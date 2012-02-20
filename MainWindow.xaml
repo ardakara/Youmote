@@ -22,15 +22,29 @@
         <Ellipse Canvas.Left="304" Canvas.Top="319" Fill="Bisque" Height="16" Name="kneeRight" Stroke="Black" Width="16" />
         <Ellipse Canvas.Left="282" Canvas.Top="253" Fill="BlueViolet" Height="16" Name="hipCenter" Stroke="Black" Width="16" />
         <TextBlock Name="target1" Text="1"
-           Height="58"
+           Height="100"
            Width="628"
-           Padding="27,5,0,0" Canvas.Left="0" Canvas.Top="34" FontSize="40">
+           Padding="27,5,0,0" Canvas.Left="0" Canvas.Top="34" FontSize="80">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
                  <Rectangle Height="75"
                           Width="75"
                           Fill="Aqua" Stroke="Black" />
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </TextBlock.Background>
+        </TextBlock>
+        <TextBlock Name="target2" Text="N"
+           Height="100"
+           Width="100"
+           Padding="27,5,0,0" Canvas.Left="0" Canvas.Top="134" FontSize="80">
+          <TextBlock.Background>
+            <VisualBrush>
+              <VisualBrush.Visual>
+                 <Rectangle Height="75"
+                          Width="75"
+                          Fill="Yellow" Stroke="Black" />
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>

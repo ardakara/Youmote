@@ -67,6 +67,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="OnthephoneDetector.cs" />
+    <Compile Include="LyingdownDetector.cs" />
+    <Compile Include="SittingDetector.cs" />
+    <Compile Include="PositionDetector.cs" />
+    <Compile Include="ScenarioDetector.cs" />
+    <Compile Include="StandingDetector.cs" />
     <Compile Include="SkeletonController.cs" />
     <Compile Include="YoumoteController.cs" />
     <Compile Include="MainWindow.xaml.cs">

@@ -13,11 +13,58 @@ namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
     {
-        public YoumoteController(MainWindow win) : base(win){}
+
+        private StandingDetector standingDetector;
+        private SittingDetector sittingDetector;
+        private LyingdownDetector lyingdownDetector;
+        private OnthephoneDetector onthephoneDetector;
+
+        public YoumoteController(MainWindow win) : base(win)
+        {
+            standingDetector = new StandingDetector();
+            sittingDetector = new SittingDetector();
+            lyingdownDetector = new LyingdownDetector();
+            onthephoneDetector = new OnthephoneDetector();
+        }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
-            
+
+            Target cur = targets[1];
+            Target t2 = targets[2];
+
+            if (standingDetector.isPositionDetected(skeleton))
+            {
+                Console.WriteLine("I'm standing!");
+                cur.setTargetText("I'm standing!");
+            }
+            else if (sittingDetector.isPositionDetected(skeleton))
+            {
+                Console.WriteLine("I'm sitting!");
+                cur.setTargetText("Sitting!");
+            }
+            else if (lyingdownDetector.isPositionDetected(skeleton))
+            {
+                Console.WriteLine("Lying down!");
+                cur.setTargetText("Lying down!");
+            }
+            else
+            {
+                Console.WriteLine("Neither sitting nor standing!");
+                cur.setTargetText("Neither!");
+            }
+
+            if (onthephoneDetector.isPositionDetected(skeleton))
+            {
+                Console.WriteLine("on the phone! \n");
+                t2.setTargetText("Y!");
+            }
+            else
+            {
+                Console.WriteLine("not on the phone!");
+                t2.setTargetText("N!");
+            }
+
             /* we'll call them here */
 
         }
