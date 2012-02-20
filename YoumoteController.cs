@@ -17,7 +17,7 @@ namespace SkeletalTracking
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
-
+            
             /* we'll call them here */
 
         }
