@@ -53,6 +53,7 @@ namespace SkeletalTracking
                 if (deltaX_left < 15 && deltaY_left < 15 || deltaX_right < 15 && deltaY_right < 15)
                 {
                     cur.setTargetSelected();
+                    cur.setTargetText("Hello there!");
                 }
                 else
                 {
@@ -121,6 +122,34 @@ namespace SkeletalTracking
         {
             _target_color = new SolidColorBrush(Colors.Red);
             _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color)); 
+        }
+
+        public void setTargetColor(Color color)
+        {
+            _target_color = new SolidColorBrush(color);
+            _canvasEl.Background = new VisualBrush(generateEllipse((double)_canvasEl.GetValue(Canvas.WidthProperty) / 2, _target_color));
+        }
+
+        public void setFontSize(int size)
+        {
+            _canvasEl.FontSize = size;
+        }
+
+        public string getTargetText()
+        {
+            return _canvasEl.Text;
+        }
+
+        private void centerText()
+        {
+            double width = _canvasEl.ActualWidth;
+            double oldX = this.getXPosition();
+            double oldY = this.getYPosition();
+        }
+
+        public void setTargetText(string text)
+        {
+            _canvasEl.Text = text;
         }
 
         public void hideTarget()

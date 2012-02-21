@@ -58,15 +58,11 @@ namespace SkeletalTracking
         {
             targets.Add(1, new Target(target1, 1));
             targets.Add(2, new Target(target2, 2));
-            targets.Add(3, new Target(target3, 3));
-            targets.Add(4, new Target(target4, 4));
-            targets.Add(5, new Target(target5, 5));
+
             currentController.controllerActivated(targets);
+
             Canvas.SetZIndex(target1, 100);
             Canvas.SetZIndex(target2, 100);
-            Canvas.SetZIndex(target3, 100);
-            Canvas.SetZIndex(target4, 100);
-            Canvas.SetZIndex(target5, 100);
         }
 
         private void SetupKinect()
