@@ -21,14 +21,8 @@ namespace SkeletalTracking
         /// sub states for the skeleton (standing, sitting) and sees if these combine to a person leaving.
         /// </summary>
         /// <returns></returns>
-        Enum getScenarioState();
-        /// <summary>
-        /// Given a scenario state enum (retrieved from getScenarioState), returns whether the scenario
-        /// has been detected in this state
-        /// </summary>
-        /// <param name="scenarioState">Enum retrieved from getScenarioState</param>
-        /// <returns></returns>
-        Boolean isSuccess(Enum scenarioState);
+        Boolean getScenarioState();
+
 /// <summary>
 /// Takes in a skeleton and uses posture detection and other qualities to determine a sub-state (standing,sitting,phoneing).  
 /// It then adds this state to its history of states.
