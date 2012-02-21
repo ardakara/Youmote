@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SkeletalTracking
 {
-    class ScenarioStateHistory 
+    class ScenarioStateHistory
     {
         private List<ScenarioState> _history;
         public List<ScenarioState> History
@@ -24,7 +24,7 @@ namespace SkeletalTracking
         public List<ScenarioState> getLastNStates(int n)
         {
             List<ScenarioState> lastStates = new List<ScenarioState>();
-            for (int i = this.History.Count - 1; i > this.History.Count - 1 - n;i++ )
+            for (int i = this.History.Count - 1; i > this.History.Count - 1 - n && i >=0; i--)
             {
                 lastStates.Add(this.History[i]);
             }
@@ -32,15 +32,24 @@ namespace SkeletalTracking
         }
         public void addState(ScenarioState nextState)
         {
-            ScenarioState prevState = this._history[this._history.Count - 1];
-            if (prevState.isSameState(nextState))
+            if (this._history.Count > 0)
             {
-                // same state, merge them
-                prevState.mergeEqualStates(nextState);
+                ScenarioState prevState = this._history[this._history.Count - 1];
+                if (prevState.isSameState(nextState))
+                {
+                    // same state, merge them
+                    ScenarioState newState = prevState.mergeEqualStates(nextState);
+                    this._history[this._history.Count - 1] = newState;
+                }
+                else
+                {
+                    ScenarioState newState = prevState.finishState(nextState);
+                    this._history[this._history.Count - 1] = newState;
+                    this._history.Add(nextState);
+                }
             }
             else
             {
-                prevState.finishState(nextState);
                 this._history.Add(nextState);
             }
         }

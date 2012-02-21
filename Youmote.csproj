@@ -63,12 +63,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AbsentDetector.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GetsUpAndLeavesDetector.cs" />
     <Compile Include="OnthephoneDetector.cs" />
     <Compile Include="LyingdownDetector.cs" />
+    <Compile Include="ScenarioState.cs" />
+    <Compile Include="ScenarioStateHistory.cs" />
     <Compile Include="SittingDetector.cs" />
     <Compile Include="PositionDetector.cs" />
     <Compile Include="ScenarioDetector.cs" />

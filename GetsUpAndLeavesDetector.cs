@@ -23,9 +23,12 @@ namespace SkeletalTracking
         {
             List<ScenarioState> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;
+
+                Console.WriteLine("********* CHECKING RECENT STATES *************");
             for (int i = 0; i < recentStates.Count; i++)
             {
                 ScenarioState state = recentStates[i];
+                Console.WriteLine(i +":" + state.ToString());
                 if (i == 0 && !GetsUpAndLeavesState.ABSENT_STATE.Equals(state))
                 {
                     // if most recent state wasnt absent, then scenario not detected
@@ -167,15 +170,15 @@ namespace SkeletalTracking
             }
 
 
-            public ScenarioState mergeEqualStates(ScenarioState ss)
+            public ScenarioState mergeEqualStates(ScenarioState next)
             {
                 GetsUpAndLeavesState gualState = new GetsUpAndLeavesState(this);
                 // make sure this is same state 
-                if (this.isSameState(ss))
+                if (this.isSameState(next))
                 {
-                    if (ss.GetType().Equals(this.GetType()))
+                    if (next.GetType().Equals(this.GetType()))
                     {
-                        GetsUpAndLeavesState nextState = new GetsUpAndLeavesState(this);
+                        GetsUpAndLeavesState nextState = (GetsUpAndLeavesState) next;
 
                         // make gualState's start be the earlier of the two
                         if (nextState._start.CompareTo(gualState._start) < 0)
@@ -194,6 +197,10 @@ namespace SkeletalTracking
                 return gualState;
             }
 
+            public override String ToString()
+            {
+                return this.Pos + "";
+            }
             public ScenarioState finishState(ScenarioState next)
             {
                 GetsUpAndLeavesState gualState = new GetsUpAndLeavesState(this);
@@ -202,7 +209,7 @@ namespace SkeletalTracking
                 {
                     if (next.GetType().Equals(this.GetType()))
                     {
-                        GetsUpAndLeavesState nextState = new GetsUpAndLeavesState(this);
+                        GetsUpAndLeavesState nextState = (GetsUpAndLeavesState) next;
 
                         // make gualState's start be the earlier of the two
                         if (nextState._start.CompareTo(gualState._start) < 0)
