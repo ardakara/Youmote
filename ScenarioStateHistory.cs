@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SkeletalTracking
 {
-    class ScenarioStateHistory
+    class ScenarioStateHistory 
     {
         private List<ScenarioState> _history;
         public List<ScenarioState> History
@@ -21,7 +21,17 @@ namespace SkeletalTracking
             this._history = new List<ScenarioState>();
         }
 
-        public void addState(ScenarioState nextState){
+        public List<ScenarioState> getLastNStates(int n)
+        {
+            List<ScenarioState> lastStates = new List<ScenarioState>();
+            for (int i = this.History.Count - 1; i > this.History.Count - 1 - n;i++ )
+            {
+                lastStates.Add(this.History[i]);
+            }
+            return lastStates;
+        }
+        public void addState(ScenarioState nextState)
+        {
             ScenarioState prevState = this._history[this._history.Count - 1];
             if (prevState.isSameState(nextState))
             {
