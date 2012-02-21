@@ -1,10 +1,10 @@
 ﻿<Window x:Class="SkeletalTracking.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="800" Width="1200" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
-    <Canvas Name="MainCanvas" Height="800" Width="1200">
-        <Image Opacity="0.1" Canvas.Left="0" Canvas.Top="0" Height="800" Name="image1" Stretch="Fill" Width="1200" />
-        <MediaElement Canvas.Left="-11" Canvas.Top="9" Height="761" Name="mediaElement1" Width="1196" Source ="C:\Users\Charlton Soesanto\Desktop\Youmote\pixar_short.avi" LoadedBehavior="Play" MediaOpened="mediaElement1_MediaOpened" Margin="3" />
+        Title="MainWindow" Height="1024" Width="1280" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+    <Canvas Name="MainCanvas" Height="1024" Width="1280">
+        <Image Opacity="0.1" Canvas.Left="0" Canvas.Top="0" Height="1024" Name="image1" Stretch="Fill" Width="1280" />
+        <MediaElement Canvas.Left="-11" Canvas.Top="46" Height="948" Name="mediaElement1" Width="1276" Source ="C:\Users\Charlton Soesanto\Desktop\Youmote\Video\pixar_short.avi" LoadedBehavior="Play" MediaOpened="mediaElement1_MediaOpened" Margin="3" />
         <Ellipse Canvas.Left="598" Canvas.Top="462" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
         <Ellipse Canvas.Left="712" Canvas.Top="589" Height="35" Name="rightEllipse" Stroke="Black" Width="35" Fill="Blue" />
         <Ellipse Canvas.Left="493" Canvas.Top="585" Fill="Blue" Height="35" Name="leftEllipse" Stroke="Black" Width="35" />

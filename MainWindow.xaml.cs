@@ -39,10 +39,11 @@ namespace SkeletalTracking
         SkeletonController currentController;
        
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
+        MediaElement curVid;
 
         //Scaling constants
-        public float k_xMaxJointScale = 1.5f;
-        public float k_yMaxJointScale = 1.5f;
+        public float k_xMaxJointScale = 3.0f;
+        public float k_yMaxJointScale = 3.0f;
 
         int i;
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -60,9 +61,13 @@ namespace SkeletalTracking
             targets.Add(2, new Target(target2, 2));
 
             currentController.controllerActivated(targets);
-
+            
             Canvas.SetZIndex(target1, 100);
             Canvas.SetZIndex(target2, 100);
+
+            curVid = mediaElement1;
+            currentController.addVideo(curVid);
+
         }
 
         private void SetupKinect()
@@ -97,7 +102,7 @@ namespace SkeletalTracking
                 nui.SkeletonEngine.SmoothParameters = parameters;
 
                 //Open the video stream
-                nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution640x480, ImageType.Color);
+                nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution1280x1024, ImageType.Color);
                 
                 //Force video to the background
                 Canvas.SetZIndex(image1, -10000);
@@ -153,7 +158,7 @@ namespace SkeletalTracking
 
         private void SetEllipsePosition(Ellipse ellipse, Joint joint)
         {    
-            var scaledJoint = joint.ScaleTo(640, 480, k_xMaxJointScale, k_yMaxJointScale);
+            var scaledJoint = joint.ScaleTo(1024, 1280, k_xMaxJointScale, k_yMaxJointScale);
 
             Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2 );
             Canvas.SetTop(ellipse, scaledJoint.Position.Y - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
@@ -187,6 +192,8 @@ namespace SkeletalTracking
 
         private void mediaElement1_MediaOpened(object sender, RoutedEventArgs e)
         {
+            //mediaElement1.Source = new Uri("Video/pixar_short.avi", UriKind.Relative);
+
         }
     }
 

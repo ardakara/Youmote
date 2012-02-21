@@ -38,8 +38,8 @@ namespace SkeletalTracking
                 int targetID = cur.id; //ID in range [1..5]
 
                 //Scale the joints to the size of the window
-                Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-                Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
                 
                 //Calculate how far our left hand is from the target in both x and y directions
                 double deltaX_left = Math.Abs(leftHand.Position.X - cur.getXPosition());
@@ -72,6 +72,11 @@ namespace SkeletalTracking
             //targets[2].showTarget();
             //targets[5].isHidden();
             //targets[3].setTargetHighlighted();           
+        }
+
+        public virtual void addVideo(MediaElement mediaElement1)
+        {
+
         }
 
         //The default value that gets passed to MaxSkeletonX and MaxSkeletonY in the Coding4Fun Joint.ScaleTo function is 1.5f
