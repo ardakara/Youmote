@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using System.Diagnostics;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
 
@@ -18,7 +19,9 @@ namespace SkeletalTracking
         private SittingIndicator sittingDetector;
         private LyingdownIndicator lyingdownDetector;
         private HandOnFaceIndicator onthephoneDetector;
-        private GetsUpAndLeavesDetector getsUpAndLeavesDetector = new GetsUpAndLeavesDetector();
+        private GetsUpAndLeavesDetector getsUpAndLeavesDetector;
+
+        private Stopwatch sw;
 
         private MediaElement curVid;
 
@@ -28,6 +31,8 @@ namespace SkeletalTracking
             sittingDetector = new SittingIndicator();
             lyingdownDetector = new LyingdownIndicator();
             onthephoneDetector = new HandOnFaceIndicator();
+            getsUpAndLeavesDetector = new GetsUpAndLeavesDetector();
+            sw = new Stopwatch();
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -46,18 +51,24 @@ namespace SkeletalTracking
                 cur.setTargetText("I'm GETTING UP AND LEAVING");
             }*/
 
-            
+            if (sw.Elapsed.TotalSeconds == 5)
+            {
+                Console.WriteLine("5 seconds have passed!");
+            }
+
             if (standingDetector.isPositionDetected(skeleton))
             {
                 Console.WriteLine("I'm standing!");
                 cur.setTargetText("I'm standing!");
                 curVid.Pause();
+                sw.Stop();
             }
             else if (sittingDetector.isPositionDetected(skeleton))
             {
                 Console.WriteLine("I'm sitting!");
                 cur.setTargetText("Sitting!");
-                curVid.Play(); 
+                curVid.Play();
+                sw.Start();
             }
             else if (lyingdownDetector.isPositionDetected(skeleton))
             {
@@ -87,8 +98,6 @@ namespace SkeletalTracking
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-
-
             /* YOUR CODE HERE */
 
         }

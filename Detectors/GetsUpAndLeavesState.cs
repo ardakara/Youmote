@@ -105,6 +105,7 @@ namespace SkeletalTracking
         {
             return this.Pos + "";
         }
+
         public ScenarioState finishState(ScenarioState next)
         {
             GetsUpAndLeavesState gualState = new GetsUpAndLeavesState(this);

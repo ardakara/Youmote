@@ -5,7 +5,7 @@ using System.Text;
 using System.Collections;
 namespace SkeletalTracking
 {
-    interface ScenarioState
+    public interface ScenarioState
     {
         Boolean isSameState(ScenarioState ss);
 
