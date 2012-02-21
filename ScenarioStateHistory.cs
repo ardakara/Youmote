@@ -23,7 +23,7 @@ namespace SkeletalTracking
 
         public void addState(ScenarioState nextState){
             ScenarioState prevState = this._history[this._history.Count - 1];
-            if (prevState.equals(nextState))
+            if (prevState.isSameState(nextState))
             {
                 // same state, merge them
                 prevState.mergeEqualStates(nextState);
