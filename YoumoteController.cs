@@ -14,20 +14,20 @@ namespace SkeletalTracking
     class YoumoteController : SkeletonController
     {
 
-        private StandingDetector standingDetector;
-        private SittingDetector sittingDetector;
-        private LyingdownDetector lyingdownDetector;
-        private OnthephoneDetector onthephoneDetector;
+        private StandingIndicator standingDetector;
+        private SittingIndicator sittingDetector;
+        private LyingdownIndicator lyingdownDetector;
+        private HandOnFaceIndicator onthephoneDetector;
         private GetsUpAndLeavesDetector getsUpAndLeavesDetector = new GetsUpAndLeavesDetector();
 
         private MediaElement curVid;
 
         public YoumoteController(MainWindow win) : base(win)
         {
-            standingDetector = new StandingDetector();
-            sittingDetector = new SittingDetector();
-            lyingdownDetector = new LyingdownDetector();
-            onthephoneDetector = new OnthephoneDetector();
+            standingDetector = new StandingIndicator();
+            sittingDetector = new SittingIndicator();
+            lyingdownDetector = new LyingdownIndicator();
+            onthephoneDetector = new HandOnFaceIndicator();
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
