@@ -21,13 +21,13 @@ namespace SkeletalTracking
         /// sub states for the skeleton (standing, sitting) and sees if these combine to a person leaving.
         /// </summary>
         /// <returns></returns>
-        Boolean getScenarioState();
+        Boolean isScenarioDetected();
 
 /// <summary>
 /// Takes in a skeleton and uses posture detection and other qualities to determine a sub-state (standing,sitting,phoneing).  
 /// It then adds this state to its history of states.
 /// </summary>
 /// <param name="skeleton"></param>
-        void processSkeleton(SkeletonData skeleton);
+void processSkeleton(SkeletonData skeleton);
     }
 }

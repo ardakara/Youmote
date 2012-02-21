@@ -21,16 +21,35 @@ namespace SkeletalTracking
             this._history = new List<ScenarioState>();
         }
 
-        public void addState(ScenarioState nextState){
-            ScenarioState prevState = this._history[this._history.Count - 1];
-            if (prevState.equals(nextState))
+        public List<ScenarioState> getLastNStates(int n)
+        {
+            List<ScenarioState> lastStates = new List<ScenarioState>();
+            for (int i = this.History.Count - 1; i > this.History.Count - 1 - n && i >=0; i--)
             {
-                // same state, merge them
-                prevState.mergeEqualStates(nextState);
+                lastStates.Add(this.History[i]);
+            }
+            return lastStates;
+        }
+        public void addState(ScenarioState nextState)
+        {
+            if (this._history.Count > 0)
+            {
+                ScenarioState prevState = this._history[this._history.Count - 1];
+                if (prevState.isSameState(nextState))
+                {
+                    // same state, merge them
+                    ScenarioState newState = prevState.mergeEqualStates(nextState);
+                    this._history[this._history.Count - 1] = newState;
+                }
+                else
+                {
+                    ScenarioState newState = prevState.finishState(nextState);
+                    this._history[this._history.Count - 1] = newState;
+                    this._history.Add(nextState);
+                }
             }
             else
             {
-                prevState.finishState(nextState);
                 this._history.Add(nextState);
             }
         }
