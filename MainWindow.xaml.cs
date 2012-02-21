@@ -183,6 +183,11 @@ namespace SkeletalTracking
                 currentController.controllerActivated(targets);
             }
         }
+
+
+        private void mediaElement1_MediaOpened(object sender, RoutedEventArgs e)
+        {
+        }
     }
 
 
