@@ -7,7 +7,7 @@ namespace SkeletalTracking.Detectors
 {
     public class PermanentLeaveDetector : PresenceDetector
     {
-        private static double MIN_ABSENT_TIME_IN_MINUTES = 5/60;
+        private static double MIN_ABSENT_TIME_IN_MINUTES = 5.0/60;
 
         public override Boolean isScenarioDetected()
         {

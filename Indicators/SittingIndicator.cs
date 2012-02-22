@@ -44,7 +44,10 @@ namespace SkeletalTracking
 
         public Boolean isPositionDetected(SkeletonData skeleton)
         {
-
+            if (skeleton == null)
+            {
+                return false;
+            }
             Joint hipCenter = skeleton.Joints[JointID.HipCenter];
             Joint head = skeleton.Joints[JointID.Head];
             Joint leftKnee = skeleton.Joints[JointID.KneeLeft];

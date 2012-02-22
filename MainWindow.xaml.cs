@@ -151,9 +151,8 @@ namespace SkeletalTracking
                 SetEllipsePosition(kneeLeft, skeleton.Joints[JointID.KneeLeft]);
                 SetEllipsePosition(kneeRight, skeleton.Joints[JointID.KneeRight]);
                 SetEllipsePosition(hipCenter, skeleton.Joints[JointID.HipCenter]);
-                currentController.processSkeletonFrame(skeleton, targets);
-
             }
+                currentController.processSkeletonFrame(skeleton, targets);
         }
 
         private void SetEllipsePosition(Ellipse ellipse, Joint joint)

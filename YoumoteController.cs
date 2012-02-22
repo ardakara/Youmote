@@ -11,7 +11,7 @@ using System.Diagnostics;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Detectors;
-
+using SkeletalTracking.Indicators;
 namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
@@ -21,6 +21,7 @@ namespace SkeletalTracking
         private SittingIndicator sittingIndicator;
         private LyingdownIndicator lyingdownIndicator;
         private HandOnFaceIndicator onthephoneIndicator;
+        private AbsentIndicator absentIndicator;
         private PresenceDetector getsUpAndLeavesDetector;
         private PermanentLeaveDetector permanentLeaveDetector;
 
@@ -29,31 +30,49 @@ namespace SkeletalTracking
         private TextBlock notification_text;
         private Image notification_image;
 
-        public YoumoteController(MainWindow win) : base(win)
+        public YoumoteController(MainWindow win)
+            : base(win)
         {
             standingIndicator = new StandingIndicator();
             sittingIndicator = new SittingIndicator();
             lyingdownIndicator = new LyingdownIndicator();
             onthephoneIndicator = new HandOnFaceIndicator();
-//            getsUpAndLeavesDetector = new PresenceDetector();
+            this.permanentLeaveDetector = new PermanentLeaveDetector();
+            this.absentIndicator = new AbsentIndicator();
             sw = new Stopwatch();
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
 
+
+            // all detector process skeleton
             this.permanentLeaveDetector.processSkeleton(skeleton);
-
-
 
             Target cur = targets[1];
             Target t2 = targets[2];
 
-            if (permanentLeaveDetector.isScenarioDetected())
+            Boolean isAbsent = absentIndicator.isPositionDetected(skeleton);
+            if (isAbsent)
             {
-                Console.WriteLine("I'm permanently gone");
-                cur.setTargetText("I'm permanently gone");
+                Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+                if (isPermanentlyGone)
+                {
+                    Console.WriteLine("I'm permanently gone");
+                    cur.setTargetText("I'm permanently gone");
+
+                }
+                else
+                {
+
+                    Console.WriteLine("I'm off screen");
+                    cur.setTargetText("I'm off screen");
+
+                }
+                return;
             }
+
+//            sw.Elapsed.TotalSeconds();
 
             if (sw.Elapsed.TotalSeconds == 5)
             {
@@ -98,7 +117,7 @@ namespace SkeletalTracking
                 Console.WriteLine("not on the phone!");
                 t2.setTargetText("N!");
             }
-            
+
             /* we'll call them here */
 
         }
