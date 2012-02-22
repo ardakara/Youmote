@@ -31,14 +31,16 @@ namespace SkeletalTracking
         private TextBlock notification_text;
         private Image notification_image;
         private TextBlock notification_speaker;
+        private Rectangle notification_background_rect;
 
         public YoumoteController(MainWindow win)
             : base(win)
         {
             // repeat for all the messages
-            this.messageList.pushMessage(10, 3,"TV Ninja", "You're watching a Pixar short with Jeff!", "tv_logo.png");
-            this.messageList.pushMessage(20, 3,"Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(50, 3,"Jeff H.", "Bwahahahha", "heer_profile.jpg");
+            this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
+            this.messageList.pushMessage(10, 3,"Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
+            this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
+
         }
 
         private void change_speaker_photo(String image_name)
@@ -55,6 +57,18 @@ namespace SkeletalTracking
             change_speaker_photo(message.imgFile);
             notification_text.Text = message.text;
             notification_speaker.Text = message.speaker;
+
+            notification_text.Visibility = Visibility.Visible;
+            notification_speaker.Visibility = Visibility.Visible;
+            notification_image.Visibility = Visibility.Visible;
+            notification_background_rect.Visibility = Visibility.Visible;
+        }
+
+        private void remove_message(Message message) {
+            notification_text.Visibility = Visibility.Hidden;
+            notification_speaker.Visibility = Visibility.Hidden;
+            notification_image.Visibility = Visibility.Hidden;
+            notification_background_rect.Visibility = Visibility.Hidden;
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -63,15 +77,15 @@ namespace SkeletalTracking
             List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
             foreach (Message message in readyMessages)
             {
+                display_message(message);
                 message.startMessageTimer();
-                // deal with it charlton :p
             }
 
             List<Message> finishedMessages = this.messageList.popFinishedMessages();
             foreach (Message message in finishedMessages)
             {
+                remove_message(message);
                 message.stopMessageTimer();
-                // deal with it charlton :p
             }
 
 
@@ -114,9 +128,6 @@ namespace SkeletalTracking
                 cur.setTargetText("I'm standing!");
                 curVid.Pause();
                 sw.Stop();
-
-                notification_image.Visibility = Visibility.Visible;
-                notification_text.Visibility = Visibility.Visible;
                 
             }
             else if (sittingIndicator.isPositionDetected(skeleton))
@@ -125,8 +136,6 @@ namespace SkeletalTracking
                 cur.setTargetText("Sitting!");
                 curVid.Play();
                 sw.Start();
-                notification_image.Visibility = Visibility.Visible;
-                notification_text.Visibility = Visibility.Visible;
             }
             else if (lyingdownIndicator.isPositionDetected(skeleton))
             {
@@ -163,11 +172,12 @@ namespace SkeletalTracking
             notification_text.Visibility = Visibility.Hidden;
         }
 
-        public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image)
+        public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, Rectangle rect)
         {
             notification_text = not_text;
             notification_image = not_image;
             notification_speaker = not_speaker;
+            notification_background_rect = rect;
         }
 
         public override void addVideo(MediaElement mediaElement1)

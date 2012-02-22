@@ -4,7 +4,7 @@
         Title="MainWindow" Height="1024" Width="1280" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Canvas Name="MainCanvas" Height="1024" Width="1280">
         <Image Opacity="0.1" Canvas.Left="0" Canvas.Top="0" Height="1024" Name="image1" Stretch="Fill" Width="1280" />
-        <MediaElement Canvas.Left="-11" Canvas.Top="46" Height="948" Name="mediaElement1" Width="1276" Source ="C:\Users\Charlton Soesanto\Desktop\Youmote\Video\pixar_short.avi" LoadedBehavior="Manual" MediaOpened="mediaElement1_MediaOpened" Margin="3" />
+        <MediaElement Canvas.Left="-3" Canvas.Top="46" Height="948" Name="mediaElement1" Width="1276" Source ="C:\Users\Charlton Soesanto\Desktop\Youmote\Video\pixar_short.avi" LoadedBehavior="Manual" MediaOpened="mediaElement1_MediaOpened" Margin="3" />
         <Ellipse Canvas.Left="598" Canvas.Top="462" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
         <Ellipse Canvas.Left="712" Canvas.Top="589" Height="35" Name="rightEllipse" Stroke="Black" Width="35" Fill="Blue" />
         <Ellipse Canvas.Left="493" Canvas.Top="585" Fill="Blue" Height="35" Name="leftEllipse" Stroke="Black" Width="35" />
@@ -22,6 +22,7 @@
         <Ellipse Canvas.Left="573" Canvas.Top="655" Fill="Bisque" Height="16" Name="kneeLeft" Stroke="Black" Width="16" />
         <Ellipse Canvas.Left="632" Canvas.Top="655" Fill="Bisque" Height="16" Name="kneeRight" Stroke="Black" Width="16" />
         <Ellipse Canvas.Left="610" Canvas.Top="589" Fill="BlueViolet" Height="16" Name="hipCenter" Stroke="Black" Width="16" />
+        <Rectangle Canvas.Left="805" Canvas.Top="194" Height="110" Name="rectangle1" Stroke="Black" Width="450" Fill="AliceBlue" Visibility="Hidden"/>
         <TextBlock Name="target1" Text="1"
            Height="43"
            Width="954"
@@ -52,10 +53,10 @@
         </TextBlock>
         <Label Canvas.Left="0" Canvas.Top="0" Content="Current Controller:" Height="28" Name="label1" Width="108" />
         <Label Canvas.Left="103" Canvas.Top="0" Content="YouMote" Height="26" Name="controllerText" Width="140" />
-        <TextBlock Name="notification_text" Text="Hahahahahahah."
+        <TextBlock Name="notification_text" Text="Welcome!" Visibility="Hidden"
            Height="39"
            Width="347"
-           Padding="10,0,0,0" Canvas.Left="908" Canvas.Top="99" FontSize="18">
+           Padding="10,0,0,0" Canvas.Left="899" Canvas.Top="247" FontSize="24">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -66,10 +67,10 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <TextBlock Name="notification_speaker" Text="First L:"
+        <TextBlock Name="notification_speaker" Text="First L:" Visibility="Hidden"
            Height="22"
            Width="118"
-           Padding="5,0,0,0" Canvas.Left="908" Canvas.Top="62" FontSize="18">
+           Padding="5,0,0,0" Canvas.Left="899" Canvas.Top="210" FontSize="18" TextAlignment="Center">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -80,6 +81,7 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <Image Canvas.Left="836" Canvas.Top="62" Height="76" Name="notification_image" Stretch="Fill" Width="66" />
+        <Image Canvas.Left="820" Canvas.Top="210" Height="76" Name="notification_image" Stretch="Fill" Width="66" Visibility="Hidden"/>
+        
     </Canvas>
 </Window>
