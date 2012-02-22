@@ -31,7 +31,7 @@
             <VisualBrush>
               <VisualBrush.Visual>
                  <Rectangle Height="75"
-                          Width="75"
+                          Width="150"
                           Fill="White" Stroke="Black" />
               </VisualBrush.Visual>
             </VisualBrush>
@@ -46,7 +46,7 @@
               <VisualBrush.Visual>
                  <Rectangle Height="75"
                           Width="75"
-                          Fill="BlanchedAlmond" Stroke="Black" />
+                          Fill="BlanchedAlmond"/>
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>
@@ -62,7 +62,7 @@
               <VisualBrush.Visual>
                  <Rectangle Height="75"
                           Width="75"
-                          Fill="BlanchedAlmond" Stroke="Black" />
+                          Fill="BlanchedAlmond" />
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>
@@ -76,7 +76,7 @@
               <VisualBrush.Visual>
                  <Rectangle Height="75"
                           Width="75"
-                          Fill="BlanchedAlmond" Stroke="Black" />
+                          Fill="BlanchedAlmond" />
               </VisualBrush.Visual>
             </VisualBrush>
           </TextBlock.Background>
