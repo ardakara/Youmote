@@ -5,11 +5,11 @@ using System.Text;
 
 namespace SkeletalTracking.Detectors
 {
-    class PermanentLeaveDetector : PresenceDetector
+    public class PermanentLeaveDetector : PresenceDetector
     {
-        private static int MIN_ABSENT_TIME_IN_MINUTES = 4;
+        private static double MIN_ABSENT_TIME_IN_MINUTES = 5/60;
 
-        public Boolean isScenarioDetected()
+        public override Boolean isScenarioDetected()
         {
             ScenarioStateIMPL lastState = this._history.History.Peek();
             if (PresenceState.ABSENT_STATE.isSameState(lastState))

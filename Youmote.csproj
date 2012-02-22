@@ -63,7 +63,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="AbsentDetector.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -71,10 +70,9 @@
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\PermanentLeaveDetector.cs" />
     <Compile Include="Detectors\StandAndLeaveDetector.cs" />
-    <Compile Include="NotificationModels.cs" />
-    <Compile Include="Notification.cs" />
     <Compile Include="Detectors\PresenceDetector.cs" />
     <Compile Include="Detectors\PresenceState.cs" />
+    <Compile Include="Indicators\AbsentIndicator.cs" />
     <Compile Include="Indicators\HandOnFaceIndicator.cs" />
     <Compile Include="Indicators\LyingdownIndicator.cs" />
     <Compile Include="ScenarioStateIMPL.cs" />

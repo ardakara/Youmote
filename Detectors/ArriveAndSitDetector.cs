@@ -9,7 +9,7 @@ namespace SkeletalTracking.Detectors
     {
 
 
-        public Boolean isScenarioDetected()
+        public override Boolean isScenarioDetected()
         {
             List<ScenarioStateIMPL> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;

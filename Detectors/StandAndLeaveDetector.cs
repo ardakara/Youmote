@@ -5,10 +5,10 @@ using System.Text;
 
 namespace SkeletalTracking.Detectors
 {
-    class StandAndLeaveDetector : PresenceDetector
+    public class StandAndLeaveDetector : PresenceDetector
     {
         protected static double STAND_DURATION = 30;
-        public Boolean isScenarioDetected()
+        public override Boolean isScenarioDetected()
         {
             List<ScenarioStateIMPL> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;
