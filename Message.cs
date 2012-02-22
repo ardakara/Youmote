@@ -15,14 +15,15 @@ namespace SkeletalTracking
         public String text;
         public String imgFile;
         private Stopwatch sw = new Stopwatch();
-        public Message(double time, String speaker, String text, String imgFile)
+        public Message(double time, double duration, String speaker, String text, String imgFile)
         {
             this.time = time;
+            this.duration = duration;
             this.speaker = speaker;
             this.text = text;
             this.imgFile = imgFile;
         }
-        public void startMessageViewing()
+        public void startMessageTimer()
         {
             sw.Start();
         }
@@ -37,7 +38,7 @@ namespace SkeletalTracking
                 return false;
             }
         }
-        public void stopMessageViewing()
+        public void stopMessageTimer()
         {
             this.sw.Stop();
         }

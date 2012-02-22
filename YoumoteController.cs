@@ -32,7 +32,7 @@ namespace SkeletalTracking
             : base(win)
         {
             // repeat for all the messages
-            this.messageList.pushMessage(10, "Jeff", "hi", "imagefile");
+            this.messageList.pushMessage(10,3, "Jeff", "hi", "imagefile");
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -41,14 +41,14 @@ namespace SkeletalTracking
             List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
             foreach (Message message in readyMessages)
             {
-                message.startMessageViewing();
+                message.startMessageTimer();
                 // deal with it charlton :p
             }
 
             List<Message> finishedMessages = this.messageList.popFinishedMessages();
             foreach (Message message in finishedMessages)
             {
-                message.stopMessageViewing();
+                message.stopMessageTimer();
                 // deal with it charlton :p
             }
 
