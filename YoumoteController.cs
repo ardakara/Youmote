@@ -19,7 +19,7 @@ namespace SkeletalTracking
         private SittingIndicator sittingDetector;
         private LyingdownIndicator lyingdownDetector;
         private HandOnFaceIndicator onthephoneDetector;
-        private GetsUpAndLeavesDetector getsUpAndLeavesDetector;
+        private PresenceDetector getsUpAndLeavesDetector;
 
         private Stopwatch sw;
 
@@ -31,7 +31,7 @@ namespace SkeletalTracking
             sittingDetector = new SittingIndicator();
             lyingdownDetector = new LyingdownIndicator();
             onthephoneDetector = new HandOnFaceIndicator();
-            getsUpAndLeavesDetector = new GetsUpAndLeavesDetector();
+            getsUpAndLeavesDetector = new PresenceDetector();
             sw = new Stopwatch();
         }
 
