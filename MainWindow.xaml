@@ -69,7 +69,7 @@
         <TextBlock Name="notification_speaker" Text="First L:"
            Height="22"
            Width="118"
-           Padding="5,0,0,0" Canvas.Left="908" Canvas.Top="62" FontSize="18">
+           Padding="5,0,0,0" Canvas.Left="908" Canvas.Top="62" FontSize="18" TextAlignment="Center">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>

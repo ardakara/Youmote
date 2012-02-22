@@ -55,6 +55,16 @@ namespace SkeletalTracking
             change_speaker_photo(message.imgFile);
             notification_text.Text = message.text;
             notification_speaker.Text = message.speaker;
+
+            notification_text.Visibility = Visibility.Visible;
+            notification_speaker.Visibility = Visibility.Visible;
+            notification_image.Visibility = Visibility.Visible;
+        }
+
+        private void remove_message(Message message) {
+            notification_text.Visibility = Visibility.Hidden;
+            notification_speaker.Visibility = Visibility.Hidden;
+            notification_image.Visibility = Visibility.Hidden;
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -64,6 +74,7 @@ namespace SkeletalTracking
             foreach (Message message in readyMessages)
             {
                 message.startMessageViewing();
+                display_message(message);
                 // deal with it charlton :p
             }
 
@@ -71,6 +82,7 @@ namespace SkeletalTracking
             foreach (Message message in finishedMessages)
             {
                 message.stopMessageViewing();
+                remove_message(message);
                 // deal with it charlton :p
             }
 
