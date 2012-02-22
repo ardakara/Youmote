@@ -21,13 +21,13 @@ namespace SkeletalTracking
 
         public Boolean isScenarioDetected()
         {
-            List<ScenarioState> recentStates = this._history.getLastNStates(3);
+            List<ScenarioStateIMPL> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;
 
                 Console.WriteLine("********* CHECKING RECENT STATES *************");
             for (int i = 0; i < recentStates.Count; i++)
             {
-                ScenarioState state = recentStates[i];
+                ScenarioStateIMPL state = recentStates[i];
                 Console.WriteLine(i +":" + state.ToString());
                 if (i == 0 && !GetsUpAndLeavesState.ABSENT_STATE.Equals(state))
                 {

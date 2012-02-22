@@ -7,7 +7,7 @@ namespace SkeletalTracking
 {
 
 
-    public class GetsUpAndLeavesState : ScenarioState
+    public class GetsUpAndLeavesState : ScenarioStateIMPL
     {
 
         public enum GetsUpAndLeavesPosition { SIT, STAND, ABSENT };
@@ -43,7 +43,7 @@ namespace SkeletalTracking
         }
 
 
-        public Boolean isSameState(ScenarioState ss)
+        public Boolean isSameState(ScenarioStateIMPL ss)
         {
             if (!ss.GetType().Equals(this.GetType()))
             {
@@ -74,7 +74,7 @@ namespace SkeletalTracking
 
         }
 
-        public ScenarioState mergeEqualStates(ScenarioState next)
+        public ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL next)
         {
             GetsUpAndLeavesState gualState = new GetsUpAndLeavesState(this);
             // make sure this is same state 
@@ -106,7 +106,7 @@ namespace SkeletalTracking
             return this.Pos + "";
         }
 
-        public ScenarioState finishState(ScenarioState next)
+        public ScenarioStateIMPL finishState(ScenarioStateIMPL next)
         {
             GetsUpAndLeavesState gualState = new GetsUpAndLeavesState(this);
             // make sure this is same state 

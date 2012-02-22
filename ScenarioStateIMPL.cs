@@ -5,9 +5,9 @@ using System.Text;
 using System.Collections;
 namespace SkeletalTracking
 {
-    public interface ScenarioState
+    public interface ScenarioStateIMPL
     {
-        Boolean isSameState(ScenarioState ss);
+        Boolean isSameState(ScenarioStateIMPL ss);
 
 /// <summary>
 /// States are being added every frame.  Instead of having a list of repeating, sitting frames, we merge two frames if they are the same
@@ -16,12 +16,12 @@ namespace SkeletalTracking
 /// 0 to 40th frame.  Now the merged state represents sitting from 0 to 41st state.
 /// </summary>
 /// <param name="ss"></param>
-        ScenarioState mergeEqualStates(ScenarioState ss);
+        ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL ss);
 
 /// <summary>
 /// Used when the state representing previous frames is not equal to the state that is about to be added for most current frame.
 /// </summary>
 /// <param name="next"></param>
-        ScenarioState finishState(ScenarioState next);
+        ScenarioStateIMPL finishState(ScenarioStateIMPL next);
     }
 }

@@ -7,8 +7,8 @@ namespace SkeletalTracking
 {
     class ScenarioStateHistory
     {
-        private List<ScenarioState> _history;
-        public List<ScenarioState> History
+        private List<ScenarioStateIMPL> _history;
+        public List<ScenarioStateIMPL> History
         {
             get
             {
@@ -18,32 +18,32 @@ namespace SkeletalTracking
 
         public ScenarioStateHistory()
         {
-            this._history = new List<ScenarioState>();
+            this._history = new List<ScenarioStateIMPL>();
         }
 
-        public List<ScenarioState> getLastNStates(int n)
+        public List<ScenarioStateIMPL> getLastNStates(int n)
         {
-            List<ScenarioState> lastStates = new List<ScenarioState>();
+            List<ScenarioStateIMPL> lastStates = new List<ScenarioStateIMPL>();
             for (int i = this.History.Count - 1; i > this.History.Count - 1 - n && i >=0; i--)
             {
                 lastStates.Add(this.History[i]);
             }
             return lastStates;
         }
-        public void addState(ScenarioState nextState)
+        public void addState(ScenarioStateIMPL nextState)
         {
             if (this._history.Count > 0)
             {
-                ScenarioState prevState = this._history[this._history.Count - 1];
+                ScenarioStateIMPL prevState = this._history[this._history.Count - 1];
                 if (prevState.isSameState(nextState))
                 {
                     // same state, merge them
-                    ScenarioState newState = prevState.mergeEqualStates(nextState);
+                    ScenarioStateIMPL newState = prevState.mergeEqualStates(nextState);
                     this._history[this._history.Count - 1] = newState;
                 }
                 else
                 {
-                    ScenarioState newState = prevState.finishState(nextState);
+                    ScenarioStateIMPL newState = prevState.finishState(nextState);
                     this._history[this._history.Count - 1] = newState;
                     this._history.Add(nextState);
                 }
