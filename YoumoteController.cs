@@ -22,8 +22,9 @@ namespace SkeletalTracking
         private PresenceDetector getsUpAndLeavesDetector;
 
         private Stopwatch sw;
-
         private MediaElement curVid;
+        private Target notification_text;
+        private Image notification_image;
 
         public YoumoteController(MainWindow win) : base(win)
         {
@@ -100,6 +101,12 @@ namespace SkeletalTracking
         {
             /* YOUR CODE HERE */
 
+        }
+
+        public override void addUIElements(Target not_text, Image not_image)
+        {
+            notification_text = not_text;
+            notification_image = not_image;
         }
 
         public override void addVideo(MediaElement mediaElement1)

@@ -71,8 +71,6 @@
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\PermanentLeaveDetector.cs" />
     <Compile Include="Detectors\StandAndLeaveDetector.cs" />
-    <Compile Include="NotificationModels.cs" />
-    <Compile Include="Notification.cs" />
     <Compile Include="Detectors\PresenceDetector.cs" />
     <Compile Include="Detectors\PresenceState.cs" />
     <Compile Include="Indicators\HandOnFaceIndicator.cs" />

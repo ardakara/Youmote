@@ -52,5 +52,20 @@
         </TextBlock>
         <Label Canvas.Left="0" Canvas.Top="0" Content="Current Controller:" Height="28" Name="label1" Width="108" />
         <Label Canvas.Left="103" Canvas.Top="0" Content="YouMote" Height="28" Name="controllerText" Width="140" />
+        <TextBlock Name="notification_text" Text=""
+           Height="82"
+           Width="242"
+           Padding="27,0,0,0" Canvas.Left="1013" Canvas.Top="62" FontSize="32">
+          <TextBlock.Background>
+            <VisualBrush>
+              <VisualBrush.Visual>
+                 <Rectangle Height="75"
+                          Width="75"
+                          Fill="BlanchedAlmond" Stroke="Black" />
+              </VisualBrush.Visual>
+            </VisualBrush>
+          </TextBlock.Background>
+        </TextBlock>
+        <Image Canvas.Left="1023" Canvas.Top="68" Height="70" Name="notification_image" Stretch="Fill" Width="56" />
     </Canvas>
 </Window>

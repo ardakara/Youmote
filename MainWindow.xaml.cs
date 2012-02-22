@@ -68,6 +68,7 @@ namespace SkeletalTracking
             curVid = mediaElement1;
             currentController.addVideo(curVid);
 
+            currentController.addUIElements(notification_text, notification_image);
         }
 
         private void SetupKinect()
