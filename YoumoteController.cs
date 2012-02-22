@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
@@ -25,7 +26,7 @@ namespace SkeletalTracking
 
         private Stopwatch sw;
         private MediaElement curVid;
-        private Target notification_text;
+        private TextBlock notification_text;
         private Image notification_image;
 
         public YoumoteController(MainWindow win) : base(win)
@@ -72,6 +73,9 @@ namespace SkeletalTracking
                 cur.setTargetText("Sitting!");
                 curVid.Play();
                 sw.Start();
+                notification_image.Visibility = Visibility.Visible;
+                notification_text.Visibility = Visibility.Visible;
+                notification_text.Text = "Jeff Heer: Lulz";
             }
             else if (lyingdownIndicator.isPositionDetected(skeleton))
             {
@@ -101,11 +105,19 @@ namespace SkeletalTracking
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
+            
             /* YOUR CODE HERE */
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri("pack://application:,,/Images/heer_profile.jpg");
+            img.EndInit();
+            notification_image.Source = img;
 
+            notification_image.Visibility = Visibility.Hidden;
+            notification_text.Visibility = Visibility.Hidden;
         }
 
-        public override void addUIElements(Target not_text, Image not_image)
+        public override void addUIElements(TextBlock not_text, Image not_image)
         {
             notification_text = not_text;
             notification_image = not_image;

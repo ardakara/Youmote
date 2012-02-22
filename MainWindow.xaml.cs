@@ -60,15 +60,14 @@ namespace SkeletalTracking
             targets.Add(1, new Target(target1, 1));
             targets.Add(2, new Target(target2, 2));
 
+            curVid = mediaElement1;
+            currentController.addVideo(curVid);
+            currentController.addUIElements(notification_text, notification_image);
+
             currentController.controllerActivated(targets);
             
             Canvas.SetZIndex(target1, 100);
             Canvas.SetZIndex(target2, 100);
-
-            curVid = mediaElement1;
-            currentController.addVideo(curVid);
-
-            currentController.addUIElements(notification_text, notification_image);
         }
 
         private void SetupKinect()
