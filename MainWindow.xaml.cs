@@ -62,7 +62,7 @@ namespace SkeletalTracking
 
             curVid = mediaElement1;
             currentController.addVideo(curVid);
-            currentController.addUIElements(notification_speaker, notification_text, notification_image);
+            currentController.addUIElements(notification_speaker, notification_text, notification_image, rectangle1);
 
             currentController.controllerActivated(targets);
             

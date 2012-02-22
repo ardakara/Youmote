@@ -26,7 +26,7 @@ namespace SkeletalTracking
             List<Message> readyMessages = new List<Message>();
             foreach (Message message in this.queuedMessages)
             {
-                if (message.time > time)
+                if (message.time < time)
                 {
                     readyMessages.Add(message);
                 }
