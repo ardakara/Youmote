@@ -33,14 +33,18 @@ namespace SkeletalTracking
         private TextBlock notification_speaker;
         private Rectangle notification_background_rect;
 
+        private void addMessages() {
+            this.messageList.Clear();
+            this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
+            this.messageList.pushMessage(10, 3, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
+            this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
+        }
+
         public YoumoteController(MainWindow win)
             : base(win)
         {
             // repeat for all the messages
-            this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
-            this.messageList.pushMessage(10, 3,"Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
-
+            addMessages();
         }
 
         private void change_speaker_photo(String image_name)
@@ -104,7 +108,11 @@ namespace SkeletalTracking
                     Console.WriteLine("I'm permanently gone");
                     cur.setTargetText("I'm permanently gone");
                     this.messageList.Clear();
+                    addMessages();
                     sw.Reset();
+                    curVid.Stop();
+                    curVid.Position = TimeSpan.Zero;
+                    curVid.Visibility = Visibility.Hidden;
                     
                 }
                 else
@@ -136,6 +144,7 @@ namespace SkeletalTracking
             {
                 Console.WriteLine("I'm sitting!");
                 cur.setTargetText("Sitting!");
+                curVid.Visibility = Visibility.Visible;
                 curVid.Play();
                 sw.Start();
             }
