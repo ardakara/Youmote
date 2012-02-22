@@ -7,7 +7,7 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
-    class StandingIndicator : PositionIndicatorIMPL
+    public class StandingIndicator : PositionIndicatorIMPL
     {
         public Boolean isPositionDetected(SkeletonData skeleton)
         {

@@ -5,15 +5,21 @@ using System.Text;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace SkeletalTracking.Indicators
 {
-    class AbsentDetector
+    public class AbsentIndicator
     {
-
 
         public Boolean isPositionDetected(SkeletonData skeleton)
         {
-            return skeleton == null;
+            if (skeleton == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
-
+using SkeletalTracking.Indicators;
 namespace SkeletalTracking
 {
     public abstract class PresenceDetector : ScenarioDetectorIMPL
@@ -13,7 +13,7 @@ namespace SkeletalTracking
         protected ScenarioStateHistory _history;
         protected StandingIndicator _standingDetector = new StandingIndicator();
         protected SittingIndicator _sittingDetector = new SittingIndicator();
-        protected AbsentDetector _absentDetector = new AbsentDetector();
+        protected AbsentIndicator _absentIndicator = new AbsentIndicator();
         public PresenceDetector()
         {
             this._history = new ScenarioStateHistory(30);
@@ -24,7 +24,7 @@ namespace SkeletalTracking
 
         public void processSkeleton(SkeletonData skeleton)
         {
-            Boolean isAbsent = this._absentDetector.isPositionDetected(skeleton);
+            Boolean isAbsent = this._absentIndicator.isPositionDetected(skeleton);
             if (isAbsent)
             {
                 PresenceState state = new PresenceState(PresenceState.GetsUpAndLeavesPosition.ABSENT, DateTime.Now, DateTime.Now);

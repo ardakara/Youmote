@@ -7,7 +7,7 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
-    class SittingIndicator : PositionIndicatorIMPL
+    public class SittingIndicator : PositionIndicatorIMPL
     {
 
         private double dotProduct(double x1, double y1, double z1, double x2, double y2, double z2)

@@ -9,17 +9,19 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
+using SkeletalTracking.Detectors;
 
 namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
     {
 
-        private StandingIndicator standingDetector;
-        private SittingIndicator sittingDetector;
-        private LyingdownIndicator lyingdownDetector;
-        private HandOnFaceIndicator onthephoneDetector;
+        private StandingIndicator standingIndicator;
+        private SittingIndicator sittingIndicator;
+        private LyingdownIndicator lyingdownIndicator;
+        private HandOnFaceIndicator onthephoneIndicator;
         private PresenceDetector getsUpAndLeavesDetector;
+        private PermanentLeaveDetector permanentLeaveDetector;
 
         private Stopwatch sw;
         private MediaElement curVid;
@@ -28,10 +30,10 @@ namespace SkeletalTracking
 
         public YoumoteController(MainWindow win) : base(win)
         {
-            standingDetector = new StandingIndicator();
-            sittingDetector = new SittingIndicator();
-            lyingdownDetector = new LyingdownIndicator();
-            onthephoneDetector = new HandOnFaceIndicator();
+            standingIndicator = new StandingIndicator();
+            sittingIndicator = new SittingIndicator();
+            lyingdownIndicator = new LyingdownIndicator();
+            onthephoneIndicator = new HandOnFaceIndicator();
 //            getsUpAndLeavesDetector = new PresenceDetector();
             sw = new Stopwatch();
         }
@@ -39,39 +41,39 @@ namespace SkeletalTracking
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
 
-            this.getsUpAndLeavesDetector.processSkeleton(skeleton);
-            this.getsUpAndLeavesDetector.isScenarioDetected();
+            this.permanentLeaveDetector.processSkeleton(skeleton);
+
 
 
             Target cur = targets[1];
             Target t2 = targets[2];
-            /*
-            if (getsUpAndLeavesDetector.isScenarioDetected())
+
+            if (permanentLeaveDetector.isScenarioDetected())
             {
-                Console.WriteLine("I'm GETTING UP AND LEAVING");
-                cur.setTargetText("I'm GETTING UP AND LEAVING");
-            }*/
+                Console.WriteLine("I'm permanently gone");
+                cur.setTargetText("I'm permanently gone");
+            }
 
             if (sw.Elapsed.TotalSeconds == 5)
             {
                 Console.WriteLine("5 seconds have passed!");
             }
 
-            if (standingDetector.isPositionDetected(skeleton))
+            if (standingIndicator.isPositionDetected(skeleton))
             {
                 Console.WriteLine("I'm standing!");
                 cur.setTargetText("I'm standing!");
                 curVid.Pause();
                 sw.Stop();
             }
-            else if (sittingDetector.isPositionDetected(skeleton))
+            else if (sittingIndicator.isPositionDetected(skeleton))
             {
                 Console.WriteLine("I'm sitting!");
                 cur.setTargetText("Sitting!");
                 curVid.Play();
                 sw.Start();
             }
-            else if (lyingdownDetector.isPositionDetected(skeleton))
+            else if (lyingdownIndicator.isPositionDetected(skeleton))
             {
                 Console.WriteLine("Lying down!");
                 cur.setTargetText("Lying down!");
@@ -82,7 +84,7 @@ namespace SkeletalTracking
                 cur.setTargetText("Neither!");
             }
 
-            if (onthephoneDetector.isPositionDetected(skeleton))
+            if (onthephoneIndicator.isPositionDetected(skeleton))
             {
                 Console.WriteLine("on the phone! \n");
                 t2.setTargetText("Y!");

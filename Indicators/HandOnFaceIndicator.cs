@@ -7,7 +7,7 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
-    class HandOnFaceIndicator : PositionIndicatorIMPL
+    public class HandOnFaceIndicator : PositionIndicatorIMPL
     {
 
         private double magnitude(double x, double y, double z)

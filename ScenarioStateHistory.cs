@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SkeletalTracking
 {
-    class ScenarioStateHistory
+    public class ScenarioStateHistory
     {
         private static double FALSE_STATE_DURATION_IN_SECONDS = 1;
         private Stack<ScenarioStateIMPL> _history;
@@ -79,6 +79,7 @@ namespace SkeletalTracking
                         it.Dispose();
                 }
             }
+            this.smoothHistory();
         }
     }
 }
