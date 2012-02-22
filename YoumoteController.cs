@@ -20,10 +20,10 @@ namespace SkeletalTracking
         private StandingIndicator standingIndicator = new StandingIndicator();
         private SittingIndicator sittingIndicator = new SittingIndicator();
         private LyingdownIndicator lyingdownIndicator = new LyingdownIndicator();
-        private HandOnFaceIndicator handOnFaceIndicator  = new HandOnFaceIndicator();
+        private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentIndicator absentIndicator = new AbsentIndicator();
 
-        private PermanentLeaveDetector permanentLeaveDetector  = new PermanentLeaveDetector();
+        private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
 
@@ -60,11 +60,20 @@ namespace SkeletalTracking
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
 
-            List<Message> overdueMessages = this.messageList.removeOverdueMessages(sw.Elapsed.TotalSeconds);
-            foreach (Message message in overdueMessages)
+            List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
+            foreach (Message message in readyMessages)
             {
+                message.startMessageViewing();
                 // deal with it charlton :p
             }
+
+            List<Message> finishedMessages = this.messageList.popFinishedMessages();
+            foreach (Message message in finishedMessages)
+            {
+                message.stopMessageViewing();
+                // deal with it charlton :p
+            }
+
 
             // all detector process skeleton
             this.permanentLeaveDetector.processSkeleton(skeleton);
@@ -92,7 +101,7 @@ namespace SkeletalTracking
                 return;
             }
 
-            
+
 
             if (sw.Elapsed.TotalSeconds == 5)
             {
