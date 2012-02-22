@@ -7,7 +7,7 @@ namespace SkeletalTracking
 {
     public class ScenarioStateHistory
     {
-        private static double FALSE_STATE_DURATION_IN_SECONDS = 1;
+        private static double FALSE_STATE_DURATION_IN_SECONDS = 0.3;
         private List<ScenarioStateIMPL> _history;
         private int _maxSize;
         public List<ScenarioStateIMPL> History
@@ -107,8 +107,8 @@ namespace SkeletalTracking
                 }
                 else
                 {
-                    ScenarioStateIMPL newState = lastState.finishState(nextState);
-                    this._history.Add(newState);
+                    ScenarioStateIMPL cappedOldState = lastState.finishState(nextState);
+                    this._history.Add(cappedOldState);
                     this._history.Add(nextState);
                 }
             }

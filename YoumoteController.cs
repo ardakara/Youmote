@@ -129,17 +129,9 @@ namespace SkeletalTracking
                     cur.setTargetText("I'm off screen");
 
                 }
-                return;
+
             }
-
-
-
-            if (sw.Elapsed.TotalSeconds == 5)
-            {
-                Console.WriteLine("5 seconds have passed!");
-            }
-
-            if (isStanding)
+            else if (isStanding)
             {
                 Console.WriteLine("I'm standing!");
                 cur.setTargetText("I'm standing!");
