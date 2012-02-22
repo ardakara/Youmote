@@ -15,12 +15,18 @@ namespace SkeletalTracking
             this.queuedMessages.Add(m);
         }
 
-        public void pushMessage(double time, double duration,String speaker, String text, String imgFile)
+        public void pushMessage(double time, double duration, String speaker, String text, String imgFile)
         {
             this.pushMessage(new Message(time, duration, speaker, text, imgFile));
         }
 
-        
+        public void Clear()
+        {
+            this.queuedMessages.Clear();
+            this.runningMessages.Clear();
+        }
+
+
 
         public List<Message> popReadyMessages(double time)
         {

@@ -103,7 +103,9 @@ namespace SkeletalTracking
                 {
                     Console.WriteLine("I'm permanently gone");
                     cur.setTargetText("I'm permanently gone");
-
+                    this.messageList.Clear();
+                    sw.Reset();
+                    
                 }
                 else
                 {
