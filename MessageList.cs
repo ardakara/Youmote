@@ -20,13 +20,14 @@ namespace SkeletalTracking
             this.pushMessage(new Message(time, duration, speaker, text, imgFile));
         }
 
+        
 
         public List<Message> popReadyMessages(double time)
         {
             List<Message> readyMessages = new List<Message>();
             foreach (Message message in this.queuedMessages)
             {
-                if (message.time > time)
+                if (message.time < time)
                 {
                     readyMessages.Add(message);
                 }
