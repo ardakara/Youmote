@@ -27,7 +27,6 @@ namespace SkeletalTracking
         public void smoothHistory()
         {
 
-
             List<ScenarioStateIMPL> removeList = new List<ScenarioStateIMPL>();
             for (int i = 0; i < this._history.Count - 1; i++)
             {
@@ -40,6 +39,15 @@ namespace SkeletalTracking
             foreach (ScenarioStateIMPL state in removeList)
             {
                 this._history.Remove(state);
+
+            }
+            List<ScenarioStateIMPL> smoothedHistory = this._history;
+            this._history = new List<ScenarioStateIMPL>();
+
+            // now go through and merge states that are adjacent and the same
+            foreach (ScenarioStateIMPL state in smoothedHistory)
+            {
+                this.addState(state,false);
             }
         }
 
@@ -82,8 +90,11 @@ namespace SkeletalTracking
                 return null;
             }
         }
-
         public void addState(ScenarioStateIMPL nextState)
+        {
+            this.addState(nextState, true);
+        }
+        public void addState(ScenarioStateIMPL nextState, Boolean withSmoothing)
         {
             if (this._history.Count > 0)
             {
@@ -111,7 +122,10 @@ namespace SkeletalTracking
                 int numRemove = this._history.Count - this._maxSize;
                 this._history.RemoveRange(0, numRemove);
             }
-            this.smoothHistory();
+            if (withSmoothing)
+            {
+                this.smoothHistory();
+            }
         }
     }
 }

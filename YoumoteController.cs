@@ -17,12 +17,10 @@ namespace SkeletalTracking
     class YoumoteController : SkeletonController
     {
 
-        private StandingIndicator standingIndicator = new StandingIndicator();
-        private SittingIndicator sittingIndicator = new SittingIndicator();
-        private LyingdownIndicator lyingdownIndicator = new LyingdownIndicator();
+        private StandingDetector standingDetector = new StandingDetector();
+        private SittingDetector sittingDetector = new SittingDetector();
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
-        private AbsentIndicator absentIndicator = new AbsentIndicator();
-
+        private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
@@ -33,7 +31,8 @@ namespace SkeletalTracking
         private TextBlock notification_speaker;
         private Rectangle notification_background_rect;
 
-        private void addMessages() {
+        private void addMessages()
+        {
             this.messageList.Clear();
             this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
             this.messageList.pushMessage(10, 3, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
@@ -68,7 +67,8 @@ namespace SkeletalTracking
             notification_background_rect.Visibility = Visibility.Visible;
         }
 
-        private void remove_message(Message message) {
+        private void remove_message(Message message)
+        {
             notification_text.Visibility = Visibility.Hidden;
             notification_speaker.Visibility = Visibility.Hidden;
             notification_image.Visibility = Visibility.Hidden;
@@ -94,15 +94,22 @@ namespace SkeletalTracking
 
 
             // all detector process skeleton
+
             this.permanentLeaveDetector.processSkeleton(skeleton);
+            this.absentDetector.processSkeleton(skeleton);
+            this.standingDetector.processSkeleton(skeleton);
+            this.sittingDetector.processSkeleton(skeleton);
 
             Target cur = targets[1];
             Target t2 = targets[2];
 
-            Boolean isAbsent = absentIndicator.isPositionDetected(skeleton);
+            Boolean isAbsent = absentDetector.isScenarioDetected();
+            Boolean isStanding = standingDetector.isScenarioDetected();
+            Boolean isSitting = sittingDetector.isScenarioDetected();
+            Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+
             if (isAbsent)
             {
-                Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
                 if (isPermanentlyGone)
                 {
                     Console.WriteLine("I'm permanently gone");
@@ -113,7 +120,7 @@ namespace SkeletalTracking
                     curVid.Stop();
                     curVid.Position = TimeSpan.Zero;
                     curVid.Visibility = Visibility.Hidden;
-                    
+
                 }
                 else
                 {
@@ -132,26 +139,21 @@ namespace SkeletalTracking
                 Console.WriteLine("5 seconds have passed!");
             }
 
-            if (standingIndicator.isPositionDetected(skeleton))
+            if (isStanding)
             {
                 Console.WriteLine("I'm standing!");
                 cur.setTargetText("I'm standing!");
                 curVid.Pause();
                 sw.Stop();
-                
+
             }
-            else if (sittingIndicator.isPositionDetected(skeleton))
+            else if (isSitting)
             {
                 Console.WriteLine("I'm sitting!");
                 cur.setTargetText("Sitting!");
                 curVid.Visibility = Visibility.Visible;
                 curVid.Play();
                 sw.Start();
-            }
-            else if (lyingdownIndicator.isPositionDetected(skeleton))
-            {
-                Console.WriteLine("Lying down!");
-                cur.setTargetText("Lying down!");
             }
             else
             {
@@ -176,7 +178,7 @@ namespace SkeletalTracking
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-            
+
             /* YOUR CODE HERE */
             notification_speaker.Visibility = Visibility.Hidden;
             notification_image.Visibility = Visibility.Hidden;
