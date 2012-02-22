@@ -74,6 +74,10 @@ namespace SkeletalTracking
             //targets[3].setTargetHighlighted();           
         }
 
+        public virtual void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image) 
+        {
+
+        }
         public virtual void addVideo(MediaElement mediaElement1)
         {
 

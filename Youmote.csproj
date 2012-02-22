@@ -115,6 +115,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\heer_profile.jpg" />
+    <Resource Include="Images\tv_logo.png" />
     <Content Include="Video\pixar_short.avi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
