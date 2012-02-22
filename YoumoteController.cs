@@ -29,6 +29,7 @@ namespace SkeletalTracking
         private MediaElement curVid;
         private TextBlock notification_text;
         private Image notification_image;
+        private TextBlock notification_speaker;
 
         public YoumoteController(MainWindow win)
             : base(win)
@@ -85,6 +86,13 @@ namespace SkeletalTracking
                 cur.setTargetText("I'm standing!");
                 curVid.Pause();
                 sw.Stop();
+
+                notification_image.Visibility = Visibility.Visible;
+                notification_text.Visibility = Visibility.Visible;
+                
+                change_speaker_photo("tv_logo.png");
+                notification_text.Text = "SmartTV";
+                notification_text.Text = "You're watching with Jeff!";
             }
             else if (sittingIndicator.isPositionDetected(skeleton))
             {
@@ -94,7 +102,9 @@ namespace SkeletalTracking
                 sw.Start();
                 notification_image.Visibility = Visibility.Visible;
                 notification_text.Visibility = Visibility.Visible;
-                notification_text.Text = "Jeff Heer: Lulz";
+                change_speaker_photo("heer_profile.jpg");
+                notification_speaker.Text = "Jeff Heer";
+                notification_text.Text = "Lulz";
             }
             else if (lyingdownIndicator.isPositionDetected(skeleton))
             {
@@ -126,20 +136,16 @@ namespace SkeletalTracking
         {
             
             /* YOUR CODE HERE */
-            BitmapImage img = new BitmapImage();
-            img.BeginInit();
-            img.UriSource = new Uri("pack://application:,,/Images/heer_profile.jpg");
-            img.EndInit();
-            notification_image.Source = img;
 
             notification_image.Visibility = Visibility.Hidden;
             notification_text.Visibility = Visibility.Hidden;
         }
 
-        public override void addUIElements(TextBlock not_text, Image not_image)
+        public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image)
         {
             notification_text = not_text;
             notification_image = not_image;
+            notification_speaker = not_speaker;
         }
 
         public override void addVideo(MediaElement mediaElement1)
@@ -147,6 +153,14 @@ namespace SkeletalTracking
             curVid = mediaElement1;
         }
 
+        public void change_speaker_photo(String image_name)
+        {
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
+            img.EndInit();
+            notification_image.Source = img;
+        }
         // put your classifier code here as functions that return bool
     }
 }
