@@ -17,15 +17,16 @@ namespace SkeletalTracking
     class YoumoteController : SkeletonController
     {
 
-        private StandingIndicator standingIndicator;
-        private SittingIndicator sittingIndicator;
-        private LyingdownIndicator lyingdownIndicator;
-        private HandOnFaceIndicator onthephoneIndicator;
-        private AbsentIndicator absentIndicator;
-        private PresenceDetector getsUpAndLeavesDetector;
-        private PermanentLeaveDetector permanentLeaveDetector;
+        private StandingIndicator standingIndicator = new StandingIndicator();
+        private SittingIndicator sittingIndicator = new SittingIndicator();
+        private LyingdownIndicator lyingdownIndicator = new LyingdownIndicator();
+        private HandOnFaceIndicator handOnFaceIndicator  = new HandOnFaceIndicator();
+        private AbsentIndicator absentIndicator = new AbsentIndicator();
 
-        private Stopwatch sw;
+        private PermanentLeaveDetector permanentLeaveDetector  = new PermanentLeaveDetector();
+        private MessageList messageList = new MessageList();
+        private Stopwatch sw = new Stopwatch();
+
         private MediaElement curVid;
         private TextBlock notification_text;
         private Image notification_image;
@@ -34,18 +35,18 @@ namespace SkeletalTracking
         public YoumoteController(MainWindow win)
             : base(win)
         {
-            standingIndicator = new StandingIndicator();
-            sittingIndicator = new SittingIndicator();
-            lyingdownIndicator = new LyingdownIndicator();
-            onthephoneIndicator = new HandOnFaceIndicator();
-            this.permanentLeaveDetector = new PermanentLeaveDetector();
-            this.absentIndicator = new AbsentIndicator();
-            sw = new Stopwatch();
+            // repeat for all the messages
+            this.messageList.pushMessage(10, "Jeff", "hi", "imagefile");
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
         {
 
+            List<Message> overdueMessages = this.messageList.removeOverdueMessages(sw.Elapsed.TotalSeconds);
+            foreach (Message message in overdueMessages)
+            {
+                // deal with it charlton :p
+            }
 
             // all detector process skeleton
             this.permanentLeaveDetector.processSkeleton(skeleton);
@@ -73,7 +74,7 @@ namespace SkeletalTracking
                 return;
             }
 
-//            sw.Elapsed.TotalSeconds();
+            
 
             if (sw.Elapsed.TotalSeconds == 5)
             {
@@ -117,7 +118,7 @@ namespace SkeletalTracking
                 cur.setTargetText("Neither!");
             }
 
-            if (onthephoneIndicator.isPositionDetected(skeleton))
+            if (handOnFaceIndicator.isPositionDetected(skeleton))
             {
                 Console.WriteLine("on the phone! \n");
                 t2.setTargetText("Y!");

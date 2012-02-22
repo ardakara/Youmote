@@ -75,6 +75,8 @@
     <Compile Include="Indicators\AbsentIndicator.cs" />
     <Compile Include="Indicators\HandOnFaceIndicator.cs" />
     <Compile Include="Indicators\LyingdownIndicator.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageList.cs" />
     <Compile Include="ScenarioStateIMPL.cs" />
     <Compile Include="ScenarioStateHistory.cs" />
     <Compile Include="Indicators\SittingIndicator.cs" />
