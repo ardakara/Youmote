@@ -36,7 +36,25 @@ namespace SkeletalTracking
             : base(win)
         {
             // repeat for all the messages
-            this.messageList.pushMessage(10, "Jeff", "hi", "imagefile");
+            this.messageList.pushMessage(10, "TV Ninja", "You're watching a Pixar short with Jeff!", "tv_logo.png");
+            this.messageList.pushMessage(20, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
+            this.messageList.pushMessage(50, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
+        }
+
+        private void change_speaker_photo(String image_name)
+        {
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
+            img.EndInit();
+            notification_image.Source = img;
+        }
+
+        private void display_message(Message message)
+        {
+            change_speaker_photo(message.imgFile);
+            notification_text.Text = message.text;
+            notification_speaker.Text = message.speaker;
         }
 
         public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
@@ -91,9 +109,6 @@ namespace SkeletalTracking
                 notification_image.Visibility = Visibility.Visible;
                 notification_text.Visibility = Visibility.Visible;
                 
-                change_speaker_photo("tv_logo.png");
-                notification_text.Text = "SmartTV";
-                notification_text.Text = "You're watching with Jeff!";
             }
             else if (sittingIndicator.isPositionDetected(skeleton))
             {
@@ -103,9 +118,6 @@ namespace SkeletalTracking
                 sw.Start();
                 notification_image.Visibility = Visibility.Visible;
                 notification_text.Visibility = Visibility.Visible;
-                change_speaker_photo("heer_profile.jpg");
-                notification_speaker.Text = "Jeff Heer";
-                notification_text.Text = "Lulz";
             }
             else if (lyingdownIndicator.isPositionDetected(skeleton))
             {
@@ -137,7 +149,7 @@ namespace SkeletalTracking
         {
             
             /* YOUR CODE HERE */
-
+            notification_speaker.Visibility = Visibility.Hidden;
             notification_image.Visibility = Visibility.Hidden;
             notification_text.Visibility = Visibility.Hidden;
         }
@@ -154,14 +166,6 @@ namespace SkeletalTracking
             curVid = mediaElement1;
         }
 
-        public void change_speaker_photo(String image_name)
-        {
-            BitmapImage img = new BitmapImage();
-            img.BeginInit();
-            img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
-            img.EndInit();
-            notification_image.Source = img;
-        }
         // put your classifier code here as functions that return bool
     }
 }

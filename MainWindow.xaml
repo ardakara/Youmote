@@ -52,10 +52,10 @@
         </TextBlock>
         <Label Canvas.Left="0" Canvas.Top="0" Content="Current Controller:" Height="28" Name="label1" Width="108" />
         <Label Canvas.Left="103" Canvas.Top="0" Content="YouMote" Height="26" Name="controllerText" Width="140" />
-        <TextBlock Name="notification_text" Text=""
-           Height="110"
+        <TextBlock Name="notification_text" Text="Hahahahahahah."
+           Height="39"
            Width="347"
-           Padding="10,0,0,0" Canvas.Left="908" Canvas.Top="62" FontSize="18">
+           Padding="10,0,0,0" Canvas.Left="908" Canvas.Top="99" FontSize="18">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -66,10 +66,10 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <TextBlock Name="notification_speaker" Text=""
-           Height="28"
-           Width="97"
-           Padding="5,0,0,0" Canvas.Left="805" Canvas.Top="144" FontSize="20">
+        <TextBlock Name="notification_speaker" Text="First L:"
+           Height="22"
+           Width="118"
+           Padding="5,0,0,0" Canvas.Left="908" Canvas.Top="62" FontSize="18">
           <TextBlock.Background>
             <VisualBrush>
               <VisualBrush.Visual>
@@ -80,6 +80,6 @@
             </VisualBrush>
           </TextBlock.Background>
         </TextBlock>
-        <Image Canvas.Left="805" Canvas.Top="62" Height="76" Name="notification_image" Stretch="Fill" Width="97" />
+        <Image Canvas.Left="836" Canvas.Top="62" Height="76" Name="notification_image" Stretch="Fill" Width="66" />
     </Canvas>
 </Window>
