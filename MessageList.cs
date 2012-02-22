@@ -7,35 +7,56 @@ namespace SkeletalTracking
 {
     public class MessageList
     {
-        List<Message> messages = new List<Message>();
+        List<Message> runningMessages = new List<Message>();
+        List<Message> queuedMessages = new List<Message>();
 
         public void pushMessage(Message m)
         {
-            this.messages.Add(m);
+            this.queuedMessages.Add(m);
         }
 
         public void pushMessage(double time, String speaker, String text, String imgFile)
         {
-            this.pushMessage(new Message(time, speaker,text, imgFile));
+            this.pushMessage(new Message(time, speaker, text, imgFile));
         }
 
-        public List<Message> removeOverdueMessages(double time)
+
+        public List<Message> popReadyMessages(double time)
         {
-            List<Message> overdueMessages = new List<Message>();
-            foreach (Message message in this.messages)
+            List<Message> readyMessages = new List<Message>();
+            foreach (Message message in this.queuedMessages)
             {
                 if (message.time > time)
                 {
-                    overdueMessages.Add(message);
+                    readyMessages.Add(message);
                 }
             }
-            foreach (Message message in overdueMessages)
+            foreach (Message message in readyMessages)
             {
-                this.messages.Remove(message);
+                this.queuedMessages.Remove(message);
+                this.runningMessages.Add(message);
             }
-            return overdueMessages;
+            return readyMessages;
         }
 
- 
+        public List<Message> popFinishedMessages()
+        {
+            List<Message> finishedMessages = new List<Message>();
+            foreach (Message message in this.runningMessages)
+            {
+                if (message.isFinished())
+                {
+                    finishedMessages.Add(message);
+                }
+            }
+            foreach (Message message in finishedMessages)
+            {
+                this.runningMessages.Remove(message);
+            }
+            return finishedMessages;
+        }
+
+
+
     }
 }
