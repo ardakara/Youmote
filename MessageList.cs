@@ -15,9 +15,9 @@ namespace SkeletalTracking
             this.queuedMessages.Add(m);
         }
 
-        public void pushMessage(double time, String speaker, String text, String imgFile)
+        public void pushMessage(double time, double duration,String speaker, String text, String imgFile)
         {
-            this.pushMessage(new Message(time, speaker, text, imgFile));
+            this.pushMessage(new Message(time, duration, speaker, text, imgFile));
         }
 
 

@@ -36,9 +36,9 @@ namespace SkeletalTracking
             : base(win)
         {
             // repeat for all the messages
-            this.messageList.pushMessage(10, "TV Ninja", "You're watching a Pixar short with Jeff!", "tv_logo.png");
-            this.messageList.pushMessage(20, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(50, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
+            this.messageList.pushMessage(10, 3,"TV Ninja", "You're watching a Pixar short with Jeff!", "tv_logo.png");
+            this.messageList.pushMessage(20, 3,"Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
+            this.messageList.pushMessage(50, 3,"Jeff H.", "Bwahahahha", "heer_profile.jpg");
         }
 
         private void change_speaker_photo(String image_name)
@@ -73,16 +73,16 @@ namespace SkeletalTracking
             List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
             foreach (Message message in readyMessages)
             {
-                message.startMessageViewing();
                 display_message(message);
+                message.startMessageTimer();
                 // deal with it charlton :p
             }
 
             List<Message> finishedMessages = this.messageList.popFinishedMessages();
             foreach (Message message in finishedMessages)
             {
-                message.stopMessageViewing();
                 remove_message(message);
+                message.stopMessageTimer();
                 // deal with it charlton :p
             }
 
