@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
@@ -16,6 +16,6 @@ namespace SkeletalTracking
         /// </summary>
         /// <param name="skeleton"></param>
         /// <returns></returns>
-        Boolean isPositionDetected(SkeletonData skeleton);
+        Boolean isPositionDetected(Skeleton skeleton);
     }
 }

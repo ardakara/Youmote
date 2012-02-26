@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
@@ -27,7 +27,7 @@ namespace SkeletalTracking
         //and manipulate its state and position, as well as hide/show it (see class defn. below).
         //It is indexed from 1, thus you can retrieve an individual target with the expression
         //targets[3], which would retrieve the target labeled "3" on screen.
-        public virtual void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
+        public virtual void processSkeletonFrame(Skeleton skeleton, Dictionary<int, Target> targets)
         {
 
             /*Example implementation*/
@@ -38,8 +38,8 @@ namespace SkeletalTracking
                 int targetID = cur.id; //ID in range [1..5]
 
                 //Scale the joints to the size of the window
-                Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
-                Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                Joint leftHand = skeleton.Joints[JointType.HandLeft].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                Joint rightHand = skeleton.Joints[JointType.HandRight].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
                 
                 //Calculate how far our left hand is from the target in both x and y directions
                 double deltaX_left = Math.Abs(leftHand.Position.X - cur.getXPosition());

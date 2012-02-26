@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Indicators;
 namespace SkeletalTracking
@@ -22,7 +22,7 @@ namespace SkeletalTracking
         public abstract Boolean isScenarioDetected();
         
 
-        public void processSkeleton(SkeletonData skeleton)
+        public void processSkeleton(Skeleton skeleton)
         {
             Boolean isAbsent = this._absentIndicator.isPositionDetected(skeleton);
             if (isAbsent)

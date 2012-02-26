@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
@@ -28,6 +28,6 @@ namespace SkeletalTracking
 /// It then adds this state to its history of states.
 /// </summary>
 /// <param name="skeleton"></param>
-void processSkeleton(SkeletonData skeleton);
+void processSkeleton(Skeleton skeleton);
     }
 }

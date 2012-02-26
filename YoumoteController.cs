@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Diagnostics;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Detectors;
 using SkeletalTracking.Indicators;
@@ -75,7 +75,7 @@ namespace SkeletalTracking
             notification_background_rect.Visibility = Visibility.Hidden;
         }
 
-        public override void processSkeletonFrame(SkeletonData skeleton, Dictionary<int, Target> targets)
+        public override void processSkeletonFrame(Skeleton skeleton, Dictionary<int, Target> targets)
         {
 
             List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -189,7 +189,5 @@ namespace SkeletalTracking
         {
             curVid = mediaElement1;
         }
-
-        // put your classifier code here as functions that return bool
     }
 }

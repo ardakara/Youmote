@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Research.Kinect.Nui;
+using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
@@ -42,16 +42,16 @@ namespace SkeletalTracking
             }
         }
 
-        public Boolean isPositionDetected(SkeletonData skeleton)
+        public Boolean isPositionDetected(Skeleton skeleton)
         {
             if (skeleton == null)
             {
                 return false;
             }
-            Joint hipCenter = skeleton.Joints[JointID.HipCenter];
-            Joint head = skeleton.Joints[JointID.Head];
-            Joint leftKnee = skeleton.Joints[JointID.KneeLeft];
-            Joint rightKnee = skeleton.Joints[JointID.KneeRight];
+            Joint hipCenter = skeleton.Joints[JointType.HipCenter];
+            Joint head = skeleton.Joints[JointType.Head];
+            Joint leftKnee = skeleton.Joints[JointType.KneeLeft];
+            Joint rightKnee = skeleton.Joints[JointType.KneeRight];
 
             double hipToHeadX = head.Position.X - hipCenter.Position.X;
             double hipToHeadY = head.Position.Y - hipCenter.Position.Y;

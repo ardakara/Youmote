@@ -1,27 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Research.Kinect.Nui;
-using Coding4Fun.Kinect.Wpf; 
+﻿/* Migration to SDK v1.0
+ * TODO:
+ * - if the current video image doesn't work, go back to ToBitmapSource();
+ */
 
 namespace SkeletalTracking
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Navigation;
+    using System.Windows.Shapes;
+    using Microsoft.Kinect;
+    using Coding4Fun.Kinect.Wpf;
+    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-    
-
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -29,8 +32,8 @@ namespace SkeletalTracking
             InitializeComponent();
         }
 
-        //Kinect Runtime
-        Runtime nui;
+        //Kinect Sensor
+        KinectSensor nui;
 
         //Targets and skeleton controller
         YoumoteController youmoteController;
@@ -41,18 +44,22 @@ namespace SkeletalTracking
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
         MediaElement curVid;
 
+        private byte[] pixelData;
+        private WriteableBitmap outputImage;
+
+        Skeleton[] skeletons;
+
         //Scaling constants
         public float k_xMaxJointScale = 3.0f;
         public float k_yMaxJointScale = 3.0f;
+        private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
 
-        int i;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetupKinect();
             youmoteController = new YoumoteController(this);
             currentController = youmoteController;
             InitTargets();
-            i = 0;
         }
         
         private void InitTargets()
@@ -72,87 +79,116 @@ namespace SkeletalTracking
 
         private void SetupKinect()
         {
-            if (Runtime.Kinects.Count == 0)
+            if (KinectSensor.KinectSensors.Count == 0)
             {
                 this.Title = "No Kinect connected"; 
             }
             else
             {
                 //use first Kinect
-                nui = Runtime.Kinects[0];
+                nui = KinectSensor.KinectSensors[0];
 
                 //Initialize to do skeletal tracking
-                nui.Initialize(RuntimeOptions.UseSkeletalTracking | RuntimeOptions.UseColor | RuntimeOptions.UseDepthAndPlayerIndex);
+                nui.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+                nui.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
+                nui.SkeletonStream.Enable(new TransformSmoothParameters()
+                {
+                    Smoothing = 0.5f,
+                    Correction = 0.5f,
+                    Prediction = 0.5f,
+                    JitterRadius = 0.05f,
+                    MaxDeviationRadius = 0.04f
+                });
+                nui.Start();
 
                 //add event to receive skeleton data
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
 
                 //add event to receive video data
-                nui.VideoFrameReady += new EventHandler<ImageFrameReadyEventArgs>(nui_VideoFrameReady);
-
-                //to experiment, toggle TransformSmooth between true & false and play with parameters            
-                nui.SkeletonEngine.TransformSmooth = true;
-                TransformSmoothParameters parameters = new TransformSmoothParameters();
-                // parameters used to smooth the skeleton data
-                parameters.Smoothing = 0.3f;
-                parameters.Correction = 0.3f;
-                parameters.Prediction = 0.4f;
-                parameters.JitterRadius = 0.7f;
-                parameters.MaxDeviationRadius = 0.2f;
-                nui.SkeletonEngine.SmoothParameters = parameters;
-
-                //Open the video stream
-                nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution1280x1024, ImageType.Color);
+                this.outputImage = new WriteableBitmap(
+                            Convert.ToInt32(image1.Width),
+                            Convert.ToInt32(image1.Height),
+                            96,  // DpiX
+                            96,  // DpiY
+                            PixelFormats.Bgr32,
+                            null);
+                image1.Source = this.outputImage; 
+                nui.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(nui_VideoFrameReady);
                 
                 //Force video to the background
                 Canvas.SetZIndex(image1, -10000);
             }
         }
 
-        void nui_VideoFrameReady(object sender, ImageFrameReadyEventArgs e)
+        void nui_VideoFrameReady(object sender, ColorImageFrameReadyEventArgs e)
         {
-            //Automagically create BitmapSource for Video
-            image1.Source = e.ImageFrame.ToBitmapSource();            
+            using (ColorImageFrame imageFrame = e.OpenColorImageFrame())
+            {
+                if (this.pixelData == null)
+                {
+                    this.pixelData = new byte[imageFrame.PixelDataLength];
+                }
+
+                imageFrame.CopyPixelDataTo(this.pixelData);
+                this.outputImage.WritePixels(
+                    new Int32Rect(0, 0, Convert.ToInt32(image1.Width), Convert.ToInt32(image1.Height)),
+                    this.pixelData,
+                    Convert.ToInt32(image1.Width) * Bgr32BytesPerPixel,
+                    0); 
+            }          
         }
 
         void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
-            
-            SkeletonFrame allSkeletons = e.SkeletonFrame;
-
-            //get the first tracked skeleton
-            SkeletonData skeleton = (from s in allSkeletons.Skeletons
-                                     where s.TrackingState == SkeletonTrackingState.Tracked
-                                     select s).FirstOrDefault();
-
-
-            if(skeleton != null)
+            bool receivedData = false;
+            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
-                //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
-                SetEllipsePosition(headEllipse, skeleton.Joints[JointID.Head]);
-                SetEllipsePosition(leftEllipse, skeleton.Joints[JointID.HandLeft]);
-                SetEllipsePosition(rightEllipse, skeleton.Joints[JointID.HandRight]);
-                SetEllipsePosition(shoulderCenter, skeleton.Joints[JointID.ShoulderCenter]);
-                SetEllipsePosition(shoulderRight, skeleton.Joints[JointID.ShoulderRight]);
-                SetEllipsePosition(shoulderLeft, skeleton.Joints[JointID.ShoulderLeft]);
-                SetEllipsePosition(ankleRight, skeleton.Joints[JointID.AnkleRight]);
-                SetEllipsePosition(ankleLeft, skeleton.Joints[JointID.AnkleLeft]);
-                SetEllipsePosition(footLeft, skeleton.Joints[JointID.FootLeft]);
-                SetEllipsePosition(footRight, skeleton.Joints[JointID.FootRight]);
-                SetEllipsePosition(wristLeft, skeleton.Joints[JointID.WristLeft]);
-                SetEllipsePosition(wristRight, skeleton.Joints[JointID.WristRight]);
-                SetEllipsePosition(elbowLeft, skeleton.Joints[JointID.ElbowLeft]);
-                SetEllipsePosition(elbowRight, skeleton.Joints[JointID.ElbowRight]);
-                SetEllipsePosition(ankleLeft, skeleton.Joints[JointID.AnkleLeft]);
-                SetEllipsePosition(footLeft, skeleton.Joints[JointID.FootLeft]);
-                SetEllipsePosition(footRight, skeleton.Joints[JointID.FootRight]);
-                SetEllipsePosition(wristLeft, skeleton.Joints[JointID.WristLeft]);
-                SetEllipsePosition(wristRight, skeleton.Joints[JointID.WristRight]);
-                SetEllipsePosition(kneeLeft, skeleton.Joints[JointID.KneeLeft]);
-                SetEllipsePosition(kneeRight, skeleton.Joints[JointID.KneeRight]);
-                SetEllipsePosition(hipCenter, skeleton.Joints[JointID.HipCenter]);
+                if (skeletonFrame != null)
+                {
+                    if (skeletons == null)
+                    {
+                        skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+                    }
+                    receivedData = true;
+                }
+
+                if (receivedData)
+                {
+                    //get the first tracked skeleton
+                    Skeleton skeleton = (from s in skeletons
+                                         where s.TrackingState == SkeletonTrackingState.Tracked
+                                         select s).FirstOrDefault();
+
+
+                    if (skeleton != null)
+                    {
+                        //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
+                        SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
+                        SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
+                        SetEllipsePosition(rightEllipse, skeleton.Joints[JointType.HandRight]);
+                        SetEllipsePosition(shoulderCenter, skeleton.Joints[JointType.ShoulderCenter]);
+                        SetEllipsePosition(shoulderRight, skeleton.Joints[JointType.ShoulderRight]);
+                        SetEllipsePosition(shoulderLeft, skeleton.Joints[JointType.ShoulderLeft]);
+                        SetEllipsePosition(ankleRight, skeleton.Joints[JointType.AnkleRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(elbowLeft, skeleton.Joints[JointType.ElbowLeft]);
+                        SetEllipsePosition(elbowRight, skeleton.Joints[JointType.ElbowRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
+                        SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
+                        SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+                    }
+                    currentController.processSkeletonFrame(skeleton, targets);
+                }
             }
-                currentController.processSkeletonFrame(skeleton, targets);
         }
 
         private void SetEllipsePosition(Ellipse ellipse, Joint joint)
@@ -162,7 +198,7 @@ namespace SkeletalTracking
             Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2 );
             Canvas.SetTop(ellipse, scaledJoint.Position.Y - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
             Canvas.SetZIndex(ellipse, (int) -Math.Floor(scaledJoint.Position.Z*100));
-            if (joint.ID == JointID.HandLeft || joint.ID == JointID.HandRight)
+            if (joint.JointType == JointType.HandLeft || joint.JointType == JointType.HandRight)
             {   
                 byte val = (byte)(Math.Floor((joint.Position.Z - 0.8)* 255 / 2));
                 ellipse.Fill = new SolidColorBrush(Color.FromRgb(val, val, val));
@@ -174,7 +210,7 @@ namespace SkeletalTracking
         private void Window_Closed(object sender, EventArgs e)
         {
             //Cleanup
-            nui.Uninitialize();
+            nui.Stop();
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
