@@ -96,73 +96,73 @@ namespace SkeletalTracking
             // all detector process skeleton
 
             this.permanentLeaveDetector.processSkeleton(skeleton);
-            this.absentDetector.processSkeleton(skeleton);
+            //this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
-            this.sittingDetector.processSkeleton(skeleton);
+            //this.sittingDetector.processSkeleton(skeleton);
 
-            Target cur = targets[1];
-            Target t2 = targets[2];
+            //Target cur = targets[1];
+            //Target t2 = targets[2];
 
-            Boolean isAbsent = absentDetector.isScenarioDetected();
-            Boolean isStanding = standingDetector.isScenarioDetected();
-            Boolean isSitting = sittingDetector.isScenarioDetected();
-            Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+            //Boolean isAbsent = absentDetector.isScenarioDetected();
+            //Boolean isStanding = standingDetector.isScenarioDetected();
+            //Boolean isSitting = sittingDetector.isScenarioDetected();
+            //Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
 
-            if (isAbsent)
-            {
-                if (isPermanentlyGone)
-                {
-                    Console.WriteLine("I'm permanently gone");
-                    cur.setTargetText("I'm permanently gone");
-                    this.messageList.Clear();
-                    addMessages();
-                    sw.Reset();
-                    curVid.Stop();
-                    curVid.Position = TimeSpan.Zero;
-                    curVid.Visibility = Visibility.Hidden;
+            //if (isAbsent)
+            //{
+            //    if (isPermanentlyGone)
+            //    {
+            //        Console.WriteLine("I'm permanently gone");
+            //        cur.setTargetText("I'm permanently gone");
+            //        this.messageList.Clear();
+            //        addMessages();
+            //        sw.Reset();
+            //        curVid.Stop();
+            //        curVid.Position = TimeSpan.Zero;
+            //        curVid.Visibility = Visibility.Hidden;
 
-                }
-                else
-                {
+            //    }
+            //    else
+            //    {
 
-                    Console.WriteLine("I'm off screen");
-                    cur.setTargetText("I'm off screen");
+            //        Console.WriteLine("I'm off screen");
+            //        cur.setTargetText("I'm off screen");
 
-                }
+            //    }
 
-            }
-            else if (isStanding)
-            {
-                Console.WriteLine("I'm standing!");
-                cur.setTargetText("I'm standing!");
-                curVid.Pause();
-                sw.Stop();
+            //}
+            //else if (isStanding)
+            //{
+            //    Console.WriteLine("I'm standing!");
+            //    cur.setTargetText("I'm standing!");
+            //    curVid.Pause();
+            //    sw.Stop();
 
-            }
-            else if (isSitting)
-            {
-                Console.WriteLine("I'm sitting!");
-                cur.setTargetText("Sitting!");
-                curVid.Visibility = Visibility.Visible;
-                curVid.Play();
-                sw.Start();
-            }
-            else
-            {
-                Console.WriteLine("Neither sitting nor standing!");
-                cur.setTargetText("Neither!");
-            }
+            //}
+            //else if (isSitting)
+            //{
+            //    Console.WriteLine("I'm sitting!");
+            //    cur.setTargetText("Sitting!");
+            //    curVid.Visibility = Visibility.Visible;
+            //    curVid.Play();
+            //    sw.Start();
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Neither sitting nor standing!");
+            //    cur.setTargetText("Neither!");
+            //}
 
-            if (handOnFaceIndicator.isPositionDetected(skeleton))
-            {
-                Console.WriteLine("on the phone! \n");
-                t2.setTargetText("Y!");
-            }
-            else
-            {
-                Console.WriteLine("not on the phone!");
-                t2.setTargetText("N!");
-            }
+            //if (handOnFaceIndicator.isPositionDetected(skeleton))
+            //{
+            //    Console.WriteLine("on the phone! \n");
+            //    t2.setTargetText("Y!");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("not on the phone!");
+            //    t2.setTargetText("N!");
+            //}
 
             /* we'll call them here */
 

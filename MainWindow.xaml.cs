@@ -1,6 +1,10 @@
 ﻿/* Migration to SDK v1.0
  * TODO:
  * - if the current video image doesn't work, go back to ToBitmapSource();
+ * 
+ * Help sources:
+ * - http://robrelyea.wordpress.com/2012/02/01/k4w-code-migration-from-beta2-to-v1-0-managed/
+ * - http://robrelyea.wordpress.com/2012/02/01/k4w-details-of-api-changes-from-beta2-to-v1-managed/#_KinectSensor_discovery
  */
 
 namespace SkeletalTracking
@@ -43,9 +47,6 @@ namespace SkeletalTracking
        
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
         MediaElement curVid;
-
-        private byte[] pixelData;
-        private WriteableBitmap outputImage;
 
         Skeleton[] skeletons;
 
@@ -105,14 +106,6 @@ namespace SkeletalTracking
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
 
                 //add event to receive video data
-                this.outputImage = new WriteableBitmap(
-                            Convert.ToInt32(image1.Width),
-                            Convert.ToInt32(image1.Height),
-                            96,  // DpiX
-                            96,  // DpiY
-                            PixelFormats.Bgr32,
-                            null);
-                image1.Source = this.outputImage; 
                 nui.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(nui_VideoFrameReady);
                 
                 //Force video to the background
@@ -124,17 +117,10 @@ namespace SkeletalTracking
         {
             using (ColorImageFrame imageFrame = e.OpenColorImageFrame())
             {
-                if (this.pixelData == null)
+                if (imageFrame != null)
                 {
-                    this.pixelData = new byte[imageFrame.PixelDataLength];
+                    image1.Source = imageFrame.ToBitmapSource();
                 }
-
-                imageFrame.CopyPixelDataTo(this.pixelData);
-                this.outputImage.WritePixels(
-                    new Int32Rect(0, 0, Convert.ToInt32(image1.Width), Convert.ToInt32(image1.Height)),
-                    this.pixelData,
-                    Convert.ToInt32(image1.Width) * Bgr32BytesPerPixel,
-                    0); 
             }          
         }
 
@@ -145,17 +131,18 @@ namespace SkeletalTracking
             {
                 if (skeletonFrame != null)
                 {
-                    if (skeletons == null)
+                    if (this.skeletons == null || this.skeletons.Length != skeletonFrame.SkeletonArrayLength)
                     {
-                        skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
+                        this.skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
                     }
                     receivedData = true;
                 }
 
                 if (receivedData)
                 {
+                    skeletonFrame.CopySkeletonDataTo(this.skeletons);
                     //get the first tracked skeleton
-                    Skeleton skeleton = (from s in skeletons
+                    Skeleton skeleton = (from s in this.skeletons
                                          where s.TrackingState == SkeletonTrackingState.Tracked
                                          select s).FirstOrDefault();
 
@@ -185,8 +172,8 @@ namespace SkeletalTracking
                         SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
                         SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
                         SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+                        currentController.processSkeletonFrame(skeleton, targets);
                     }
-                    currentController.processSkeletonFrame(skeleton, targets);
                 }
             }
         }
