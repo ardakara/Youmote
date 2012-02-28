@@ -14,11 +14,9 @@ namespace SkeletalTracking.Detectors
             List<ScenarioStateIMPL> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;
 
-            Console.WriteLine("********* CHECKING RECENT STATES *************");
             for (int i = 0; i < recentStates.Count; i++)
             {
                 ScenarioStateIMPL state = recentStates[i];
-                Console.WriteLine(i + ":" + state.ToString());
             }
             return isDetected;
         }

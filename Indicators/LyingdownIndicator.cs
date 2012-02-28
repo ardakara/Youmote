@@ -31,10 +31,6 @@ namespace SkeletalTracking
 
             if (Math.Abs(hipY - headY) < 0.15)
             {
-                Console.WriteLine("HipY - HeadY = " + Math.Abs(hipY - headY));
-                Console.WriteLine("hipY - leftKneeY = " + Math.Abs(hipY - leftKneeY));
-                Console.WriteLine("hipY - rightKneeY = " + Math.Abs(hipY - rightKneeY));
-
                 if (Math.Abs(hipY - leftKneeY) < 0.15 || Math.Abs(hipY - rightKneeY) < 0.15)
                 {
                     return true;
