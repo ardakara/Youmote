@@ -20,7 +20,7 @@ namespace SkeletalTracking
         }
 
         public abstract Boolean isScenarioDetected();
-        
+
 
         public void processSkeleton(Skeleton skeleton)
         {

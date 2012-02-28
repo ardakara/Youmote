@@ -17,7 +17,7 @@ namespace SkeletalTracking
 
         private double magnitude(double x, double y, double z)
         {
-            return Math.Sqrt( Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2) );
+            return Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
         }
 
         private double calculateAngle(double x1, double y1, double z1, double x2, double y2, double z2)
@@ -48,6 +48,7 @@ namespace SkeletalTracking
             {
                 return false;
             }
+
             Joint hipCenter = skeleton.Joints[JointType.HipCenter];
             Joint head = skeleton.Joints[JointType.Head];
             Joint leftKnee = skeleton.Joints[JointType.KneeLeft];
@@ -67,9 +68,6 @@ namespace SkeletalTracking
 
             double headToLeftKnee_degrees = calculateAngle(hipToHeadX, hipToHeadY, hipToHeadZ, hipToLeftKneeX, hipToLeftKneeY, hipToLeftKneeZ);
             double headToRightKnee_degrees = calculateAngle(hipToHeadX, hipToHeadY, hipToHeadZ, hipToRightKneeX, hipToRightKneeY, hipToRightKneeZ);
-
-            Console.WriteLine("Head to left knee degrees: " + headToLeftKnee_degrees);
-            Console.WriteLine("head to right knee degrees: " + headToRightKnee_degrees);
 
             if (isRecliningAngle(headToLeftKnee_degrees) || isRecliningAngle(headToRightKnee_degrees))
             {

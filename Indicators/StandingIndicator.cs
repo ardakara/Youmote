@@ -34,8 +34,6 @@ namespace SkeletalTracking
             double rightKneeZ = rightKnee.Position.Z;
             double deltaKneeZ = Math.Min(Math.Abs(hipZ - leftKneeZ), Math.Abs(hipZ - rightKneeZ));
 
-            Console.WriteLine("deltaLeftKneeZ: " + deltaKneeZ);
-
             if ( deltaKneeZ < 0.075 && deltaX < 0.25)
             {
                 return true;

@@ -125,7 +125,6 @@ namespace SkeletalTracking
 
 
             // all detector process skeleton
-
             //this.permanentLeaveDetector.processSkeleton(skeleton);
             //this.absentDetector.processSkeleton(skeleton);
             //this.standingDetector.processSkeleton(skeleton);
@@ -194,6 +193,68 @@ namespace SkeletalTracking
             //    Console.WriteLine("not on the phone!");
             //    t2.setTargetText("N!");
             //}
+            this.permanentLeaveDetector.processSkeleton(skeleton);
+            this.absentDetector.processSkeleton(skeleton);
+            this.standingDetector.processSkeleton(skeleton);
+            this.sittingDetector.processSkeleton(skeleton);
+
+            Target cur = targets[1];
+            Target t2 = targets[2];
+
+            Boolean isAbsent = absentDetector.isScenarioDetected();
+            Boolean isStanding = standingDetector.isScenarioDetected();
+            Boolean isSitting = sittingDetector.isScenarioDetected();
+            Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+
+            if (isAbsent)
+            {
+                if (isPermanentlyGone)
+                {
+                    cur.setTargetText("I'm permanently gone");
+                    this.messageList.Clear();
+                    addMessages();
+                    sw.Reset();
+                    curVid.Stop();
+                    curVid.Position = TimeSpan.Zero;
+                    curVid.Visibility = Visibility.Hidden;
+
+                }
+                else
+                {
+
+                    cur.setTargetText("I'm off screen");
+
+                }
+
+            }
+            else if (isStanding)
+            {
+                cur.setTargetText("I'm standing!");
+                curVid.Pause();
+                sw.Stop();
+
+            }
+            else if (isSitting)
+            {
+                cur.setTargetText("Sitting!");
+                curVid.Visibility = Visibility.Visible;
+                curVid.Play();
+                sw.Start();
+            }
+            else
+            {
+                cur.setTargetText("Neither!");
+            }
+
+            if (handOnFaceIndicator.isPositionDetected(skeleton))
+            {
+                t2.setTargetText("Y!");
+            }
+            else
+            {
+                t2.setTargetText("N!");
+            }
+>>>>>>> 3d9e846c5d69a7e14b0a8ed2ce7ae8274dc9ff09
 
             /* we'll call them here */
 

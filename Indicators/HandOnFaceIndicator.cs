@@ -28,9 +28,6 @@ namespace SkeletalTracking
             double rightHandDistance = magnitude(rightHand.Position.X - head.Position.X, rightHand.Position.Y - head.Position.Y, rightHand.Position.Z - head.Position.Z);
             double leftHandDistance = magnitude(leftHand.Position.X - head.Position.X, leftHand.Position.Y - head.Position.Y, leftHand.Position.Z - head.Position.Z);
 
-            Console.WriteLine("Right hand distance: " + rightHandDistance);
-            Console.WriteLine("Left hand distance: " + leftHandDistance);
-
             if (rightHandDistance < 0.25 || leftHandDistance < 0.25)
             {
                 return true;
