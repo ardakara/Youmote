@@ -254,7 +254,6 @@ namespace SkeletalTracking
             {
                 t2.setTargetText("N!");
             }
->>>>>>> 3d9e846c5d69a7e14b0a8ed2ce7ae8274dc9ff09
 
             /* we'll call them here */
 
