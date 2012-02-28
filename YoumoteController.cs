@@ -36,14 +36,11 @@ namespace SkeletalTracking
 
         //using the Toolkit
         SwipeGestureDetector swipeGestureRecognizer;
-        TemplatedGestureDetector circleGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
-        AudioStreamManager audioManager;
-        SkeletonDisplayManager skeletonDisplayManager;
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
-        TemplatedPostureDetector templatePostureDetector;
+        //TemplatedPostureDetector templatePostureDetector = new TemplatedPostureDetector();
         private bool recordNextFrameForPosture;
         bool displayDepth;
 
@@ -60,12 +57,24 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
+            swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
         }
 
         void OnGestureDetected(string gesture)
         {
-            Console.WriteLine("You swiped!!!!");
+            if (gesture == "SwipeToLeft")
+            {
+                Console.WriteLine("You swiped to the left!");
+            }
+            else if (gesture == "SwipeToRight")
+            {
+                Console.WriteLine("To the RIGHT you swiped!");
+            }
+            else
+            {
+                Console.WriteLine("nothin");
+            }
         }
 
         private void change_speaker_photo(String image_name)
@@ -188,27 +197,30 @@ namespace SkeletalTracking
 
             /* we'll call them here */
 
-            barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
-            if (!barycenterHelper.IsStable(skeleton.TrackingId))
-                return;
-
-            foreach (Joint joint in skeleton.Joints)
+            if (skeleton != null)
             {
-                if (joint.TrackingState != JointTrackingState.Tracked)
-                    continue;
+                barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
+                if (!barycenterHelper.IsStable(skeleton.TrackingId))
+                    return;
 
-                if (joint.JointType == JointType.HandRight)
+                foreach (Joint joint in skeleton.Joints)
                 {
-                    swipeGestureRecognizer.Add(joint.Position, nui);
-                }
-            }
+                    if (joint.TrackingState != JointTrackingState.Tracked)
+                        continue;
 
-            algorithmicPostureRecognizer.TrackPostures(skeleton);
-            templatePostureDetector.TrackPostures(skeleton);
+                    if (joint.JointType == JointType.HandRight)
+                    {
+                        swipeGestureRecognizer.Add(joint.Position, nui);
+                    }
+                }
+            
+                algorithmicPostureRecognizer.TrackPostures(skeleton);
+            }
+            //templatePostureDetector.TrackPostures(skeleton);
 
             if (recordNextFrameForPosture)
             {
-                templatePostureDetector.AddTemplate(skeleton);
+                //templatePostureDetector.AddTemplate(skeleton);
                 recordNextFrameForPosture = false;
             }
 
