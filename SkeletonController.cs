@@ -30,38 +30,39 @@ namespace SkeletalTracking
         //targets[3], which would retrieve the target labeled "3" on screen.
         public virtual void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-
-            /*Example implementation*/
-
-            foreach (var target in targets)
+            if (skeleton != null)
             {
-                Target cur = target.Value;
-                int targetID = cur.id; //ID in range [1..5]
+                /*Example implementation*/
 
-                //Scale the joints to the size of the window
-                Joint leftHand = skeleton.Joints[JointType.HandLeft].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
-                Joint rightHand = skeleton.Joints[JointType.HandRight].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
-                
-                //Calculate how far our left hand is from the target in both x and y directions
-                double deltaX_left = Math.Abs(leftHand.Position.X - cur.getXPosition());
-                double deltaY_left = Math.Abs(leftHand.Position.Y - cur.getYPosition());
-
-                //Calculate how far our right hand is from the target in both x and y directions
-                double deltaX_right = Math.Abs(rightHand.Position.X - cur.getXPosition());
-                double deltaY_right = Math.Abs(rightHand.Position.Y - cur.getYPosition());
-
-                //If we have a hit in a reasonable range, highlight the target
-                if (deltaX_left < 15 && deltaY_left < 15 || deltaX_right < 15 && deltaY_right < 15)
+                foreach (var target in targets)
                 {
-                    cur.setTargetSelected();
-                    cur.setTargetText("Hello there!");
-                }
-                else
-                {
-                    cur.setTargetUnselected();
+                    Target cur = target.Value;
+                    int targetID = cur.id; //ID in range [1..5]
+
+                    //Scale the joints to the size of the window
+                    Joint leftHand = skeleton.Joints[JointType.HandLeft].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
+                    Joint rightHand = skeleton.Joints[JointType.HandRight].ScaleTo(1280, 1024, window.k_xMaxJointScale, window.k_yMaxJointScale);
+
+                    //Calculate how far our left hand is from the target in both x and y directions
+                    double deltaX_left = Math.Abs(leftHand.Position.X - cur.getXPosition());
+                    double deltaY_left = Math.Abs(leftHand.Position.Y - cur.getYPosition());
+
+                    //Calculate how far our right hand is from the target in both x and y directions
+                    double deltaX_right = Math.Abs(rightHand.Position.X - cur.getXPosition());
+                    double deltaY_right = Math.Abs(rightHand.Position.Y - cur.getYPosition());
+
+                    //If we have a hit in a reasonable range, highlight the target
+                    if (deltaX_left < 15 && deltaY_left < 15 || deltaX_right < 15 && deltaY_right < 15)
+                    {
+                        cur.setTargetSelected();
+                        cur.setTargetText("Hello there!");
+                    }
+                    else
+                    {
+                        cur.setTargetUnselected();
+                    }
                 }
             }
-
         }
 
         //This is called when the controller becomes active. This allows you to place your targets and do any 
