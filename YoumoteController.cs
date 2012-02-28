@@ -12,6 +12,9 @@ using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Detectors;
 using SkeletalTracking.Indicators;
+using Kinect.Toolbox;
+using WinRectangle = System.Windows.Shapes.Rectangle;
+
 namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
@@ -29,7 +32,17 @@ namespace SkeletalTracking
         private TextBlock notification_text;
         private Image notification_image;
         private TextBlock notification_speaker;
-        private Rectangle notification_background_rect;
+        private WinRectangle notification_background_rect;
+
+        //using the Toolkit
+        SwipeGestureDetector swipeGestureRecognizer;
+        readonly ColorStreamManager colorManager = new ColorStreamManager();
+        readonly DepthStreamManager depthManager = new DepthStreamManager();
+        readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
+        readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
+        //TemplatedPostureDetector templatePostureDetector = new TemplatedPostureDetector();
+        private bool recordNextFrameForPosture;
+        bool displayDepth;
 
         private void addMessages()
         {
@@ -44,6 +57,24 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
+            swipeGestureRecognizer = new SwipeGestureDetector();
+            swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
+        }
+
+        void OnGestureDetected(string gesture)
+        {
+            if (gesture == "SwipeToLeft")
+            {
+                Console.WriteLine("You swiped to the left!");
+            }
+            else if (gesture == "SwipeToRight")
+            {
+                Console.WriteLine("To the RIGHT you swiped!");
+            }
+            else
+            {
+                Console.WriteLine("nothin");
+            }
         }
 
         private void change_speaker_photo(String image_name)
@@ -75,7 +106,7 @@ namespace SkeletalTracking
             notification_background_rect.Visibility = Visibility.Hidden;
         }
 
-        public override void processSkeletonFrame(Skeleton skeleton, Dictionary<int, Target> targets)
+        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
 
             List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -94,7 +125,74 @@ namespace SkeletalTracking
 
 
             // all detector process skeleton
+            //this.permanentLeaveDetector.processSkeleton(skeleton);
+            //this.absentDetector.processSkeleton(skeleton);
+            //this.standingDetector.processSkeleton(skeleton);
+            //this.sittingDetector.processSkeleton(skeleton);
 
+            //Target cur = targets[1];
+            //Target t2 = targets[2];
+
+            //Boolean isAbsent = absentDetector.isScenarioDetected();
+            //Boolean isStanding = standingDetector.isScenarioDetected();
+            //Boolean isSitting = sittingDetector.isScenarioDetected();
+            //Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+
+            //if (isAbsent)
+            //{
+            //    if (isPermanentlyGone)
+            //    {
+            //        Console.WriteLine("I'm permanently gone");
+            //        cur.setTargetText("I'm permanently gone");
+            //        this.messageList.Clear();
+            //        addMessages();
+            //        sw.Reset();
+            //        curVid.Stop();
+            //        curVid.Position = TimeSpan.Zero;
+            //        curVid.Visibility = Visibility.Hidden;
+
+            //    }
+            //    else
+            //    {
+
+            //        Console.WriteLine("I'm off screen");
+            //        cur.setTargetText("I'm off screen");
+
+            //    }
+
+            //}
+            //else if (isStanding)
+            //{
+            //    Console.WriteLine("I'm standing!");
+            //    cur.setTargetText("I'm standing!");
+            //    curVid.Pause();
+            //    sw.Stop();
+
+            //}
+            //else if (isSitting)
+            //{
+            //    Console.WriteLine("I'm sitting!");
+            //    cur.setTargetText("Sitting!");
+            //    curVid.Visibility = Visibility.Visible;
+            //    curVid.Play();
+            //    sw.Start();
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Neither sitting nor standing!");
+            //    cur.setTargetText("Neither!");
+            //}
+
+            //if (handOnFaceIndicator.isPositionDetected(skeleton))
+            //{
+            //    Console.WriteLine("on the phone! \n");
+            //    t2.setTargetText("Y!");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("not on the phone!");
+            //    t2.setTargetText("N!");
+            //}
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
@@ -159,6 +257,34 @@ namespace SkeletalTracking
 
             /* we'll call them here */
 
+            if (skeleton != null)
+            {
+                barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
+                if (!barycenterHelper.IsStable(skeleton.TrackingId))
+                    return;
+
+                foreach (Joint joint in skeleton.Joints)
+                {
+                    if (joint.TrackingState != JointTrackingState.Tracked)
+                        continue;
+
+                    if (joint.JointType == JointType.HandRight)
+                    {
+                        swipeGestureRecognizer.Add(joint.Position, nui);
+                    }
+                }
+            
+                algorithmicPostureRecognizer.TrackPostures(skeleton);
+            }
+            //templatePostureDetector.TrackPostures(skeleton);
+
+            if (recordNextFrameForPosture)
+            {
+                //templatePostureDetector.AddTemplate(skeleton);
+                recordNextFrameForPosture = false;
+            }
+
+
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
@@ -170,7 +296,7 @@ namespace SkeletalTracking
             notification_text.Visibility = Visibility.Hidden;
         }
 
-        public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, Rectangle rect)
+        public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)
         {
             notification_text = not_text;
             notification_image = not_image;

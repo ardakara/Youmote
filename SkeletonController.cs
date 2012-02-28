@@ -8,6 +8,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
+using WinRectangle = System.Windows.Shapes.Rectangle;
 
 namespace SkeletalTracking
 {
@@ -27,7 +28,7 @@ namespace SkeletalTracking
         //and manipulate its state and position, as well as hide/show it (see class defn. below).
         //It is indexed from 1, thus you can retrieve an individual target with the expression
         //targets[3], which would retrieve the target labeled "3" on screen.
-        public virtual void processSkeletonFrame(Skeleton skeleton, Dictionary<int, Target> targets)
+        public virtual void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
 
             /*Example implementation*/
@@ -74,7 +75,7 @@ namespace SkeletalTracking
             //targets[3].setTargetHighlighted();           
         }
 
-        public virtual void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, Rectangle rect) 
+        public virtual void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect) 
         {
 
         }
