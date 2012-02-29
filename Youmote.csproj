@@ -93,11 +93,11 @@
     <Compile Include="Indicators\LyingdownIndicator.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageList.cs" />
-    <Compile Include="ScenarioStateIMPL.cs" />
+    <Compile Include="PositionIndicator.cs" />
+    <Compile Include="ScenarioDetector.cs" />
+    <Compile Include="ScenarioState.cs" />
     <Compile Include="ScenarioStateHistory.cs" />
     <Compile Include="Indicators\SittingIndicator.cs" />
-    <Compile Include="PositionIndicatorIMPL.cs" />
-    <Compile Include="ScenarioDetectorIMPL.cs" />
     <Compile Include="Indicators\StandingIndicator.cs" />
     <Compile Include="SkeletonController.cs" />
     <Compile Include="Television\Channel.cs" />

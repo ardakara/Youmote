@@ -23,7 +23,6 @@ namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
     {
-
         private StandingDetector standingDetector = new StandingDetector();
         private SittingDetector sittingDetector = new SittingDetector();
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
@@ -91,6 +90,7 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
+            
             /*
                         swipeGestureRecognizer = new SwipeGestureDetector();
                         swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
