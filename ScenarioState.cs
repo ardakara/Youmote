@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
-namespace SkeletalTracking
+
+namespace YouMote
 {
-    public interface ScenarioStateIMPL
+    public interface ScenarioState
     {
-        Boolean isSameState(ScenarioStateIMPL ss);
+        Boolean isSameState(ScenarioState ss);
 
         /// <summary>
         /// States are being added every frame.  Instead of having a list of repeating, sitting frames, we merge two frames if they are the same
@@ -16,13 +17,13 @@ namespace SkeletalTracking
         /// 0 to 40th frame.  Now the merged state represents sitting from 0 to 41st state.
         /// </summary>
         /// <param name="ss"></param>
-        ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL ss);
+        ScenarioState mergeEqualStates(ScenarioState ss);
 
         /// <summary>
         /// Used when the state representing previous frames is not equal to the state that is about to be added for most current frame.
         /// </summary>
         /// <param name="next"></param>
-        ScenarioStateIMPL finishState(ScenarioStateIMPL next);
+        ScenarioState finishState(ScenarioState next);
 
 
         /// <summary>

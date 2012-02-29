@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
 
 /// <summary>
@@ -13,7 +13,7 @@ namespace SkeletalTracking
 /// skeleton history (i.e.  states that represent the skeleton went sitting->standing->leaving).
 /// The getScenarioState() function return the current state of the scenario, either completed or uncompleted or other variants if needed.
 /// </summary>
-    interface ScenarioDetectorIMPL
+    interface ScenarioDetector
     {
         /// <summary>
         /// gets the current state of the scenario (usually an enum meaning whether the scenario has happened or hasn't happened.

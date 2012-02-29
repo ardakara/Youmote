@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using YouMote.Indicators;
 
-namespace SkeletalTracking
+namespace YouMote
 {
 
 
-    public class WaveState : ScenarioStateIMPL
+    public class WaveState : ScenarioState
 {
 
         public enum WavePosition { HAND_LEFT, HAND_RIGHT, HAND_BELOW};
@@ -43,7 +44,7 @@ namespace SkeletalTracking
         }
 
 
-        public Boolean isSameState(ScenarioStateIMPL ss)
+        public Boolean isSameState(ScenarioState ss)
         {
             if (!ss.GetType().Equals(this.GetType()))
             {
@@ -84,7 +85,7 @@ namespace SkeletalTracking
 
         }
 
-        public ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL next)
+        public ScenarioState mergeEqualStates(ScenarioState next)
         {
             WaveState gualState = new WaveState(this);
             // make sure this is same state 
@@ -116,7 +117,7 @@ namespace SkeletalTracking
             return this.Pos + "";
         }
 
-        public ScenarioStateIMPL finishState(ScenarioStateIMPL next)
+        public ScenarioState finishState(ScenarioState next)
         {
             WaveState gualState = new WaveState(this);
             // make sure this is same state 

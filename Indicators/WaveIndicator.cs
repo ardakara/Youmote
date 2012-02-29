@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
-    public class WaveIndicator : PositionIndicatorIMPL
+    public class WaveIndicator : PositionIndicator
     {
         
         public Boolean leftHandRight(Skeleton skeleton)

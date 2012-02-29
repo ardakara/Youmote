@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking
+namespace YouMote
 {
     public class Channel
     {
@@ -31,6 +31,15 @@ namespace SkeletalTracking
             get
             {
                 return this._media;
+            }
+        }
+
+        private Person[] _viewers;
+        public Person[] Viewers
+        {
+            get
+            {
+                return this._viewers;
             }
         }
 

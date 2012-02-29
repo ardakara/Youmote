@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking
+namespace YouMote
 {
 
 
-    public class PresenceState : ScenarioStateIMPL
+    public class PresenceState : ScenarioState
 {
 
         public enum GetsUpAndLeavesPosition { SIT, STAND, ABSENT };
@@ -43,7 +43,7 @@ namespace SkeletalTracking
         }
 
 
-        public Boolean isSameState(ScenarioStateIMPL ss)
+        public Boolean isSameState(ScenarioState ss)
         {
             if (!ss.GetType().Equals(this.GetType()))
             {
@@ -83,7 +83,7 @@ namespace SkeletalTracking
             return this._end.Subtract(this._start).TotalMilliseconds;
         }
 
-        public ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL next)
+        public ScenarioState mergeEqualStates(ScenarioState next)
         {
             PresenceState gualState = new PresenceState(this);
             // make sure this is same state 
@@ -115,7 +115,7 @@ namespace SkeletalTracking
             return this.Pos + "";
         }
 
-        public ScenarioStateIMPL finishState(ScenarioStateIMPL next)
+        public ScenarioState finishState(ScenarioState next)
         {
             PresenceState gualState = new PresenceState(this);
             // make sure this is same state 

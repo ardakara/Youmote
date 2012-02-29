@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
-using SkeletalTracking.Indicators;
-namespace SkeletalTracking
+using YouMote.Indicators;
+namespace YouMote
 {
-    public abstract class ResumeDetector : ScenarioDetectorIMPL
+    public abstract class ResumeDetector : ScenarioDetector
     {
 
         protected ScenarioStateHistory _rightHandHistory;

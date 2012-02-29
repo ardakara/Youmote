@@ -1,4 +1,4 @@
-﻿<Application x:Class="SkeletalTracking.App"
+﻿<Application x:Class="YouMote.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">

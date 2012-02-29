@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
-    public class HandOnFaceIndicator : PositionIndicatorIMPL
+    public class HandOnFaceIndicator : PositionIndicator
     {
 
         private double magnitude(double x, double y, double z)

@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
-    public class ResumeIndicator : PositionIndicatorIMPL
+    public class ResumeIndicator : PositionIndicator
     {
         
         public Boolean leftHandFront(Skeleton skeleton)

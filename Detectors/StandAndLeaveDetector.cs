@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking.Detectors
+namespace YouMote.Detectors
 {
     public class StandAndLeaveDetector : PresenceDetector
     {
         protected static double STAND_DURATION = 30;
         public override Boolean isScenarioDetected()
         {
-            List<ScenarioStateIMPL> recentStates = this._history.getLastNStates(3);
+            List<ScenarioState> recentStates = this._history.getLastNStates(3);
             Boolean isDetected = false;
 
             for (int i = 0; i < recentStates.Count; i++)
             {
-                ScenarioStateIMPL state = recentStates[i];
+
+                ScenarioState state = recentStates[i];
                 if (i == 0 && !PresenceState.ABSENT_STATE.isSameState(state))
+
                 {
                     // if most recent state wasnt absent, then scenario not detected
                     isDetected = false;

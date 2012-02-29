@@ -10,7 +10,7 @@ using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using WinRectangle = System.Windows.Shapes.Rectangle;
 
-namespace SkeletalTracking
+namespace YouMote
 {
     class SkeletonController
     {

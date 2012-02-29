@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking
+namespace YouMote
 {
     public class ScenarioStateHistory
     {
+
         private static double FALSE_STATE_DURATION_IN_SECONDS = 0;
-        private List<ScenarioStateIMPL> _history;
+        private List<ScenarioState> _history;
         private int _maxSize;
-        public List<ScenarioStateIMPL> History
+        public List<ScenarioState> History
         {
             get
             {
@@ -21,25 +22,25 @@ namespace SkeletalTracking
         public ScenarioStateHistory(int maxSize)
         {
             this._maxSize = maxSize;
-            this._history = new List<ScenarioStateIMPL>();
+            this._history = new List<ScenarioState>();
         }
 
-        public List<ScenarioStateIMPL> getLastNStates(int n)
+        public List<ScenarioState> getLastNStates(int n)
         {
-            List<ScenarioStateIMPL> lastStates = new List<ScenarioStateIMPL>();
+            List<ScenarioState> lastStates = new List<ScenarioState>();
             for (int i = this.History.Count - 1; i > this.History.Count - 1 - n && i >= 0; i--)
             {
-                lastStates.Add(this.History.ElementAt<ScenarioStateIMPL>(i));
+                lastStates.Add(this.History.ElementAt<ScenarioState>(i));
             }
             return lastStates;
         }
 
 
-        public ScenarioStateIMPL Pop()
+        public ScenarioState Pop()
         {
             if (this._history.Count > 0)
             {
-                ScenarioStateIMPL state = this._history[this.History.Count - 1];
+                ScenarioState state = this._history[this.History.Count - 1];
                 this._history.RemoveAt(this._history.Count - 1);
                 return state;
             }
@@ -51,11 +52,11 @@ namespace SkeletalTracking
 
 
 
-        public ScenarioStateIMPL Peek()
+        public ScenarioState Peek()
         {
             if (this._history.Count > 0)
             {
-                ScenarioStateIMPL state = this._history[this.History.Count - 1];
+                ScenarioState state = this._history[this.History.Count - 1];
                 return state;
             }
             else
@@ -63,20 +64,20 @@ namespace SkeletalTracking
                 return null;
             }
         }
-        public void addState(ScenarioStateIMPL nextState)
+        public void addState(ScenarioState nextState)
         {
             if (this._history.Count > 0)
             {
-                ScenarioStateIMPL lastState = this.Pop();
+                ScenarioState lastState = this.Pop();
                 if (lastState.isSameState(nextState))
                 {
                     // same state, merge them
-                    ScenarioStateIMPL newState = lastState.mergeEqualStates(nextState);
+                    ScenarioState newState = lastState.mergeEqualStates(nextState);
                     this._history.Add(newState);
                 }
                 else
                 {
-                    ScenarioStateIMPL cappedOldState = lastState.finishState(nextState);
+                    ScenarioState cappedOldState = lastState.finishState(nextState);
                     if (cappedOldState.getDurationInSeconds() > ScenarioStateHistory.FALSE_STATE_DURATION_IN_SECONDS)
                     {
                         this._history.Add(cappedOldState);

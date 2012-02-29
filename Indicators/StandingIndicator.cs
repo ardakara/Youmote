@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
-    public class StandingIndicator : PositionIndicatorIMPL
+    public class StandingIndicator : PositionIndicator
     {
         public Boolean isPositionDetected(Skeleton skeleton)
         {

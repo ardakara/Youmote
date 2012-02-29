@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking
+namespace YouMote
 {
-    interface PositionIndicatorIMPL
+    interface PositionIndicator
     {
         /// <summary>
         /// Takes in a skeleton and returns whether that position is detected.  For Example, If this is a SittingDetector, it will return true

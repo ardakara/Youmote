@@ -7,7 +7,7 @@
  * - http://robrelyea.wordpress.com/2012/02/01/k4w-details-of-api-changes-from-beta2-to-v1-managed/#_KinectSensor_discovery
  */
 
-namespace SkeletalTracking
+namespace YouMote
 {
     using System;
     using System.Collections.Generic;
@@ -33,6 +33,7 @@ namespace SkeletalTracking
     {
         public MainWindow()
         {
+            //YouMote.Client.Client.test();
             InitializeComponent();
             
         }

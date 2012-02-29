@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking
+namespace YouMote
 {
 
 
-    public class ResumeState : ScenarioStateIMPL
+    public class ResumeState : ScenarioState
 {
 
         public enum ResumePosition { HAND_BACK, HAND_FRONT, HAND_AWAY};
@@ -43,7 +43,7 @@ namespace SkeletalTracking
         }
 
 
-        public Boolean isSameState(ScenarioStateIMPL ss)
+        public Boolean isSameState(ScenarioState ss)
         {
             if (!ss.GetType().Equals(this.GetType()))
             {
@@ -84,7 +84,7 @@ namespace SkeletalTracking
 
         }
 
-        public ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL next)
+        public ScenarioState mergeEqualStates(ScenarioState next)
         {
             ResumeState gualState = new ResumeState(this);
             // make sure this is same state 
@@ -116,7 +116,7 @@ namespace SkeletalTracking
             return this.Pos + "";
         }
 
-        public ScenarioStateIMPL finishState(ScenarioStateIMPL next)
+        public ScenarioState finishState(ScenarioState next)
         {
             ResumeState gualState = new ResumeState(this);
             // make sure this is same state 
