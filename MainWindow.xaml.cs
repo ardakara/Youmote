@@ -34,6 +34,7 @@ namespace SkeletalTracking
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         //Kinect Sensor
@@ -201,8 +202,10 @@ namespace SkeletalTracking
                         SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
                         SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
                         SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+
                     }
-                        currentController.processSkeletonFrame(skeleton, nui, targets);
+                    
+                    currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
         }

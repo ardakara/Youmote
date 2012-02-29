@@ -17,8 +17,8 @@ namespace SkeletalTracking
                 return false;
             }
             
-            Joint leftElbow = skeleton.Joints[JointID.ElbowLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-            Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            Joint leftElbow = skeleton.Joints[JointType.ElbowLeft];
+            Joint leftHand = skeleton.Joints[JointType.HandLeft];
             
             // Check if the hand is on top and right of the elbow
             if ( (leftHand.Position.Y > leftElbow.Position.Y)
@@ -40,8 +40,8 @@ namespace SkeletalTracking
                 return false;
             }
             
-            Joint leftElbow = skeleton.Joints[JointID.ElbowLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-            Joint leftHand = skeleton.Joints[JointID.HandLeft].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            Joint leftElbow = skeleton.Joints[JointType.ElbowLeft];
+            Joint leftHand = skeleton.Joints[JointType.HandLeft];
             
             // Check if the hand is on top and left of the elbow
             if ( (leftHand.Position.Y > leftElbow.Position.Y)
@@ -62,8 +62,8 @@ namespace SkeletalTracking
                 return false;
             }
             
-            Joint rightElbow = skeleton.Joints[JointID.ElbowRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-            Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            Joint rightElbow = skeleton.Joints[JointType.ElbowRight];
+            Joint rightHand = skeleton.Joints[JointType.HandRight];
             
             // Check if the hand is on top and right of the elbow
             if ( (rightHand.Position.Y > rightElbow.Position.Y)
@@ -85,8 +85,8 @@ namespace SkeletalTracking
                 return false;
             }
             
-            Joint rightElbow = skeleton.Joints[JointID.ElbowRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
-            Joint rightHand = skeleton.Joints[JointID.HandRight].ScaleTo(640, 480, window.k_xMaxJointScale, window.k_yMaxJointScale);
+            Joint rightElbow = skeleton.Joints[JointType.ElbowRight];
+            Joint rightHand = skeleton.Joints[JointType.HandRight];
             
             // Check if the hand is on top and left of the elbow
             if ( (rightHand.Position.Y > rightElbow.Position.Y)
@@ -100,5 +100,11 @@ namespace SkeletalTracking
             }
             
         }
+
+        public Boolean isPositionDetected(Skeleton skeleton)
+        {
+            return false;
+        }
+
     }
 }

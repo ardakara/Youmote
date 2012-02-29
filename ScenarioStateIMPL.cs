@@ -36,6 +36,12 @@ namespace SkeletalTracking
         /// </summary>
         /// <returns></returns>
         double getDurationInSeconds();
+
+        /// <summary>
+        /// returns the duration that this state took place in seconds;
+        /// </summary>
+        /// <returns></returns>
+        double getDurationInMilliseconds();
     }
 
 }
