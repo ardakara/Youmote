@@ -81,9 +81,6 @@
     </Compile>
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
-    <Compile Include="Detectors\WaveDetector.cs" />
-    <Compile Include="Detectors\WaveState.cs" />
-    <Compile Include="Detectors\RightHandWaveDetector.cs" />
     <Compile Include="Detectors\PermanentLeaveDetector.cs" />
     <Compile Include="Detectors\SittingDetector.cs" />
     <Compile Include="Detectors\StandAndLeaveDetector.cs" />
@@ -133,9 +130,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="data\circleKB.save">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -148,6 +142,9 @@
     <Content Include="Video\pixar_short.avi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
