@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 
-namespace SkeletalTracking.Indicators
+namespace YouMote.Indicators
 {
     public class AbsentIndicator
     {

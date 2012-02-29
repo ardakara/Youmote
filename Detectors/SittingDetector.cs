@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking.Detectors
+namespace YouMote.Detectors
 {
     public class SittingDetector : PresenceDetector
     {

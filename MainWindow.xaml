@@ -1,4 +1,4 @@
-﻿<Window x:Class="SkeletalTracking.MainWindow"
+﻿<Window x:Class="YouMote.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="1024" Width="1280" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">

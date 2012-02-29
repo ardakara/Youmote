@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SkeletalTracking.Client
+namespace YouMote.Client
 {
     class Client
     {

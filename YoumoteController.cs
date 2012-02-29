@@ -10,16 +10,16 @@ using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
-using SkeletalTracking.Detectors;
-using SkeletalTracking.Indicators;
+using YouMote.Detectors;
+using YouMote.Indicators;
 //using Kinect.Toolbox;
 using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
-using SkeletalTracking.Television;
+using YouMote.Television;
 
-namespace SkeletalTracking
+namespace YouMote
 {
     class YoumoteController : SkeletonController
     {

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
-using SkeletalTracking.Indicators;
-namespace SkeletalTracking
+using YouMote.Indicators;
+namespace YouMote
 {
     public abstract class PresenceDetector : ScenarioDetector
     {

@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
 
-namespace SkeletalTracking.Television
+namespace YouMote.Television
 {
     /// <summary>
     /// Class that controllers what is happening on the users screen.. Paused video, moving videos etc.
