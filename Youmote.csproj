@@ -8,8 +8,8 @@
     <ProjectGuid>{9B080D1C-118F-4734-925C-A59838A43643}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SkeletalTracking</RootNamespace>
-    <AssemblyName>SkeletalTracking</AssemblyName>
+    <RootNamespace>YouMote</RootNamespace>
+    <AssemblyName>YouMote</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -79,6 +79,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Client\Client.cs" />
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\PermanentLeaveDetector.cs" />
