@@ -33,6 +33,7 @@ namespace YouMote
     {
         public MainWindow()
         {
+            //YouMote.Client.Client.test();
             InitializeComponent();
             
         }

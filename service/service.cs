@@ -1,69 +1,60 @@
-﻿
-//  Copyright (c) Microsoft Corporation.  All Rights Reserved.
+﻿/* 
+ * Sources: 
+ * http://msdn.microsoft.com/en-us/library/ms751519.aspx
+ * http://msdn.microsoft.com/en-us/library/ms750530.aspx
+ * 
+ * TODO: 
+ * Compile into a .exe for easy running (run exe as admin)
+ * 
+ * Recuring TODO: 
+ * run service and generate proxy in VS console for client to use
+ * svcutil.exe /language:cs /config:app.config http://localhost:8000/ServiceModelSamples/service
+ * (source: http://msdn.microsoft.com/en-us/library/ms733133.aspx)
+ */
 
 using System;
 using System.Configuration;
 using System.ServiceModel;
+using YouMote;
 
 namespace Microsoft.ServiceModel.Samples
 {
     // Define a service contract.
     [ServiceContract(Namespace="http://Microsoft.ServiceModel.Samples")]
-    public interface ICalculator
+    public interface IChannelService
     {
         [OperationContract]
-        double Add(double n1, double n2);
+        Channel[] GetChannels();
         [OperationContract]
-        double Subtract(double n1, double n2);
-        [OperationContract]
-        double Multiply(double n1, double n2);
-        [OperationContract]
-        double Divide(double n1, double n2);
+        Boolean UpdatePerson(int personID, int mediaID, double currentTime, bool isPlaying);
     }
 
     // Service class which implements the service contract.
     // Added code to write output to the console window
-    public class CalculatorService : ICalculator
+    public class ChannelService : IChannelService
     {
-        public double Add(double n1, double n2)
+        public Channel[] GetChannels()
         {
-            double result = n1 + n2;
-            Console.WriteLine("Received Add({0},{1})", n1, n2);
-            Console.WriteLine("Return: {0}", result);
-            return result;
+            // make Channel class CLS compatible somehow(http://msdn.microsoft.com/en-us/library/system.clscompliantattribute)
+            // then generate the proxy with svcutil again and test
+            Console.WriteLine("GetChannels called!") ;
+            return null;
         }
 
-        public double Subtract(double n1, double n2)
+        public bool UpdatePerson(int personID, int mediaID, double currentTime, bool isPlaying)
         {
-            double result = n1 - n2;
-            Console.WriteLine("Received Subtract({0},{1})", n1, n2);
-            Console.WriteLine("Return: {0}", result);
-            return result;
+            Console.WriteLine("UpdatePerson({0},{1},{2},{3})", personID, mediaID, currentTime, isPlaying);
+            return true;
         }
-
-        public double Multiply(double n1, double n2)
-        {
-            double result = n1 * n2;
-            Console.WriteLine("Received Multiply({0},{1})", n1, n2);
-            Console.WriteLine("Return: {0}", result);
-            return result;
-        }
-
-        public double Divide(double n1, double n2)
-        {
-            double result = n1 / n2;
-            Console.WriteLine("Received Divide({0},{1})", n1, n2);
-            Console.WriteLine("Return: {0}", result);
-            return result;
-        }
-
 
         // Host the service within this EXE console application.
         public static void Main()
         {
             // Create a ServiceHost for the CalculatorService type.
-            using (ServiceHost serviceHost = new ServiceHost(typeof(CalculatorService)))
+            using (ServiceHost serviceHost = new ServiceHost(typeof(ChannelService)))
             {
+
+
                 // Open the ServiceHost to create listeners and start listening for messages.
                 serviceHost.Open();
 

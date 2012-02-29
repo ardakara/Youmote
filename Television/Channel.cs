@@ -34,6 +34,15 @@ namespace YouMote
             }
         }
 
+        private Person[] _viewers;
+        public Person[] Viewers
+        {
+            get
+            {
+                return this._viewers;
+            }
+        }
+
         public Channel(int id, String name, Media media)
         {
             this._id = id;
