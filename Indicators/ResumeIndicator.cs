@@ -7,10 +7,10 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
-    public class WaveIndicator : PositionIndicatorIMPL
+    public class ResumeIndicator : PositionIndicatorIMPL
     {
         
-        public Boolean leftHandRight(Skeleton skeleton)
+        public Boolean leftHandFront(Skeleton skeleton)
         {
             if (skeleton == null)
             {
@@ -21,8 +21,8 @@ namespace SkeletalTracking
             Joint leftHand = skeleton.Joints[JointType.HandLeft];
             
             // Check if the hand is on top and right of the elbow
-            if ( (leftHand.Position.Y > leftElbow.Position.Y)
-                && (leftHand.Position.X > leftElbow.Position.X) )
+            if ( (leftHand.Position.X > leftElbow.Position.X)
+                && (leftHand.Position.Z > leftElbow.Position.Z) )
             {
                 return true;
             }
@@ -33,7 +33,7 @@ namespace SkeletalTracking
             
         }
         
-        public Boolean leftHandLeft(Skeleton skeleton)
+        public Boolean leftHandBack(Skeleton skeleton)
         {
             if (skeleton == null)
             {
@@ -44,8 +44,8 @@ namespace SkeletalTracking
             Joint leftHand = skeleton.Joints[JointType.HandLeft];
             
             // Check if the hand is on top and left of the elbow
-            if ( (leftHand.Position.Y > leftElbow.Position.Y)
-                && (leftHand.Position.X <= leftElbow.Position.X) )
+            if ( (leftHand.Position.X > leftElbow.Position.X)
+                && (leftHand.Position.Z <= leftElbow.Position.Z) )
             {
                 return true;
             }
@@ -55,7 +55,7 @@ namespace SkeletalTracking
             }
         }
         
-        public Boolean rightHandRight(Skeleton skeleton)
+        public Boolean rightHandFront(Skeleton skeleton)
         {
             if (skeleton == null)
             {
@@ -66,8 +66,8 @@ namespace SkeletalTracking
             Joint rightHand = skeleton.Joints[JointType.HandRight];
             
             // Check if the hand is on top and right of the elbow
-            if ( (rightHand.Position.Y > rightElbow.Position.Y)
-                && (rightHand.Position.X > rightElbow.Position.X) )
+            if ((rightHand.Position.X < rightElbow.Position.X)
+                && (rightHand.Position.Z > rightElbow.Position.Z))
             {
                 return true;
             }
@@ -78,7 +78,7 @@ namespace SkeletalTracking
             
         }
         
-        public Boolean rightHandLeft(Skeleton skeleton)
+        public Boolean rightHandBack(Skeleton skeleton)
         {
             if (skeleton == null)
             {
@@ -89,8 +89,8 @@ namespace SkeletalTracking
             Joint rightHand = skeleton.Joints[JointType.HandRight];
             
             // Check if the hand is on top and left of the elbow
-            if ( (rightHand.Position.Y > rightElbow.Position.Y)
-                && (rightHand.Position.X <= rightElbow.Position.X) )
+            if ((rightHand.Position.X < rightElbow.Position.X)
+                && (rightHand.Position.Z <= rightElbow.Position.Z))
             {
                 return true;
             }

@@ -12,7 +12,7 @@ using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Detectors;
 using SkeletalTracking.Indicators;
-//using Kinect.Toolbox;
+using Kinect.Toolbox;
 using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
@@ -27,7 +27,8 @@ namespace SkeletalTracking
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
-//        private RightHandWaveDetector rightHandWaveDetector = new RightHandWaveDetector();
+        private AmbidextrousWaveDetector ambiHandWaveDetector = new AmbidextrousWaveDetector();
+        private AmbidextrousWaveDetector ambiResumeDetector = new AmbidextrousWaveDetector();
 
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
@@ -39,14 +40,14 @@ namespace SkeletalTracking
         private WinRectangle notification_background_rect;
 
         //using the Toolkit
-/*
+
         SwipeGestureDetector swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
 
-*/
+
         //TemplatedPostureDetector templatePostureDetector = new TemplatedPostureDetector();
         private bool recordNextFrameForPosture;
         bool displayDepth;
@@ -54,11 +55,11 @@ namespace SkeletalTracking
 
         /* Adding Circle Gesture Detector stuff */
         private string circleKBPath;
-/*
-        TemplatedGestureDetector circleGestureRecognizer;
-        TemplatedGestureDetector waveGestureRecognizer;
-        TemplatedGestureDetector resumeGestureRecognizer;
-        */
+
+        /* Stuff needed to 'turn on the tv'*/
+        private WinRectangle black_screen;
+        private bool IsScreenOn;
+
         void LoadCircleGestureDetector()
         {
           /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
@@ -89,11 +90,12 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
-/*
+
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             LoadCircleGestureDetector();
-*/  
+            IsScreenOn = false;
+  
         }
 
         void OnGestureDetected(string gesture)
@@ -142,13 +144,25 @@ namespace SkeletalTracking
 
         private void detectSittingStandingScenarios(Skeleton skeleton, Dictionary<int, Target> targets ) 
         {
+            Target cur = targets[1];
+            Target t2 = targets[2];
+
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
 
-            Target cur = targets[1];
-            Target t2 = targets[2];
+            /*if (this.handOnFaceIndicator.isPositionDetected(skeleton))
+            {
+                curVid.Pause();
+            }*/
+
+            this.ambiResumeDetector.processSkeleton(skeleton);
+            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+            if (hasResumed)
+            {
+                cur.setTargetText("Has RESUMED!");
+            }
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
             Boolean isStanding = standingDetector.isScenarioDetected();
@@ -214,7 +228,7 @@ namespace SkeletalTracking
 
         private void detectChannelChangingScenarios(Skeleton skeleton, Dictionary<int, Target> targets, KinectSensor nui)
         {
-/*
+
             if (skeleton != null)
             {
                 barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
@@ -242,40 +256,45 @@ namespace SkeletalTracking
                 //templatePostureDetector.AddTemplate(skeleton);
                 recordNextFrameForPosture = false;
             }
-            */
+            
         }
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-            
-            List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
-            foreach (Message message in readyMessages)
-            {
-                display_message(message);
-                message.startMessageTimer();
-            }
-
-            List<Message> finishedMessages = this.messageList.popFinishedMessages();
-            foreach (Message message in finishedMessages)
-            {
-                remove_message(message);
-                message.stopMessageTimer();
-            }
-
-            //detectSittingStandingScenarios(skeleton, targets);
-            detectChannelChangingScenarios(skeleton, targets, nui);
 
             Target cur = targets[1];
             Target t2 = targets[2];
-            /*
-            this.rightHandWaveDetector.processSkeleton(skeleton);
-            Boolean hasWaved = rightHandWaveDetector.isScenarioDetected();
 
-            if (hasWaved)
+            if (!IsScreenOn)
             {
-                cur.setTargetText("Has waved!");
+                this.ambiHandWaveDetector.processSkeleton(skeleton);
+                Boolean hasWaved = ambiHandWaveDetector.isScenarioDetected();
+                if (hasWaved)
+                {
+                    cur.setTargetText("Has waved!");
+                    black_screen.Visibility = Visibility.Hidden;
+                    IsScreenOn = true;
+                }
             }
-            */
-            
+            else
+            {
+
+                List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
+                foreach (Message message in readyMessages)
+                {
+                    display_message(message);
+                    message.startMessageTimer();
+                }
+
+                List<Message> finishedMessages = this.messageList.popFinishedMessages();
+                foreach (Message message in finishedMessages)
+                {
+                    remove_message(message);
+                    message.stopMessageTimer();
+                }
+
+                detectSittingStandingScenarios(skeleton, targets);
+                //detectChannelChangingScenarios(skeleton, targets, nui);
+            }
             
         }
 
@@ -295,6 +314,11 @@ namespace SkeletalTracking
             notification_image = not_image;
             notification_speaker = not_speaker;
             notification_background_rect = rect;
+        }
+
+        public override void addBlackScreen(WinRectangle black_screen)
+        {
+            this.black_screen = black_screen;
         }
 
         public override void addVideo(MediaElement mediaElement1)

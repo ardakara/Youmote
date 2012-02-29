@@ -16,7 +16,7 @@ namespace SkeletalTracking.Detectors
             for (int i = 0; i < recentStates.Count; i++)
             {
                 ScenarioStateIMPL state = recentStates[i];
-                if (i == 0 && !PresenceState.ABSENT_STATE.Equals(state))
+                if (i == 0 && !PresenceState.ABSENT_STATE.isSameState(state))
                 {
                     // if most recent state wasnt absent, then scenario not detected
                     isDetected = false;
@@ -24,7 +24,7 @@ namespace SkeletalTracking.Detectors
                 }
                 else if (i == 1)
                 {
-                    if (PresenceState.STAND_STATE.Equals(state))
+                    if (PresenceState.STAND_STATE.isSameState(state))
                     {
                         PresenceState gualState = (PresenceState)state;
                         double duration = gualState.getDurationInSeconds();
@@ -51,7 +51,7 @@ namespace SkeletalTracking.Detectors
                 }
                 else if (i == 2)
                 {
-                    if (PresenceState.SIT_STATE.Equals(state))
+                    if (PresenceState.SIT_STATE.isSameState(state))
                     {
                         isDetected = true;
                         break;

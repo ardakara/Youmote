@@ -70,6 +70,7 @@ namespace SkeletalTracking
             targets.Add(2, new Target(target2, 2));
 
             curVid = mediaElement1;
+            currentController.addBlackScreen(black_screen);
             currentController.addVideo(curVid);
             currentController.addUIElements(notification_speaker, notification_text, notification_image, rectangle1);
 

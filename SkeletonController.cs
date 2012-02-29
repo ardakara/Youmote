@@ -85,6 +85,11 @@ namespace SkeletalTracking
 
         }
 
+        public virtual void addBlackScreen(WinRectangle black_screen)
+        {
+
+        }
+
         //The default value that gets passed to MaxSkeletonX and MaxSkeletonY in the Coding4Fun Joint.ScaleTo function is 1.5f
         //This function will change that so that your scaling in processSkeletonFrame aligns with the scaling done when we
         //position the ellipses in the MainWindow.xaml.cs file.

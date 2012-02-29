@@ -10,12 +10,15 @@ namespace SkeletalTracking
     public abstract class WaveDetector : ScenarioDetectorIMPL
     {
 
-        protected ScenarioStateHistory _history;
+        protected ScenarioStateHistory _rightHandHistory;
+        protected ScenarioStateHistory _leftHandHistory;
         protected WaveIndicator _righthandwaveindicator = new WaveIndicator();
+        protected WaveIndicator _lefthandwaveindicator = new WaveIndicator();
 
         public WaveDetector()
         {
-            this._history = new ScenarioStateHistory(30);
+            this._rightHandHistory = new ScenarioStateHistory(30);
+            this._leftHandHistory = new ScenarioStateHistory(30);
         }
 
         public abstract Boolean isScenarioDetected();
@@ -24,24 +27,44 @@ namespace SkeletalTracking
         public void processSkeleton(Skeleton skeleton)
         {
 
-
             Boolean rightHandLeft = this._righthandwaveindicator.rightHandLeft(skeleton);
             Boolean rightHandRight = this._righthandwaveindicator.rightHandRight(skeleton);
+
+            Boolean leftHandLeft = this._lefthandwaveindicator.leftHandLeft(skeleton);
+            Boolean leftHandRight = this._lefthandwaveindicator.leftHandRight(skeleton);
+
             WaveState state;
             if (rightHandLeft)
             {
                 state = new WaveState(WaveState.WavePosition.HAND_LEFT, DateTime.Now, DateTime.Now);
+                this._rightHandHistory.addState(state);
             }
             else if (rightHandRight)
             {
                 state = new WaveState(WaveState.WavePosition.HAND_RIGHT, DateTime.Now, DateTime.Now);
+                this._rightHandHistory.addState(state);
             }
             else
             {
                 state = new WaveState(WaveState.WavePosition.HAND_BELOW, DateTime.Now, DateTime.Now);
+                this._rightHandHistory.addState(state);
             }
 
-            this._history.addState(state);
+            if (leftHandLeft)
+            {
+                state = new WaveState(WaveState.WavePosition.HAND_LEFT, DateTime.Now, DateTime.Now);
+                this._leftHandHistory.addState(state);
+            }
+            else if (leftHandRight)
+            {
+                state = new WaveState(WaveState.WavePosition.HAND_RIGHT, DateTime.Now, DateTime.Now);
+                this._leftHandHistory.addState(state);
+            }
+            else
+            {
+                state = new WaveState(WaveState.WavePosition.HAND_BELOW, DateTime.Now, DateTime.Now);
+                this._leftHandHistory.addState(state);
+            }
 
         }
 

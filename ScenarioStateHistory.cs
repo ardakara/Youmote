@@ -7,7 +7,7 @@ namespace SkeletalTracking
 {
     public class ScenarioStateHistory
     {
-        private static double FALSE_STATE_DURATION_IN_SECONDS = 0.3;
+        private static double FALSE_STATE_DURATION_IN_SECONDS = 0;
         private List<ScenarioStateIMPL> _history;
         private int _maxSize;
         public List<ScenarioStateIMPL> History
