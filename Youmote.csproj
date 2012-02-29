@@ -79,7 +79,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Channel.cs" />
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\WaveDetector.cs" />
@@ -95,19 +94,20 @@
     <Compile Include="Indicators\WaveIndicator.cs" />
     <Compile Include="Indicators\HandOnFaceIndicator.cs" />
     <Compile Include="Indicators\LyingdownIndicator.cs" />
-    <Compile Include="Media.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageList.cs" />
-    <Compile Include="Person.cs" />
     <Compile Include="ScenarioStateIMPL.cs" />
     <Compile Include="ScenarioStateHistory.cs" />
     <Compile Include="Indicators\SittingIndicator.cs" />
     <Compile Include="PositionIndicatorIMPL.cs" />
     <Compile Include="ScenarioDetectorIMPL.cs" />
     <Compile Include="Indicators\StandingIndicator.cs" />
-    <Compile Include="ScreenController.cs" />
     <Compile Include="SkeletonController.cs" />
-    <Compile Include="Television.cs" />
+    <Compile Include="Television\Channel.cs" />
+    <Compile Include="Television\Media.cs" />
+    <Compile Include="Television\Person.cs" />
+    <Compile Include="Television\ScreenController.cs" />
+    <Compile Include="Television\Television.cs" />
     <Compile Include="YoumoteController.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
