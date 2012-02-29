@@ -74,6 +74,15 @@ namespace SkeletalTracking
 
         }
 
+        /// <summary>
+        /// returns the duration that this state took place in milliseconds;
+        /// </summary>
+        /// <returns></returns>
+        public double getDurationInMilliseconds()
+        {
+            return this._end.Subtract(this._start).TotalMilliseconds;
+        }
+
         public ScenarioStateIMPL mergeEqualStates(ScenarioStateIMPL next)
         {
             PresenceState gualState = new PresenceState(this);

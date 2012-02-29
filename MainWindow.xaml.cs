@@ -34,6 +34,7 @@ namespace SkeletalTracking
         public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         //Kinect Sensor
@@ -178,7 +179,6 @@ namespace SkeletalTracking
                     if (skeleton != null)
                     {
                         draw_skeleton(skeleton);
-                        currentController.processSkeletonFrame(skeleton, nui, targets);
                         //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
                         SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
                         SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
@@ -202,7 +202,9 @@ namespace SkeletalTracking
                         SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
                         SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
                         SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+
                     }
+                    
                     currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
