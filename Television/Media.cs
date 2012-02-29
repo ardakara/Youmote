@@ -55,6 +55,20 @@ namespace SkeletalTracking
             }
         }
 
+        private Boolean _isPlaying;
+        public Boolean IsPlaying
+        {
+            get
+            {
+                return this._isPlaying;
+            }
+            set
+            {
+                this._isPlaying = value;
+            }
+
+        }
+
         public Media(int id, double duration, double currentTime, String name, String file)
         {
             this._id = id;

@@ -12,7 +12,7 @@ using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Detectors;
 using SkeletalTracking.Indicators;
-using Kinect.Toolbox;
+//using Kinect.Toolbox;
 using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
@@ -27,7 +27,7 @@ namespace SkeletalTracking
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
-        private RightHandWaveDetector rightHandWaveDetector = new RightHandWaveDetector();
+//        private RightHandWaveDetector rightHandWaveDetector = new RightHandWaveDetector();
 
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
@@ -39,11 +39,14 @@ namespace SkeletalTracking
         private WinRectangle notification_background_rect;
 
         //using the Toolkit
+/*
         SwipeGestureDetector swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
+
+*/
         //TemplatedPostureDetector templatePostureDetector = new TemplatedPostureDetector();
         private bool recordNextFrameForPosture;
         bool displayDepth;
@@ -51,13 +54,14 @@ namespace SkeletalTracking
 
         /* Adding Circle Gesture Detector stuff */
         private string circleKBPath;
+/*
         TemplatedGestureDetector circleGestureRecognizer;
         TemplatedGestureDetector waveGestureRecognizer;
         TemplatedGestureDetector resumeGestureRecognizer;
-
+        */
         void LoadCircleGestureDetector()
         {
-            circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
+          /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
             Console.WriteLine(Environment.CurrentDirectory);
             Console.WriteLine(circleKBPath);
             using (Stream recordStream = File.Open(circleKBPath, FileMode.OpenOrCreate))
@@ -65,6 +69,7 @@ namespace SkeletalTracking
                 circleGestureRecognizer = new TemplatedGestureDetector("Circle", recordStream);
                 circleGestureRecognizer.OnGestureDetected += OnGestureDetected;
             }
+           */
             //templates.ItemsSource = circleGestureRecognizer.LearningMachine.Paths;
         }
 
@@ -84,9 +89,11 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
+/*
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             LoadCircleGestureDetector();
+*/  
         }
 
         void OnGestureDetected(string gesture)
@@ -207,6 +214,7 @@ namespace SkeletalTracking
 
         private void detectChannelChangingScenarios(Skeleton skeleton, Dictionary<int, Target> targets, KinectSensor nui)
         {
+/*
             if (skeleton != null)
             {
                 barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
@@ -234,7 +242,7 @@ namespace SkeletalTracking
                 //templatePostureDetector.AddTemplate(skeleton);
                 recordNextFrameForPosture = false;
             }
-
+            */
         }
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
@@ -258,7 +266,7 @@ namespace SkeletalTracking
 
             Target cur = targets[1];
             Target t2 = targets[2];
-
+            /*
             this.rightHandWaveDetector.processSkeleton(skeleton);
             Boolean hasWaved = rightHandWaveDetector.isScenarioDetected();
 
@@ -266,6 +274,7 @@ namespace SkeletalTracking
             {
                 cur.setTargetText("Has waved!");
             }
+            */
             
             
         }
