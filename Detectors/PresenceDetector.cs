@@ -7,7 +7,7 @@ using Coding4Fun.Kinect.Wpf;
 using SkeletalTracking.Indicators;
 namespace SkeletalTracking
 {
-    public abstract class PresenceDetector : ScenarioDetectorIMPL
+    public abstract class PresenceDetector : ScenarioDetector
     {
 
         protected ScenarioStateHistory _history;

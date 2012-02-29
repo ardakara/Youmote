@@ -11,7 +11,7 @@ namespace SkeletalTracking.Detectors
 
         public override Boolean isScenarioDetected()
         {
-            ScenarioStateIMPL lastState = this._history.Peek();
+            ScenarioState lastState = this._history.Peek();
             if (PresenceState.STAND_STATE.isSameState(lastState))
             {
                 PresenceState pState = (PresenceState)lastState;

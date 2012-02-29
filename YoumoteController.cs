@@ -17,6 +17,8 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
+using SkeletalTracking.Television;
+
 namespace SkeletalTracking
 {
     class YoumoteController : SkeletonController
@@ -27,26 +29,25 @@ namespace SkeletalTracking
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
-//        private RightHandWaveDetector rightHandWaveDetector = new RightHandWaveDetector();
+        //        private RightHandWaveDetector rightHandWaveDetector = new RightHandWaveDetector();
 
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
 
-        private MediaElement curVid;
         private TextBlock notification_text;
         private Image notification_image;
         private TextBlock notification_speaker;
         private WinRectangle notification_background_rect;
 
         //using the Toolkit
-/*
-        SwipeGestureDetector swipeGestureRecognizer;
-        readonly ColorStreamManager colorManager = new ColorStreamManager();
-        readonly DepthStreamManager depthManager = new DepthStreamManager();
-        readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
-        readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
+        /*
+                SwipeGestureDetector swipeGestureRecognizer;
+                readonly ColorStreamManager colorManager = new ColorStreamManager();
+                readonly DepthStreamManager depthManager = new DepthStreamManager();
+                readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
+                readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
 
-*/
+        */
         //TemplatedPostureDetector templatePostureDetector = new TemplatedPostureDetector();
         private bool recordNextFrameForPosture;
         bool displayDepth;
@@ -54,25 +55,26 @@ namespace SkeletalTracking
 
         /* Adding Circle Gesture Detector stuff */
         private string circleKBPath;
-/*
-        TemplatedGestureDetector circleGestureRecognizer;
-        TemplatedGestureDetector waveGestureRecognizer;
-        TemplatedGestureDetector resumeGestureRecognizer;
-        */
+        /*
+                TemplatedGestureDetector circleGestureRecognizer;
+                TemplatedGestureDetector waveGestureRecognizer;
+                TemplatedGestureDetector resumeGestureRecognizer;
+                */
         void LoadCircleGestureDetector()
         {
-          /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
-            Console.WriteLine(Environment.CurrentDirectory);
-            Console.WriteLine(circleKBPath);
-            using (Stream recordStream = File.Open(circleKBPath, FileMode.OpenOrCreate))
-            {
-                circleGestureRecognizer = new TemplatedGestureDetector("Circle", recordStream);
-                circleGestureRecognizer.OnGestureDetected += OnGestureDetected;
-            }
-           */
+            /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
+              Console.WriteLine(Environment.CurrentDirectory);
+              Console.WriteLine(circleKBPath);
+              using (Stream recordStream = File.Open(circleKBPath, FileMode.OpenOrCreate))
+              {
+                  circleGestureRecognizer = new TemplatedGestureDetector("Circle", recordStream);
+                  circleGestureRecognizer.OnGestureDetected += OnGestureDetected;
+              }
+             */
             //templates.ItemsSource = circleGestureRecognizer.LearningMachine.Paths;
         }
 
+        private ScreenController _screenController;
 
         /* END CIRCLE DETECTOR INITIALIZATION */
 
@@ -89,11 +91,11 @@ namespace SkeletalTracking
         {
             // repeat for all the messages
             addMessages();
-/*
-            swipeGestureRecognizer = new SwipeGestureDetector();
-            swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
-            LoadCircleGestureDetector();
-*/  
+            /*
+                        swipeGestureRecognizer = new SwipeGestureDetector();
+                        swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
+                        LoadCircleGestureDetector();
+            */
         }
 
         void OnGestureDetected(string gesture)
@@ -140,7 +142,7 @@ namespace SkeletalTracking
         }
 
 
-        private void detectSittingStandingScenarios(Skeleton skeleton, Dictionary<int, Target> targets ) 
+        private void detectSittingStandingScenarios(Skeleton skeleton, Dictionary<int, Target> targets)
         {
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
@@ -159,20 +161,10 @@ namespace SkeletalTracking
             {
                 if (isPermanentlyGone)
                 {
-                    Console.WriteLine("I'm permanently gone");
                     cur.setTargetText("I'm permanently gone");
-                    this.messageList.Clear();
-                    addMessages();
-                    sw.Reset();
-                    curVid.Stop();
-                    curVid.Position = TimeSpan.Zero;
-                    curVid.Visibility = Visibility.Hidden;
-
                 }
                 else
                 {
-
-                    Console.WriteLine("I'm off screen");
                     cur.setTargetText("I'm off screen");
 
                 }
@@ -180,89 +172,69 @@ namespace SkeletalTracking
             }
             else if (isStanding)
             {
-                Console.WriteLine("I'm standing!");
                 cur.setTargetText("I'm standing!");
-                curVid.Pause();
-                sw.Stop();
+
 
             }
             else if (isSitting)
             {
-                Console.WriteLine("I'm sitting!");
                 cur.setTargetText("Sitting!");
-                curVid.Visibility = Visibility.Visible;
-                curVid.Play();
-                sw.Start();
+
             }
             else
             {
-                Console.WriteLine("Neither sitting nor standing!");
                 cur.setTargetText("Neither!");
             }
 
             if (handOnFaceIndicator.isPositionDetected(skeleton))
             {
-                Console.WriteLine("on the phone! \n");
                 t2.setTargetText("Y!");
             }
             else
             {
-                Console.WriteLine("not on the phone!");
                 t2.setTargetText("N!");
             }
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, Dictionary<int, Target> targets, KinectSensor nui)
         {
-/*
-            if (skeleton != null)
-            {
-                barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
-                if (!barycenterHelper.IsStable(skeleton.TrackingId))
-                    return;
+            /*
+                        if (skeleton != null)
+                        {
+                            barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
+                            if (!barycenterHelper.IsStable(skeleton.TrackingId))
+                                return;
 
-                foreach (Joint joint in skeleton.Joints)
-                {
-                    if (joint.TrackingState != JointTrackingState.Tracked)
-                        continue;
+                            foreach (Joint joint in skeleton.Joints)
+                            {
+                                if (joint.TrackingState != JointTrackingState.Tracked)
+                                    continue;
 
-                    if (joint.JointType == JointType.HandRight)
-                    {
-                        swipeGestureRecognizer.Add(joint.Position, nui);
-                        //circleGestureRecognizer.Add(joint.Position, nui);
-                    }
-                }
+                                if (joint.JointType == JointType.HandRight)
+                                {
+                                    swipeGestureRecognizer.Add(joint.Position, nui);
+                                    //circleGestureRecognizer.Add(joint.Position, nui);
+                                }
+                            }
 
-                algorithmicPostureRecognizer.TrackPostures(skeleton);
-            }
-            //templatePostureDetector.TrackPostures(skeleton);
+                            algorithmicPostureRecognizer.TrackPostures(skeleton);
+                        }
+                        //templatePostureDetector.TrackPostures(skeleton);
 
-            if (recordNextFrameForPosture)
-            {
-                //templatePostureDetector.AddTemplate(skeleton);
-                recordNextFrameForPosture = false;
-            }
-            */
+                        if (recordNextFrameForPosture)
+                        {
+                            //templatePostureDetector.AddTemplate(skeleton);
+                            recordNextFrameForPosture = false;
+                        }
+                        */
         }
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-            
-            List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
-            foreach (Message message in readyMessages)
-            {
-                display_message(message);
-                message.startMessageTimer();
-            }
 
-            List<Message> finishedMessages = this.messageList.popFinishedMessages();
-            foreach (Message message in finishedMessages)
-            {
-                remove_message(message);
-                message.stopMessageTimer();
-            }
+            
 
             //detectSittingStandingScenarios(skeleton, targets);
-            detectChannelChangingScenarios(skeleton, targets, nui);
+            //detectChannelChangingScenarios(skeleton, targets, nui);
 
             Target cur = targets[1];
             Target t2 = targets[2];
@@ -275,8 +247,8 @@ namespace SkeletalTracking
                 cur.setTargetText("Has waved!");
             }
             */
-            
-            
+
+
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
@@ -299,7 +271,7 @@ namespace SkeletalTracking
 
         public override void addVideo(MediaElement mediaElement1)
         {
-            curVid = mediaElement1;
+
         }
     }
 }

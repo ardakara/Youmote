@@ -7,7 +7,7 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace SkeletalTracking
 {
-    public class WaveIndicator : PositionIndicatorIMPL
+    public class WaveIndicator : PositionIndicator
     {
         
         public Boolean leftHandRight(Skeleton skeleton)
