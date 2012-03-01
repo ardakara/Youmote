@@ -8,7 +8,7 @@ namespace YouMote
 {
     public class AmbidextrousWaveDetector : WaveDetector
     {
-        protected static double MAX_WAVE_DURATION = 1;
+        protected static double MAX_WAVE_DURATION = 3000;
 
         private Boolean isWaveDetected(ScenarioStateHistory history)
         {
@@ -18,12 +18,14 @@ namespace YouMote
             for (int i = 0; i < recentStates.Count; i++)
             {
                 wave_duration += recentStates[i].getDurationInMilliseconds();
-                if (recentStates.Count == 3)
-                {
-                    //Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
-                }
             }
-            if (wave_duration < 3000 && recentStates.Count >= 3 )
+
+            if (recentStates.Count == 3)
+            {
+                //Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
+            }
+
+            if (wave_duration < MAX_WAVE_DURATION && recentStates.Count >= 3 )
             {
                 if (WaveState.HAND_RIGHT.isSameState(recentStates[0]) && WaveState.HAND_LEFT.isSameState(recentStates[1]) && WaveState.HAND_RIGHT.isSameState(recentStates[2]))
                 {

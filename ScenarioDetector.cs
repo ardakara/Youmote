@@ -28,6 +28,6 @@ namespace YouMote
 /// It then adds this state to its history of states.
 /// </summary>
 /// <param name="skeleton"></param>
-void processSkeleton(Skeleton skeleton);
+        void processSkeleton(Skeleton skeleton);
     }
 }

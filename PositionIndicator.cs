@@ -17,5 +17,6 @@ namespace YouMote
         /// <param name="skeleton"></param>
         /// <returns></returns>
         Boolean isPositionDetected(Skeleton skeleton);
+
     }
 }

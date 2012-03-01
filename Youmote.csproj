@@ -100,6 +100,10 @@
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\AmbidextrousResumeDetector.cs" />
+    <Compile Include="Detectors\AmbidextrousScreenDetector.cs" />
+    <Compile Include="Detectors\ScreenState.cs" />
+    <Compile Include="Detectors\PullDownScreenDetector.cs" />
+    <Compile Include="Detectors\MuteDetector.cs" />
     <Compile Include="Detectors\ResumeDetector.cs" />
     <Compile Include="Detectors\ResumeState.cs" />
     <Compile Include="Detectors\PermanentLeaveDetector.cs" />
@@ -112,6 +116,9 @@
     <Compile Include="Detectors\WaveDetector.cs" />
     <Compile Include="Detectors\WaveState.cs" />
     <Compile Include="Indicators\AbsentIndicator.cs" />
+    <Compile Include="Indicators\LeftHandOnFaceIndicator.cs" />
+    <Compile Include="Indicators\RightHandOnFaceIndicator.cs" />
+    <Compile Include="Indicators\PullDownIndicator.cs" />
     <Compile Include="Indicators\ResumeIndicator.cs" />
     <Compile Include="Indicators\WaveIndicator.cs" />
     <Compile Include="Indicators\HandOnFaceIndicator.cs" />

@@ -29,7 +29,10 @@ namespace YouMote
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
         private AmbidextrousWaveDetector ambiHandWaveDetector = new AmbidextrousWaveDetector();
+        private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
         private AmbidextrousWaveDetector ambiResumeDetector = new AmbidextrousWaveDetector();
+
+        private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
@@ -248,7 +251,7 @@ namespace YouMote
             if (!IsScreenOn)
             {
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
-                Boolean hasWaved = ambiHandWaveDetector.isScenarioDetected();
+                Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
                     cur.setTargetText("Has waved!");
@@ -258,6 +261,13 @@ namespace YouMote
             }
             else
             {
+                
+                this.ambiScreenDetector.processSkeleton(skeleton);
+                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
+                if (hasPulledDownScreen)
+                {
+                    cur.setTargetText("Has pulled down screen!");
+                }
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)
@@ -267,8 +277,8 @@ namespace YouMote
                 }
             
 
-            //detectSittingStandingScenarios(skeleton, targets);
-            //detectChannelChangingScenarios(skeleton, targets, nui);
+                //detectSittingStandingScenarios(skeleton, targets);
+                //detectChannelChangingScenarios(skeleton, targets, nui);
 
                 List<Message> finishedMessages = this.messageList.popFinishedMessages();
                 foreach (Message message in finishedMessages)
@@ -277,7 +287,7 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-                detectSittingStandingScenarios(skeleton, targets);
+
             }
         }
 
