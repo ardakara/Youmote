@@ -37,13 +37,17 @@ namespace YouMote
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
 
+
         private TextBlock notification_text;
         private Image notification_image;
         private TextBlock notification_speaker;
         private WinRectangle notification_background_rect;
 
-        //using the Toolkit
+        /* Flags to handle complex manual overrides */
+        private Boolean _isOverrideResume;
+        private Boolean _isOverridePause;
 
+        //using the Toolkit
         SwipeGestureDetector swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
@@ -51,35 +55,10 @@ namespace YouMote
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
 
 
-        private bool recordNextFrameForPosture;
-        bool displayDepth;
-        Target gesture_notifier;
-
-        /* Adding Circle Gesture Detector stuff */
-        private string circleKBPath;
-
         /* Stuff needed to 'turn on the tv'*/
-        private WinRectangle black_screen;
         private Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
-
-        void LoadCircleGestureDetector()
-        {
-            /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
-              Console.WriteLine(Environment.CurrentDirectory);
-              Console.WriteLine(circleKBPath);
-              using (Stream recordStream = File.Open(circleKBPath, FileMode.OpenOrCreate))
-              {
-                  circleGestureRecognizer = new TemplatedGestureDetector("Circle", recordStream);
-                  circleGestureRecognizer.OnGestureDetected += OnGestureDetected;
-              }
-             */
-            //templates.ItemsSource = circleGestureRecognizer.LearningMachine.Paths;
-        }
-
-
-        /* END CIRCLE DETECTOR INITIALIZATION */
 
         private void addMessages()
         {
@@ -99,7 +78,8 @@ namespace YouMote
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new Television(win);
-            //LoadCircleGestureDetector();
+            this._isOverridePause = false;
+            this._isOverrideResume = false;
         }
 
         void OnGestureDetected(string gesture)
@@ -151,23 +131,27 @@ namespace YouMote
             this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
-
-            /*if (this.handOnFaceIndicator.isPositionDetected(skeleton))
-            {
-                curVid.Pause();
-            }*/
-
             this.ambiResumeDetector.processSkeleton(skeleton);
-            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
-            if (hasResumed)
-            {
-                this._debugPositionBox.Text = "Has RESUMED";
-            }
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+
+            if (hasResumed)
+            {
+                this._debugPositionBox.Text = "Has RESUMED";
+                if (this._isOverridePause)
+                {
+                    this._isOverridePause = false;
+                }
+                else
+                {
+                    this._isOverrideResume = true;
+                }
+            }
+
 
             if (isAbsent)
             {
@@ -178,39 +162,47 @@ namespace YouMote
                 }
                 else
                 {
-                    this._debugPositionBox.Text = "I'm off screen";
-                    this._tv.pause();
+                    if (!this._isOverrideResume)
+                    {
+                        this._debugPositionBox.Text = "I'm off screen so pause TV";
+                        this._tv.pause();
+                    }
+                    else
+                    {
+                        this._debugPositionBox.Text = "I'm off screen but override resume keeps playing show!";
+                    }
                 }
 
             }
             else if (isStanding)
             {
-
-                this._debugPositionBox.Text = "I'm standing";
-                this._tv.pause();
+                if (!this._isOverrideResume)
+                {
+                    this._debugPositionBox.Text = "I'm standing and paused.";
+                    this._tv.pause();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
+                }
             }
             else if (isSitting)
             {
-                this._debugPositionBox.Text = "Sitting!";
-                if (this._tv.IsOn)
+                if (!this._isOverridePause)
                 {
+                    this._debugPositionBox.Text = "Sitting -- so resume!";
                     this._tv.play();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "Sitting, but manual override presents play!";
                 }
             }
             else
             {
                 this._debugPositionBox.Text = "Neither!";
-
             }
 
-            if (handOnFaceIndicator.isPositionDetected(skeleton))
-            {
-                //                t2.setTargetText("Y!");
-            }
-            else
-            {
-                //              t2.setTargetText("N!");
-            }
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
@@ -230,27 +222,25 @@ namespace YouMote
                     if (joint.JointType == JointType.HandRight)
                     {
                         swipeGestureRecognizer.Add(joint.Position, nui);
-                        //circleGestureRecognizer.Add(joint.Position, nui);
                     }
                 }
 
                 algorithmicPostureRecognizer.TrackPostures(skeleton);
             }
-            //templatePostureDetector.TrackPostures(skeleton);
-
-            if (recordNextFrameForPosture)
-            {
-                //templatePostureDetector.AddTemplate(skeleton);
-                recordNextFrameForPosture = false;
-            }
-
-
         }
+
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int,Target> targets)
         {
-
             if (!this._tv.IsOn)
             {
+                if (skeleton == null)
+                {
+                    this._debugPositionBox.Text = "null skel";
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "recognized skel";
+                }
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
@@ -263,13 +253,8 @@ namespace YouMote
             else
             {
 
-                this.ambiScreenDetector.processSkeleton(skeleton);
-                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
-                if (hasPulledDownScreen)
-                {
-                    this._debugPositionBox.Text = "Has pulled down screen!";
-                    this._tv.turnOff();
-                }
+                detectSittingStandingScenarios(skeleton);
+                detectChannelChangingScenarios(skeleton, nui);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)
@@ -278,10 +263,6 @@ namespace YouMote
                     message.startMessageTimer();
                 }
 
-
-                //detectSittingStandingScenarios(skeleton, targets);
-                //detectChannelChangingScenarios(skeleton, targets, nui);
-
                 List<Message> finishedMessages = this.messageList.popFinishedMessages();
                 foreach (Message message in finishedMessages)
                 {
@@ -289,7 +270,13 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-
+                this.ambiScreenDetector.processSkeleton(skeleton);
+                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
+                if (hasPulledDownScreen)
+                {
+                    this._debugPositionBox.Text = "Has pulled down screen!";
+                    this._tv.turnOff();
+                }
             }
         }
 
@@ -309,11 +296,6 @@ namespace YouMote
             notification_image = not_image;
             notification_speaker = not_speaker;
             notification_background_rect = rect;
-        }
-
-        public override void addBlackScreen(WinRectangle black_screen)
-        {
-            this.black_screen = black_screen;
         }
 
         public override void addVideo(MediaElement mediaElement1)

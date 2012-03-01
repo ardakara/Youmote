@@ -177,8 +177,8 @@ namespace Youmote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m1 = new Media(1, 100, 0, "test", "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\m1.mp4");
-            Media m2 = new Media(1, 100, 0, "test", "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\m2.mp4");
+            Media m1 = new Media(1, 100, 0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
+            Media m2 = new Media(1, 100, 0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
             Channel c2 = new Channel(0, "channel 2", m2);
             this._channels.Clear();
@@ -188,7 +188,7 @@ namespace Youmote.Television
         }
         public void fakeTVRun()
         {
-            Media m0 = new Media(1, 100, 15.0, "test", "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\pixar_short.avi");
+            Media m0 = new Media(1, 100, 15.0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
             this._cachedMedia = m0;
 
 

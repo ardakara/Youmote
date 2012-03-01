@@ -64,7 +64,6 @@ namespace YouMote
         SkeletonController currentController;
 
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
-        MediaElement curVid;
 
         Skeleton[] skeletons;
 

@@ -115,7 +115,7 @@
     <Compile Include="Detectors\PresenceDetector.cs" />
     <Compile Include="Detectors\PresenceState.cs" />
     <Compile Include="Detectors\StandingDetector.cs" />
-    <Compile Include="Detectors\WaveDetector.cs" />
+    <Compile Include="WaveDetector.cs" />
     <Compile Include="Detectors\WaveState.cs" />
     <Compile Include="Indicators\AbsentIndicator.cs" />
     <Compile Include="Indicators\LeftHandOnFaceIndicator.cs" />
