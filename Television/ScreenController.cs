@@ -5,8 +5,9 @@ using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
+using System.Windows.Shapes;
 
-namespace YouMote.Television
+namespace SkeletalTracking.Television
 {
     /// <summary>
     /// Class that controllers what is happening on the users screen.. Paused video, moving videos etc.
@@ -14,150 +15,243 @@ namespace YouMote.Television
     public class ScreenController
     {
 
-        private static double SCREEN_CHANGE_DURATION = 1;
-        private static int SCREEN_X = 0;
-        private static int SCREEN_Y = 0;
-        private static int SCREEN_WIDTH = 100;
-        private static int SCREEN_HEIGHT = 100;
+        private static double FADE_OUT_DURATION = 3.0;
+        private static double FADE_IN_DURATION = 3.0;
+        private static double SCREEN_CHANGE_DURATION = 1.0;
+        private double screenX = 0;
+        private double screenY = 0;
+        private double screenWidth;
+        private double screenHeight;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
+        public Media CurrentMedia
+        {
+            get
+            {
+                return this._currentMedia;
+            }
+            set
+            {
+                this._currentMedia = value;
+
+                this._currentMediaElement.Source = new System.Uri(this._currentMedia.File);
+                this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
+            }
+        }
         private Media _swapMedia = Media.NULL_MEDIA;
-        private MediaElement _currentMediaElement = new MediaElement();
-        private MediaElement _swapMediaElement = new MediaElement();
+        public Media SwapMedia
+        {
+            get
+            {
+                return this._swapMedia;
+            }
+            set
+            {
+                this._swapMedia = value;
+                this._swapMediaElement.Source = new System.Uri(this._swapMedia.File);
+                this._swapMediaElement.Position = TimeSpan.FromSeconds(this._swapMedia.CurrentTime);
+            }
+        }
 
-        private Storyboard _curLeavingLeftAnimation = new Storyboard();
-        private Storyboard _curLeavingRightAnimation = new Storyboard();
-        private Storyboard _swapEnteringLeftAnimation = new Storyboard();
-        private Storyboard _swapEnteringRightAnimation = new Storyboard();
+        private MediaElement _currentMediaElement;
+        private MediaElement _swapMediaElement;
+        private Canvas _currentContainer;
+        private Canvas _swapContainer;
 
-        private DoubleAnimation _curLeavingLeftDoubleAnimation = new DoubleAnimation();
-        private DoubleAnimation _curLeavingRightDoubleAnimation = new DoubleAnimation();
-        private DoubleAnimation _swapEnteringLeftDoubleAnimation = new DoubleAnimation();
-        private DoubleAnimation _swapEnteringRightDoubleAnimation = new DoubleAnimation();
+        private Storyboard _fadeOutStoryboard = new Storyboard();
+        private Storyboard _fadeInStoryboard = new Storyboard();
+        private Storyboard _curMoveLeftStoryboard = new Storyboard();
+        private Storyboard _curMoveRightStoryboard = new Storyboard();
+        private Storyboard _swapMoveRightStoryboard = new Storyboard();
+        private Storyboard _swapMoveLeftStoryboard = new Storyboard();
+
+        private DoubleAnimation _fadeInDoubleAnimation = new DoubleAnimation();
+        private DoubleAnimation _fadeOutDoubleAnimation = new DoubleAnimation();
+        private DoubleAnimation _curMoveLeftDoubleAnimation = new DoubleAnimation();
+        private DoubleAnimation _curMoveRightDoubleAnimation = new DoubleAnimation();
+        private DoubleAnimation _swapMoveRightDoubleAnimation = new DoubleAnimation();
+        private DoubleAnimation _swapMoveLeftDoubleAnimation = new DoubleAnimation();
 
 
         public ScreenController(MainWindow window)
         {
             this._window = window;
-
-
+            this.screenWidth = window.MainCanvas.Width;
+            this.screenHeight = window.MainCanvas.Height;
+            this.initializeMediaElements();
+            this.initializeStoryElements();
         }
 
         private void initializeStoryElements()
         {
+            this._fadeInDoubleAnimation.From = 0.0;
+            this._fadeInDoubleAnimation.To = 1.0;
+            this._fadeInDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.FADE_IN_DURATION));
+            this._fadeInDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._fadeInStoryboard.Children.Add(this._fadeInDoubleAnimation);
 
-            this._curLeavingLeftDoubleAnimation.From = ScreenController.SCREEN_X;
-            this._curLeavingLeftDoubleAnimation.To = ScreenController.SCREEN_X - ScreenController.SCREEN_WIDTH;
-            this._curLeavingLeftDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
-            this._curLeavingLeftDoubleAnimation.FillBehavior = FillBehavior.Stop;
-            this._curLeavingLeftDoubleAnimation.Completed += handleAnimationCompleted;
-            this._curLeavingLeftAnimation.Children.Add(this._curLeavingLeftDoubleAnimation);
+            this._fadeOutDoubleAnimation.From = 1.0;
+            this._fadeOutDoubleAnimation.To = 0.0;
+            this._fadeOutDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.FADE_OUT_DURATION));
+            this._fadeOutDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._fadeOutStoryboard.Children.Add(this._fadeOutDoubleAnimation);
 
-            this._curLeavingRightDoubleAnimation.From = ScreenController.SCREEN_X;
-            this._curLeavingRightDoubleAnimation.To = ScreenController.SCREEN_X + ScreenController.SCREEN_WIDTH;
-            this._curLeavingRightDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
-            this._curLeavingRightDoubleAnimation.FillBehavior = FillBehavior.Stop;
-            this._curLeavingRightDoubleAnimation.Completed += handleAnimationCompleted;
-            this._curLeavingRightAnimation.Children.Add(this._curLeavingRightDoubleAnimation);
+            this._curMoveLeftDoubleAnimation.From = this.screenX;
+            this._curMoveLeftDoubleAnimation.To = this.screenX - this.screenWidth;
+            this._curMoveLeftDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
+            this._curMoveLeftDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._curMoveLeftStoryboard.Children.Add(this._curMoveLeftDoubleAnimation);
 
-            this._swapEnteringLeftDoubleAnimation.From = ScreenController.SCREEN_X - ScreenController.SCREEN_WIDTH;
-            this._swapEnteringLeftDoubleAnimation.To = ScreenController.SCREEN_X;
-            this._swapEnteringLeftDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
-            this._swapEnteringLeftDoubleAnimation.FillBehavior = FillBehavior.Stop;
-            this._swapEnteringLeftDoubleAnimation.Completed += handleAnimationCompleted;
-            this._swapEnteringLeftAnimation.Children.Add(this._swapEnteringLeftDoubleAnimation);
+            this._curMoveRightDoubleAnimation.From = this.screenX;
+            this._curMoveRightDoubleAnimation.To = this.screenX + this.screenWidth;
+            this._curMoveRightDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
+            this._curMoveRightDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._curMoveRightStoryboard.Children.Add(this._curMoveRightDoubleAnimation);
 
-            this._swapEnteringRightDoubleAnimation.From = ScreenController.SCREEN_X + ScreenController.SCREEN_WIDTH;
-            this._swapEnteringRightDoubleAnimation.To = ScreenController.SCREEN_X;
-            this._swapEnteringRightDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
-            this._swapEnteringRightDoubleAnimation.FillBehavior = FillBehavior.Stop;
-            this._swapEnteringRightDoubleAnimation.Completed += handleAnimationCompleted;
-            this._swapEnteringRightAnimation.Children.Add(this._swapEnteringRightDoubleAnimation);
+            this._swapMoveRightDoubleAnimation.From = this.screenX - this.screenWidth;
+            this._swapMoveRightDoubleAnimation.To = this.screenX;
+            this._swapMoveRightDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
+            this._swapMoveRightDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._swapMoveRightDoubleAnimation.Completed += handleAnimationCompleted;
+            this._swapMoveRightStoryboard.Children.Add(this._swapMoveRightDoubleAnimation);
+
+            this._swapMoveLeftDoubleAnimation.From = this.screenX + this.screenWidth;
+            this._swapMoveLeftDoubleAnimation.To = this.screenX;
+            this._swapMoveLeftDoubleAnimation.Duration = new System.Windows.Duration(TimeSpan.FromSeconds(ScreenController.SCREEN_CHANGE_DURATION));
+            this._swapMoveLeftDoubleAnimation.FillBehavior = FillBehavior.HoldEnd;
+            this._swapMoveLeftDoubleAnimation.Completed += handleAnimationCompleted;
+            this._swapMoveLeftStoryboard.Children.Add(this._swapMoveLeftDoubleAnimation);
+
         }
 
+        /// <summary>
+        /// Function called once the swaps have been moved into place.  This cleanup function then makes the swap media the current media.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleAnimationCompleted(object sender, EventArgs e)
         {
             Media tempMedia = this._currentMedia;
             MediaElement tempMediaElement = this._currentMediaElement;
+            Canvas tempContainer = this._currentContainer;
+
             this._currentMediaElement = this._swapMediaElement;
             this._currentMedia = this._swapMedia;
+            this._currentContainer = this._swapContainer;
 
             this._swapMedia = Media.NULL_MEDIA;
             this._swapMediaElement = tempMediaElement;
-            this._swapMediaElement.Opacity = 0;
+            this._swapContainer = tempContainer;
         }
         private void initializeMediaElements()
         {
-            this._currentMediaElement.Height = SCREEN_HEIGHT;
-            this._currentMediaElement.Width = SCREEN_WIDTH;
-            this._currentMediaElement.Opacity = 0;
+            this._currentContainer = this._window.me1Container;
+            this._currentContainer.Height = this.screenHeight;
+            this._currentContainer.Width = this.screenWidth;
+            this._currentContainer.Visibility = Visibility.Visible;
+
+            this._currentMediaElement = this._window.mediaElement1;
+            this._currentMediaElement.Height = this.screenHeight;
+            this._currentMediaElement.Width = this.screenWidth;
+            this._currentMediaElement.Visibility = Visibility.Visible;
             this._currentMediaElement.Name = "CURRENT_MEDIA_ELEMENT";
-            this._window.MainCanvas.Children.Add(this._currentMediaElement);
 
-            this._swapMediaElement.Height = SCREEN_HEIGHT;
-            this._swapMediaElement.Width = SCREEN_WIDTH;
-            this._swapMediaElement.Opacity = 0;
+            this._swapContainer = this._window.me2Container;
+            this._swapContainer.Visibility = Visibility.Visible;
+            this._swapContainer.Height = this.screenHeight;
+            this._swapContainer.Width = this.screenWidth;
+
+            this._swapMediaElement = this._window.mediaElement2;
+            this._swapMediaElement.Height = this.screenHeight;
+            this._swapMediaElement.Width = this.screenWidth;
+            this._swapMediaElement.Visibility = Visibility.Visible;
             this._swapMediaElement.Name = "SWAP_MEDIA_ELEMENT";
-            this._window.MainCanvas.Children.Add(this._swapMediaElement);
         }
 
-        public void pauseCurrentMedia()
+        public void fadeOut()
         {
-            this._currentMediaElement.Pause();
+            this._fadeInStoryboard.SkipToFill();
+            Storyboard.SetTargetName(this._fadeOutDoubleAnimation, this._currentContainer.Name);
+            Storyboard.SetTargetProperty(this._fadeOutDoubleAnimation, new PropertyPath(Canvas.OpacityProperty));
+            this._fadeOutStoryboard.Begin(this._window, true);
         }
 
-        public void playCurrentMedia()
+        public void fadeIn()
+        {
+            this._fadeInStoryboard.SkipToFill();
+            Storyboard.SetTargetName(this._fadeInDoubleAnimation, this._currentContainer.Name);
+            Storyboard.SetTargetProperty(this._fadeInDoubleAnimation, new PropertyPath(Canvas.OpacityProperty));
+            this._fadeInStoryboard.Begin(this._window, true);
+        }
+
+        public void turnOn(Media m)
+        {
+            this.CurrentMedia = m;
+            this.play();
+            this.fadeIn();
+
+        }
+
+        public void play()
         {
             this._currentMediaElement.Play();
+            this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
+        }
+        public double pause()
+        {
+            this._currentMediaElement.Pause();
+            return this._currentMediaElement.Position.Seconds;
         }
 
-        public void fadeOutCurrentMedia()
+        public double turnOff()
         {
+            double position = this.pause();
+            this.fadeOut();
+            return position;
         }
 
-        public void fadeInCurrentMedia()
+        private void skipAllStoryboardsToFill()
         {
+            this._curMoveLeftStoryboard.SkipToFill();
+            this._curMoveLeftStoryboard.SkipToFill();
+            this._swapMoveRightStoryboard.SkipToFill();
+            this._swapMoveLeftStoryboard.SkipToFill();
+            this._fadeInStoryboard.SkipToFill();
+            this._fadeOutStoryboard.SkipToFill();
+        }
+        public void moveMediaToRight(Media media)
+        {
+            this.skipAllStoryboardsToFill();
+
+            this.pause();
+            Storyboard.SetTargetName(this._curMoveRightDoubleAnimation, this._currentContainer.Name);
+            Storyboard.SetTargetProperty(this._curMoveRightDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
+            this._curMoveRightStoryboard.Begin(this._window, true);
+
+            this.SwapMedia = media;
+//            this._swapContainer.Opacity = 1.0;
+            this._swapMediaElement.Play();
+            this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
+            Storyboard.SetTargetName(this._swapMoveRightDoubleAnimation, this._swapContainer.Name);
+            Storyboard.SetTargetProperty(this._swapMoveRightDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
+            this._swapMoveRightStoryboard.Begin(this._window, true);
         }
 
-        public void turnOn(Media media)
+
+        public void moveMediaToLeft(Media media)
         {
-            // fate in current media
-        }
+            this._fadeInStoryboard.SkipToFill();
+            Storyboard.SetTargetName(this._curMoveLeftDoubleAnimation, this._currentContainer.Name);
+            Storyboard.SetTargetProperty(this._curMoveLeftDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
+            this._curMoveLeftStoryboard.Begin(this._window, true);
 
-        public void turnOff()
-        {
-            // fade out current media
-        }
-
-        public void swapInNewMediaFromLeftToRight(Media media)
-        {
-            this._swapMedia = media;
-            this._swapMediaElement.Source = new System.Uri(this._swapMedia.File);
-            this._swapMediaElement.Opacity = 1.0;
-            Storyboard.SetTargetName(this._curLeavingRightDoubleAnimation, this._currentMediaElement.Name);
-            Storyboard.SetTargetProperty(this._curLeavingRightDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
-
-            Storyboard.SetTargetName(this._swapEnteringLeftDoubleAnimation, this._swapMediaElement.Name);
-            Storyboard.SetTargetProperty(this._swapEnteringLeftDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
-            this._curLeavingRightAnimation.Begin();
-            this._swapEnteringLeftAnimation.Begin();
-        }
-
-
-        public void swapInNewMediaFromRightToLeft(Media media)
-        {
-            this._swapMedia = media;
-            this._swapMediaElement.Source = new System.Uri(this._swapMedia.File);
-            this._swapMediaElement.Opacity = 1.0;
-
-            Storyboard.SetTargetName(this._curLeavingLeftDoubleAnimation, this._currentMediaElement.Name);
-            Storyboard.SetTargetProperty(this._curLeavingLeftDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
-
-            Storyboard.SetTargetName(this._swapEnteringRightDoubleAnimation, this._swapMediaElement.Name);
-            Storyboard.SetTargetProperty(this._swapEnteringRightDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
-
-            this._curLeavingLeftAnimation.Begin();
-            this._swapEnteringRightAnimation.Begin();
+            this.SwapMedia = media;
+//            this._swapContainer.Opacity = 1.0;
+            this._swapMediaElement.Play();
+            this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
+            Storyboard.SetTargetName(this._swapMoveLeftDoubleAnimation, this._swapContainer.Name);
+            Storyboard.SetTargetProperty(this._swapMoveLeftDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
+            this._swapMoveLeftStoryboard.Begin(this._window, true);
         }
 
     }
