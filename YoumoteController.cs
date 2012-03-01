@@ -17,7 +17,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
-using YouMote.Television;
+using Youmote.Television;
 
 namespace YouMote
 {
@@ -61,6 +61,8 @@ namespace YouMote
         /* Stuff needed to 'turn on the tv'*/
         private WinRectangle black_screen;
         private bool IsScreenOn;
+        private TextBox _debugPositionBox;
+        private TextBox _debugGestureBox;
 
         void LoadCircleGestureDetector()
         {
@@ -76,7 +78,6 @@ namespace YouMote
             //templates.ItemsSource = circleGestureRecognizer.LearningMachine.Paths;
         }
 
-        private ScreenController _screenController;
 
         /* END CIRCLE DETECTOR INITIALIZATION */
 
@@ -93,7 +94,8 @@ namespace YouMote
         {
             // repeat for all the messages
             addMessages();
-
+            this._debugPositionBox = win.DebugPositionTextBox;
+            this._debugGestureBox = win.DebugGestureTextBox;
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             //LoadCircleGestureDetector();
@@ -104,11 +106,11 @@ namespace YouMote
         {
             if (gesture == "SwipeToLeft")
             {
-                gesture_notifier.setTargetText("You swiped to the left!");
+                this._debugGestureBox.Text = "you swiped left!";
             }
             else if (gesture == "SwipeToRight")
             {
-                gesture_notifier.setTargetText("to the RIGHT you swiped!!");
+                this._debugGestureBox.Text = "to the RIGHT you swiped!!";
             }
         }
 
@@ -142,10 +144,8 @@ namespace YouMote
         }
 
 
-        private void detectSittingStandingScenarios(Skeleton skeleton, Dictionary<int, Target> targets)
+        private void detectSittingStandingScenarios(Skeleton skeleton)
         {
-            Target cur = targets[1];
-            Target t2 = targets[2];
 
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
@@ -161,7 +161,7 @@ namespace YouMote
             Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
             if (hasResumed)
             {
-                cur.setTargetText("Has RESUMED!");
+                this._debugPositionBox.Text = "Has RESUMED";
             }
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
@@ -173,42 +173,39 @@ namespace YouMote
             {
                 if (isPermanentlyGone)
                 {
-                    cur.setTargetText("I'm permanently gone");
+                    this._debugPositionBox.Text = "I'm permanently gone";
                 }
                 else
                 {
-                    cur.setTargetText("I'm off screen");
-
+                    this._debugPositionBox.Text = "I'm off screen";
                 }
 
             }
             else if (isStanding)
             {
-                cur.setTargetText("I'm standing!");
-
-
+                this._debugPositionBox.Text = "I'm standing";
             }
             else if (isSitting)
             {
-                cur.setTargetText("Sitting!");
-
+                this._debugPositionBox.Text = "Sitting!";
             }
             else
             {
-                cur.setTargetText("Neither!");
+                this._debugPositionBox.Text = "Neither!";
+
             }
 
             if (handOnFaceIndicator.isPositionDetected(skeleton))
             {
-                t2.setTargetText("Y!");
+                //                t2.setTargetText("Y!");
             }
             else
             {
-                t2.setTargetText("N!");
+                //              t2.setTargetText("N!");
             }
         }
 
-        private void detectChannelChangingScenarios(Skeleton skeleton, Dictionary<int, Target> targets, KinectSensor nui)
+        private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
         {
 
             if (skeleton != null)
@@ -238,15 +235,13 @@ namespace YouMote
                 //templatePostureDetector.AddTemplate(skeleton);
                 recordNextFrameForPosture = false;
             }
-            
+
 
         }
-        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
+        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui)
         {
 
 
-            Target cur = targets[1];
-            Target t2 = targets[2];
 
             if (!IsScreenOn)
             {
@@ -254,19 +249,19 @@ namespace YouMote
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
-                    cur.setTargetText("Has waved!");
+                    this._debugPositionBox.Text = "Has waved!";
                     black_screen.Visibility = Visibility.Hidden;
                     IsScreenOn = true;
                 }
             }
             else
             {
-                
+
                 this.ambiScreenDetector.processSkeleton(skeleton);
                 Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
                 if (hasPulledDownScreen)
                 {
-                    cur.setTargetText("Has pulled down screen!");
+                    this._debugPositionBox.Text = "Has pulled down screen!";
                 }
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -275,7 +270,7 @@ namespace YouMote
                     display_message(message);
                     message.startMessageTimer();
                 }
-            
+
 
                 //detectSittingStandingScenarios(skeleton, targets);
                 //detectChannelChangingScenarios(skeleton, targets, nui);
@@ -298,7 +293,7 @@ namespace YouMote
             notification_speaker.Visibility = Visibility.Hidden;
             notification_image.Visibility = Visibility.Hidden;
             notification_text.Visibility = Visibility.Hidden;
-            gesture_notifier = targets[1];
+            //            gesture_notifier = targets[1];
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)

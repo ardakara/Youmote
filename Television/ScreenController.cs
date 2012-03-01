@@ -6,8 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
 using System.Windows.Shapes;
+using YouMote;
 
-namespace SkeletalTracking.Television
+namespace Youmote.Television
 {
     /// <summary>
     /// Class that controllers what is happening on the users screen.. Paused video, moving videos etc.
@@ -145,7 +146,7 @@ namespace SkeletalTracking.Television
         }
         private void initializeMediaElements()
         {
-            this._currentContainer = this._window.me1Container;
+            this._currentContainer = this._window.MediaContainer1;
             this._currentContainer.Height = this.screenHeight;
             this._currentContainer.Width = this.screenWidth;
             this._currentContainer.Visibility = Visibility.Visible;
@@ -156,7 +157,7 @@ namespace SkeletalTracking.Television
             this._currentMediaElement.Visibility = Visibility.Visible;
             this._currentMediaElement.Name = "CURRENT_MEDIA_ELEMENT";
 
-            this._swapContainer = this._window.me2Container;
+            this._swapContainer = this._window.MediaContainer2;
             this._swapContainer.Visibility = Visibility.Visible;
             this._swapContainer.Height = this.screenHeight;
             this._swapContainer.Width = this.screenWidth;
