@@ -238,10 +238,8 @@ namespace YouMote
 
 
         }
-        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui)
+        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int,Target> targets)
         {
-
-
 
             if (!IsScreenOn)
             {
