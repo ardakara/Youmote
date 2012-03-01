@@ -65,6 +65,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\Microsoft SDKs\Kinect\v1.0\Assemblies\Microsoft.Kinect.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Speech, Version=11.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.Speech.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
@@ -170,9 +174,9 @@
   <ItemGroup>
     <Resource Include="Images\heer_profile.jpg" />
     <Resource Include="Images\tv_logo.png" />
-    <Content Include="Video\pixar_short.avi">
+    <Resource Include="Video\pixar_short.avi">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
