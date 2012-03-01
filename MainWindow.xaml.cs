@@ -24,18 +24,29 @@ namespace YouMote
     using System.Windows.Shapes;
     using Microsoft.Kinect;
     using Coding4Fun.Kinect.Wpf;
-    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
     public partial class MainWindow : Window
     {
+        private static Boolean isDebug = true;
         public MainWindow()
         {
             //YouMote.Client.Client.test();
             InitializeComponent();
-            
+            if (isDebug)
+            {
+                this.DebugPositionTextBox.Visibility = Visibility.Visible;
+                this.DebugGestureTextBox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.DebugPositionTextBox.Visibility = Visibility.Hidden;
+                this.DebugGestureTextBox.Visibility = Visibility.Hidden;
+            }
+
         }
 
         //Kinect Sensor
@@ -46,9 +57,8 @@ namespace YouMote
 
         //Holds the currently active controller
         SkeletonController currentController;
-       
+
         Dictionary<int, Target> targets = new Dictionary<int, Target>();
-        MediaElement curVid;
 
         Skeleton[] skeletons;
 
@@ -62,30 +72,13 @@ namespace YouMote
             SetupKinect();
             youmoteController = new YoumoteController(this);
             currentController = youmoteController;
-            InitTargets();
-        }
-        
-        private void InitTargets()
-        {
-            targets.Add(1, new Target(target1, 1));
-            targets.Add(2, new Target(target2, 2));
-
-            curVid = mediaElement1;
-            currentController.addBlackScreen(black_screen);
-            currentController.addVideo(curVid);
-            currentController.addUIElements(notification_speaker, notification_text, notification_image, rectangle1);
-
-            currentController.controllerActivated(targets);
-            
-            Canvas.SetZIndex(target1, 100);
-            Canvas.SetZIndex(target2, 100);
         }
 
         private void SetupKinect()
         {
             if (KinectSensor.KinectSensors.Count == 0)
             {
-                this.Title = "No Kinect connected"; 
+                this.Title = "No Kinect connected";
             }
             else
             {
@@ -108,51 +101,8 @@ namespace YouMote
                 //add event to receive skeleton data
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
 
-                //add event to receive video data
-                nui.ColorFrameReady += new EventHandler<ColorImageFrameReadyEventArgs>(nui_VideoFrameReady);
-                
-                //Force video to the background
-                Canvas.SetZIndex(image1, -10000);
+
             }
-        }
-
-        void nui_VideoFrameReady(object sender, ColorImageFrameReadyEventArgs e)
-        {
-            using (ColorImageFrame imageFrame = e.OpenColorImageFrame())
-            {
-                if (imageFrame != null)
-                {
-                    image1.Source = imageFrame.ToBitmapSource();
-                }
-            }          
-        }
-
-        void draw_skeleton(Skeleton skeleton)
-        {
-            //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
-            SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
-            SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
-            SetEllipsePosition(rightEllipse, skeleton.Joints[JointType.HandRight]);
-            SetEllipsePosition(shoulderCenter, skeleton.Joints[JointType.ShoulderCenter]);
-            SetEllipsePosition(shoulderRight, skeleton.Joints[JointType.ShoulderRight]);
-            SetEllipsePosition(shoulderLeft, skeleton.Joints[JointType.ShoulderLeft]);
-            SetEllipsePosition(ankleRight, skeleton.Joints[JointType.AnkleRight]);
-            SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
-            SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
-            SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
-            SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
-            SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
-            SetEllipsePosition(elbowLeft, skeleton.Joints[JointType.ElbowLeft]);
-            SetEllipsePosition(elbowRight, skeleton.Joints[JointType.ElbowRight]);
-            SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
-            SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
-            SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
-            SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
-            SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
-            SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
-            SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
-            SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
-                        
         }
 
         void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -177,51 +127,21 @@ namespace YouMote
                                          where s.TrackingState == SkeletonTrackingState.Tracked
                                          select s).FirstOrDefault();
 
-
-                    if (skeleton != null)
-                    {
-                        draw_skeleton(skeleton);
-                        //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
-                        SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
-                        SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
-                        SetEllipsePosition(rightEllipse, skeleton.Joints[JointType.HandRight]);
-                        SetEllipsePosition(shoulderCenter, skeleton.Joints[JointType.ShoulderCenter]);
-                        SetEllipsePosition(shoulderRight, skeleton.Joints[JointType.ShoulderRight]);
-                        SetEllipsePosition(shoulderLeft, skeleton.Joints[JointType.ShoulderLeft]);
-                        SetEllipsePosition(ankleRight, skeleton.Joints[JointType.AnkleRight]);
-                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
-                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
-                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
-                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
-                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
-                        SetEllipsePosition(elbowLeft, skeleton.Joints[JointType.ElbowLeft]);
-                        SetEllipsePosition(elbowRight, skeleton.Joints[JointType.ElbowRight]);
-                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
-                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
-                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
-                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
-                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
-                        SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
-                        SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
-                        SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
-
-                    }
-                    
                     currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
         }
 
         private void SetEllipsePosition(Ellipse ellipse, Joint joint)
-        {    
+        {
             var scaledJoint = joint.ScaleTo(1024, 1280, k_xMaxJointScale, k_yMaxJointScale);
 
-            Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2 );
+            Canvas.SetLeft(ellipse, scaledJoint.Position.X - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
             Canvas.SetTop(ellipse, scaledJoint.Position.Y - (double)ellipse.GetValue(Canvas.WidthProperty) / 2);
-            Canvas.SetZIndex(ellipse, (int) -Math.Floor(scaledJoint.Position.Z*100));
+            Canvas.SetZIndex(ellipse, (int)-Math.Floor(scaledJoint.Position.Z * 100));
             if (joint.JointType == JointType.HandLeft || joint.JointType == JointType.HandRight)
-            {   
-                byte val = (byte)(Math.Floor((joint.Position.Z - 0.8)* 255 / 2));
+            {
+                byte val = (byte)(Math.Floor((joint.Position.Z - 0.8) * 255 / 2));
                 ellipse.Fill = new SolidColorBrush(Color.FromRgb(val, val, val));
             }
         }
@@ -240,7 +160,6 @@ namespace YouMote
             if (e.Key == Key.D1)
             {
                 currentController = youmoteController;
-                controllerText.Content = "YouMote";
                 currentController.controllerActivated(targets);
             }
         }

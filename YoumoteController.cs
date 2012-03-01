@@ -17,7 +17,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
-using YouMote.Television;
+using Youmote.Television;
 
 namespace YouMote
 {
@@ -43,14 +43,9 @@ namespace YouMote
         private TextBlock notification_speaker;
         private WinRectangle notification_background_rect;
 
-        private Target gesture_notifier;
-
-        /* Stuff needed to 'turn on the tv'*/
-        private WinRectangle black_screen;
-        private bool IsScreenOn;
-
-        private AbsentIndicator absentIndicator = new AbsentIndicator();
-        private bool IsSkeletonRecognized; 
+        /* Flags to handle complex manual overrides */
+        private Boolean _isOverrideResume;
+        private Boolean _isOverridePause;
 
         //using the Toolkit
         SwipeGestureDetector swipeGestureRecognizer;
@@ -58,27 +53,12 @@ namespace YouMote
         readonly DepthStreamManager depthManager = new DepthStreamManager();
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
-        private bool recordNextFrameForPosture;
 
 
-
-        void LoadCircleGestureDetector()
-        {
-            /*  circleKBPath = SysPath.Combine(Environment.CurrentDirectory, @"data\circleKB.save");
-              Console.WriteLine(Environment.CurrentDirectory);
-              Console.WriteLine(circleKBPath);
-              using (Stream recordStream = File.Open(circleKBPath, FileMode.OpenOrCreate))
-              {
-                  circleGestureRecognizer = new TemplatedGestureDetector("Circle", recordStream);
-                  circleGestureRecognizer.OnGestureDetected += OnGestureDetected;
-              }
-             */
-            //templates.ItemsSource = circleGestureRecognizer.LearningMachine.Paths;
-        }
-
-        private ScreenController _screenController;
-
-        /* END CIRCLE DETECTOR INITIALIZATION */
+        /* Stuff needed to 'turn on the tv'*/
+        private Television _tv;
+        private TextBox _debugPositionBox;
+        private TextBox _debugGestureBox;
 
         private void addMessages()
         {
@@ -93,23 +73,24 @@ namespace YouMote
         {
             // repeat for all the messages
             addMessages();
-
+            this._debugPositionBox = win.DebugPositionTextBox;
+            this._debugGestureBox = win.DebugGestureTextBox;
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
-            //LoadCircleGestureDetector();
-            IsScreenOn = false;
-            IsSkeletonRecognized = false;
+            this._tv = new Television(win);
+            this._isOverridePause = false;
+            this._isOverrideResume = false;
         }
 
         void OnGestureDetected(string gesture)
         {
             if (gesture == "SwipeToLeft")
             {
-                gesture_notifier.setTargetText("You swiped to the left!");
+                this._debugGestureBox.Text = "you swiped left!";
             }
             else if (gesture == "SwipeToRight")
             {
-                gesture_notifier.setTargetText("to the RIGHT you swiped!!");
+                this._debugGestureBox.Text = "to the RIGHT you swiped!!";
             }
         }
 
@@ -143,73 +124,88 @@ namespace YouMote
         }
 
 
-        private void detectSittingStandingScenarios(Skeleton skeleton, Dictionary<int, Target> targets)
+        private void detectSittingStandingScenarios(Skeleton skeleton)
         {
-            Target cur = targets[1];
-            Target t2 = targets[2];
 
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
-
-            /*if (this.handOnFaceIndicator.isPositionDetected(skeleton))
-            {
-                curVid.Pause();
-            }*/
-
             this.ambiResumeDetector.processSkeleton(skeleton);
-            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
-            if (hasResumed)
-            {
-                cur.setTargetText("Has RESUMED!");
-            }
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
+            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+
+            if (hasResumed)
+            {
+                this._debugPositionBox.Text = "Has RESUMED";
+                if (this._isOverridePause)
+                {
+                    this._isOverridePause = false;
+                }
+                else
+                {
+                    this._isOverrideResume = true;
+                }
+            }
+
 
             if (isAbsent)
             {
                 if (isPermanentlyGone)
                 {
-                    cur.setTargetText("I'm permanently gone");
+                    this._debugPositionBox.Text = "I'm permanently gone";
+                    this._tv.turnOff();
                 }
                 else
                 {
-                    cur.setTargetText("I'm off screen");
-
+                    if (!this._isOverrideResume)
+                    {
+                        this._debugPositionBox.Text = "I'm off screen so pause TV";
+                        this._tv.pause();
+                    }
+                    else
+                    {
+                        this._debugPositionBox.Text = "I'm off screen but override resume keeps playing show!";
+                    }
                 }
 
             }
             else if (isStanding)
             {
-                cur.setTargetText("I'm standing!");
-
-
+                if (!this._isOverrideResume)
+                {
+                    this._debugPositionBox.Text = "I'm standing and paused.";
+                    this._tv.pause();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
+                }
             }
             else if (isSitting)
             {
-                cur.setTargetText("Sitting!");
-
+                if (!this._isOverridePause)
+                {
+                    this._debugPositionBox.Text = "Sitting -- so resume!";
+                    this._tv.play();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "Sitting, but manual override presents play!";
+                }
             }
             else
             {
-                cur.setTargetText("Neither!");
+                this._debugPositionBox.Text = "Neither!";
             }
 
-            if (handOnFaceIndicator.isPositionDetected(skeleton))
-            {
-                t2.setTargetText("Y!");
-            }
-            else
-            {
-                t2.setTargetText("N!");
-            }
         }
 
-        private void detectChannelChangingScenarios(Skeleton skeleton, Dictionary<int, Target> targets, KinectSensor nui)
+        private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
         {
 
             if (skeleton != null)
@@ -226,7 +222,6 @@ namespace YouMote
                     if (joint.JointType == JointType.HandRight)
                     {
                         swipeGestureRecognizer.Add(joint.Position, nui);
-                        //circleGestureRecognizer.Add(joint.Position, nui);
                     }
                 }
 
@@ -234,54 +229,32 @@ namespace YouMote
             }
         }
 
-        private void turnOnTV()
+        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int,Target> targets)
         {
-            black_screen.Visibility = Visibility.Hidden;
-            IsScreenOn = true;
-            //TODO: ADD VIDEO RESUME!!
-        }
-
-        private void turnOffTV() {
-            black_screen.Visibility = Visibility.Visible;
-            IsScreenOn = false;
-            //todo: ADD VIDEO PAUSE!!
-        }
-
-        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
-        {
-            if (!IsSkeletonRecognized && !this.absentIndicator.isPositionDetected(skeleton) )
+            if (!this._tv.IsOn)
             {
-                gesture_notifier.setTargetText("You've been recognized: Your gesture is my command!");
-            }
-
-            if (IsSkeletonRecognized && this.absentIndicator.isPositionDetected(skeleton))
-            {
-                gesture_notifier.setTargetText("Bye bye!");
-            }
-
-            Target t2 = targets[2];
-
-            if (!IsScreenOn)
-            {
+                if (skeleton == null)
+                {
+                    this._debugPositionBox.Text = "null skel";
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "recognized skel";
+                }
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
-                    gesture_notifier.setTargetText("Has waved!");
-                    turnOnTV();
+                    this._debugPositionBox.Text = "Has waved!";
+                    // turn on the tv
+                    this._tv.turnOn();
                 }
             }
             else
             {
-                
-                this.ambiScreenDetector.processSkeleton(skeleton);
-                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
-                if (hasPulledDownScreen)
-                {
-                    gesture_notifier.setTargetText("Has pulled down screen!");
-                    turnOffTV();
-                    return;
-                }
+
+                detectSittingStandingScenarios(skeleton);
+                detectChannelChangingScenarios(skeleton, nui);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)
@@ -289,10 +262,6 @@ namespace YouMote
                     display_message(message);
                     message.startMessageTimer();
                 }
-            
-
-                detectSittingStandingScenarios(skeleton, targets);
-                detectChannelChangingScenarios(skeleton, targets, nui);
 
                 List<Message> finishedMessages = this.messageList.popFinishedMessages();
                 foreach (Message message in finishedMessages)
@@ -301,7 +270,13 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-
+                this.ambiScreenDetector.processSkeleton(skeleton);
+                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
+                if (hasPulledDownScreen)
+                {
+                    this._debugPositionBox.Text = "Has pulled down screen!";
+                    this._tv.turnOff();
+                }
             }
         }
 
@@ -312,7 +287,7 @@ namespace YouMote
             notification_speaker.Visibility = Visibility.Hidden;
             notification_image.Visibility = Visibility.Hidden;
             notification_text.Visibility = Visibility.Hidden;
-            gesture_notifier = targets[1];
+            //            gesture_notifier = targets[1];
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)
@@ -321,11 +296,6 @@ namespace YouMote
             notification_image = not_image;
             notification_speaker = not_speaker;
             notification_background_rect = rect;
-        }
-
-        public override void addBlackScreen(WinRectangle black_screen)
-        {
-            this.black_screen = black_screen;
         }
 
         public override void addVideo(MediaElement mediaElement1)
