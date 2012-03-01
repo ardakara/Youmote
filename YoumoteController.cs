@@ -37,30 +37,30 @@ namespace YouMote
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
 
+
         private TextBlock notification_text;
         private Image notification_image;
         private TextBlock notification_speaker;
         private WinRectangle notification_background_rect;
 
-        //using the Toolkit
+        private Target gesture_notifier;
 
+        /* Stuff needed to 'turn on the tv'*/
+        private WinRectangle black_screen;
+        private bool IsScreenOn;
+
+        private AbsentIndicator absentIndicator = new AbsentIndicator();
+        private bool IsSkeletonRecognized; 
+
+        //using the Toolkit
         SwipeGestureDetector swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
         readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
-
-
         private bool recordNextFrameForPosture;
-        bool displayDepth;
-        Target gesture_notifier;
 
-        /* Adding Circle Gesture Detector stuff */
-        private string circleKBPath;
 
-        /* Stuff needed to 'turn on the tv'*/
-        private WinRectangle black_screen;
-        private bool IsScreenOn;
 
         void LoadCircleGestureDetector()
         {
@@ -98,6 +98,7 @@ namespace YouMote
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             //LoadCircleGestureDetector();
             IsScreenOn = false;
+            IsSkeletonRecognized = false;
         }
 
         void OnGestureDetected(string gesture)
@@ -231,21 +232,33 @@ namespace YouMote
 
                 algorithmicPostureRecognizer.TrackPostures(skeleton);
             }
-            //templatePostureDetector.TrackPostures(skeleton);
-
-            if (recordNextFrameForPosture)
-            {
-                //templatePostureDetector.AddTemplate(skeleton);
-                recordNextFrameForPosture = false;
-            }
-            
-
         }
+
+        private void turnOnTV()
+        {
+            black_screen.Visibility = Visibility.Hidden;
+            IsScreenOn = true;
+            //TODO: ADD VIDEO RESUME!!
+        }
+
+        private void turnOffTV() {
+            black_screen.Visibility = Visibility.Visible;
+            IsScreenOn = false;
+            //todo: ADD VIDEO PAUSE!!
+        }
+
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
+            if (!IsSkeletonRecognized && !this.absentIndicator.isPositionDetected(skeleton) )
+            {
+                gesture_notifier.setTargetText("You've been recognized: Your gesture is my command!");
+            }
 
+            if (IsSkeletonRecognized && this.absentIndicator.isPositionDetected(skeleton))
+            {
+                gesture_notifier.setTargetText("Bye bye!");
+            }
 
-            Target cur = targets[1];
             Target t2 = targets[2];
 
             if (!IsScreenOn)
@@ -254,9 +267,8 @@ namespace YouMote
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
-                    cur.setTargetText("Has waved!");
-                    black_screen.Visibility = Visibility.Hidden;
-                    IsScreenOn = true;
+                    gesture_notifier.setTargetText("Has waved!");
+                    turnOnTV();
                 }
             }
             else
@@ -266,7 +278,9 @@ namespace YouMote
                 Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
                 if (hasPulledDownScreen)
                 {
-                    cur.setTargetText("Has pulled down screen!");
+                    gesture_notifier.setTargetText("Has pulled down screen!");
+                    turnOffTV();
+                    return;
                 }
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -277,8 +291,8 @@ namespace YouMote
                 }
             
 
-                //detectSittingStandingScenarios(skeleton, targets);
-                //detectChannelChangingScenarios(skeleton, targets, nui);
+                detectSittingStandingScenarios(skeleton, targets);
+                detectChannelChangingScenarios(skeleton, targets, nui);
 
                 List<Message> finishedMessages = this.messageList.popFinishedMessages();
                 foreach (Message message in finishedMessages)

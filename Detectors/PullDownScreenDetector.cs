@@ -12,7 +12,6 @@ namespace YouMote
 
         protected ScenarioStateHistory _rightHandHistory;
         protected PullDownIndicator _straightArmIndicator = new PullDownIndicator();
-        protected static double MAX_PULL_DURATION = 3000;
         private double startX;
         private double startY;
 
@@ -59,7 +58,7 @@ namespace YouMote
                     endY = startY - (skeleton.Joints[JointType.ShoulderCenter].Position.Y - skeleton.Joints[JointType.HipCenter].Position.Y);
                     double x = startY - endY;
                     //Console.WriteLine("The distance b/w shoulder center and hip center is :" + x);
-                    Console.WriteLine("startY " + startY + ", endY: " + endY);
+                    //Console.WriteLine("startY " + startY + ", endY: " + endY);
                     
                     pullInitiated = true;
                 }
@@ -67,16 +66,16 @@ namespace YouMote
                 {
                     if (Math.Abs(curX - startX) < allowanceX && (curY < lastY))
                     {
-                        Console.WriteLine("WOO! curY: " + curY + ", lastY: " + lastY);
+                        //Console.WriteLine("WOO! curY: " + curY + ", lastY: " + lastY);
                         if (curY <= endY) //they went far down enough!
                         {
-                            Console.WriteLine("woo!");
+                            //Console.WriteLine("woo!");
                             state = new ScreenState(ScreenState.ScreenPosition.ARM_DOWN, DateTime.Now, DateTime.Now);
                             this._rightHandHistory.addState(state);
                         }
                         else
                         {
-                            Console.WriteLine("On the way down...");
+                            //Console.WriteLine("On the way down...");
                             state = new ScreenState(ScreenState.ScreenPosition.ARM_MOVINGDOWN, DateTime.Now, DateTime.Now);
                             this._rightHandHistory.addState(state);
                         }
