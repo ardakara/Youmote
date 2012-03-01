@@ -60,7 +60,7 @@ namespace YouMote
 
         /* Stuff needed to 'turn on the tv'*/
         private WinRectangle black_screen;
-        private bool IsScreenOn;
+        private Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
@@ -98,8 +98,8 @@ namespace YouMote
             this._debugGestureBox = win.DebugGestureTextBox;
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
+            this._tv = new Television(win);
             //LoadCircleGestureDetector();
-            IsScreenOn = false;
         }
 
         void OnGestureDetected(string gesture)
@@ -174,20 +174,28 @@ namespace YouMote
                 if (isPermanentlyGone)
                 {
                     this._debugPositionBox.Text = "I'm permanently gone";
+                    this._tv.turnOff();
                 }
                 else
                 {
                     this._debugPositionBox.Text = "I'm off screen";
+                    this._tv.pause();
                 }
 
             }
             else if (isStanding)
             {
+
                 this._debugPositionBox.Text = "I'm standing";
+                this._tv.pause();
             }
             else if (isSitting)
             {
                 this._debugPositionBox.Text = "Sitting!";
+                if (this._tv.IsOn)
+                {
+                    this._tv.play();
+                }
             }
             else
             {
@@ -241,15 +249,15 @@ namespace YouMote
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int,Target> targets)
         {
 
-            if (!IsScreenOn)
+            if (!this._tv.IsOn)
             {
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
                     this._debugPositionBox.Text = "Has waved!";
-                    black_screen.Visibility = Visibility.Hidden;
-                    IsScreenOn = true;
+                    // turn on the tv
+                    this._tv.turnOn();
                 }
             }
             else
@@ -260,6 +268,7 @@ namespace YouMote
                 if (hasPulledDownScreen)
                 {
                     this._debugPositionBox.Text = "Has pulled down screen!";
+                    this._tv.turnOff();
                 }
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
