@@ -156,7 +156,7 @@ namespace Youmote.Television
             this._currentMediaElement.Width = this.screenWidth;
             this._currentMediaElement.Visibility = Visibility.Visible;
             this._currentMediaElement.Name = "CURRENT_MEDIA_ELEMENT";
-
+            this._currentMediaElement.MediaEnded += this.handleCurrentMediaEnded;
             this._swapContainer = this._window.MediaContainer2;
             this._swapContainer.Visibility = Visibility.Visible;
             this._swapContainer.Height = this.screenHeight;
@@ -167,6 +167,13 @@ namespace Youmote.Television
             this._swapMediaElement.Width = this.screenWidth;
             this._swapMediaElement.Visibility = Visibility.Visible;
             this._swapMediaElement.Name = "SWAP_MEDIA_ELEMENT";
+        }
+
+        public void handleCurrentMediaEnded(object sender, EventArgs e)
+        {
+            this._currentMediaElement.Position = TimeSpan.FromSeconds(0);
+            this._currentMediaElement.Play();
+
         }
 
         public void fadeOut()

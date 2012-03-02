@@ -10,6 +10,8 @@ namespace Youmote.Television
 {
     public class Television
     {
+        // Blakes Path For Quick Copying:  "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
+        private static String VIDEO_PATH = "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
         private Boolean _isOn = false;
         public Boolean IsOn
         {
@@ -177,8 +179,10 @@ namespace Youmote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m1 = new Media(1, 100, 0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
-            Media m2 = new Media(1, 100, 0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
+            Media m1 = new Media(1, 100, 0, "test", VIDEO_PATH + "batman.avi");
+            Media m2 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
+            Media m3 = new Media(1, 100, 0, "test", VIDEO_PATH + "spiderman.avi");
+            Media m4 = new Media(1, 100, 0, "test", VIDEO_PATH + "hobbit.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
             Channel c2 = new Channel(0, "channel 2", m2);
             this._channels.Clear();
@@ -188,21 +192,21 @@ namespace Youmote.Television
         }
         public void fakeTVRun()
         {
-            Media m0 = new Media(1, 100, 15.0, "test", "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\pixar_short.avi");
+            Media m0 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
             this._cachedMedia = m0;
 
 
             // worker that creates a channel change worker that turns the tv on
 
             this.simulateFakeAction(this.turnOn, 2);
-            this.simulateFakeAction(this.moveMediaToLeft, 7);
-            this.simulateFakeAction(this.moveMediaToRight, 10);
-            this.simulateFakeAction(this.moveMediaToLeft, 13);
-            this.simulateFakeAction(this.moveMediaToLeft, 15);
-            this.simulateFakeAction(this.moveMediaToRight, 17);
-            this.simulateFakeAction(this.pause, 20);
-            this.simulateFakeAction(this.moveMediaToLeft, 23);
-            this.simulateFakeAction(this.turnOff, 28);
+//            this.simulateFakeAction(this.moveMediaToLeft, 7);
+//            this.simulateFakeAction(this.moveMediaToRight, 10);
+//            this.simulateFakeAction(this.moveMediaToLeft, 13);
+//            this.simulateFakeAction(this.moveMediaToLeft, 15);
+//            this.simulateFakeAction(this.moveMediaToRight, 17);
+//            this.simulateFakeAction(this.pause, 20);
+//            this.simulateFakeAction(this.moveMediaToLeft, 23);
+//            this.simulateFakeAction(this.turnOff, 28);
         }
 
         private delegate void FakeActionDelegate();

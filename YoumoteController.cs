@@ -38,10 +38,6 @@ namespace YouMote
         private Stopwatch sw = new Stopwatch();
 
 
-        private TextBlock notification_text;
-        private Image notification_image;
-        private TextBlock notification_speaker;
-        private WinRectangle notification_background_rect;
 
         /* Flags to handle complex manual overrides */
         private Boolean _isOverrideResume;
@@ -100,27 +96,16 @@ namespace YouMote
             img.BeginInit();
             img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
             img.EndInit();
-            notification_image.Source = img;
         }
 
         private void display_message(Message message)
         {
             change_speaker_photo(message.imgFile);
-            notification_text.Text = message.text;
-            notification_speaker.Text = message.speaker;
-
-            notification_text.Visibility = Visibility.Visible;
-            notification_speaker.Visibility = Visibility.Visible;
-            notification_image.Visibility = Visibility.Visible;
-            notification_background_rect.Visibility = Visibility.Visible;
         }
 
         private void remove_message(Message message)
         {
-            notification_text.Visibility = Visibility.Hidden;
-            notification_speaker.Visibility = Visibility.Hidden;
-            notification_image.Visibility = Visibility.Hidden;
-            notification_background_rect.Visibility = Visibility.Hidden;
+
         }
 
 
@@ -283,19 +268,12 @@ namespace YouMote
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
 
-            /* YOUR CODE HERE */
-            notification_speaker.Visibility = Visibility.Hidden;
-            notification_image.Visibility = Visibility.Hidden;
-            notification_text.Visibility = Visibility.Hidden;
-            //            gesture_notifier = targets[1];
+            this._tv.fakeTVRun();
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)
         {
-            notification_text = not_text;
-            notification_image = not_image;
-            notification_speaker = not_speaker;
-            notification_background_rect = rect;
+
         }
 
         public override void addVideo(MediaElement mediaElement1)
