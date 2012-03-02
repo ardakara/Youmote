@@ -135,6 +135,7 @@ namespace Youmote.Television
         public void turnOn()
         {
             this._isOn = true;
+            this.updateChannelListings();
             if (!this._cachedMedia.Equals(Media.NULL_MEDIA))
             {
                 this._screenController.turnOn(this._cachedMedia);
