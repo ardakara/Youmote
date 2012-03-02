@@ -82,11 +82,15 @@ namespace YouMote
         {
             if (gesture == "SwipeToLeft")
             {
+                this._isOverrideResume = true;
                 this._debugGestureBox.Text = "you swiped left!";
+                this._tv.moveMediaToLeft();
             }
             else if (gesture == "SwipeToRight")
             {
+                this._isOverrideResume = true;
                 this._debugGestureBox.Text = "to the RIGHT you swiped!!";
+                this._tv.moveMediaToRight();
             }
         }
 
@@ -155,6 +159,7 @@ namespace YouMote
                     else
                     {
                         this._debugPositionBox.Text = "I'm off screen but override resume keeps playing show!";
+                        this._tv.play();
                     }
                 }
 
@@ -173,6 +178,7 @@ namespace YouMote
             }
             else if (isSitting)
             {
+                this._isOverrideResume = false;
                 if (!this._isOverridePause)
                 {
                     this._debugPositionBox.Text = "Sitting -- so resume!";
@@ -262,13 +268,15 @@ namespace YouMote
                     this._debugPositionBox.Text = "Has pulled down screen!";
                     this._tv.turnOff();
                 }
+
+ 
             }
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
 
-            this._tv.fakeTVRun();
+//            this._tv.fakeTVRun();
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)

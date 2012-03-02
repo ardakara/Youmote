@@ -16,7 +16,7 @@ namespace Youmote.Television
     public class ScreenController
     {
 
-        private static double FADE_OUT_DURATION = 3.0;
+        private static double FADE_OUT_DURATION = 5.0;
         private static double FADE_IN_DURATION = 3.0;
         private static double SCREEN_CHANGE_DURATION = 1.0;
         private double screenX = 0;
@@ -139,10 +139,12 @@ namespace Youmote.Television
             this._currentMediaElement = this._swapMediaElement;
             this._currentMedia = this._swapMedia;
             this._currentContainer = this._swapContainer;
+            this._currentMediaElement.Opacity = 1.0;
 
             this._swapMedia = Media.NULL_MEDIA;
             this._swapMediaElement = tempMediaElement;
             this._swapContainer = tempContainer;
+            this._swapMediaElement.Opacity = 0.0;
         }
         private void initializeMediaElements()
         {
@@ -197,14 +199,15 @@ namespace Youmote.Television
             this.CurrentMedia = m;
             this.play();
             this.fadeIn();
-
         }
 
         public void play()
         {
+            this.skipAllStoryboardsToFill();
             this._currentMediaElement.Play();
             this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
         }
+
         public double pause()
         {
             this._currentMediaElement.Pause();
@@ -237,7 +240,7 @@ namespace Youmote.Television
             this._curMoveRightStoryboard.Begin(this._window, true);
 
             this.SwapMedia = media;
-//            this._swapContainer.Opacity = 1.0;
+            this._swapContainer.Opacity = 1.0;
             this._swapMediaElement.Play();
             this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
             Storyboard.SetTargetName(this._swapMoveRightDoubleAnimation, this._swapContainer.Name);
@@ -249,12 +252,14 @@ namespace Youmote.Television
         public void moveMediaToLeft(Media media)
         {
             this._fadeInStoryboard.SkipToFill();
+
+            this.pause();
             Storyboard.SetTargetName(this._curMoveLeftDoubleAnimation, this._currentContainer.Name);
             Storyboard.SetTargetProperty(this._curMoveLeftDoubleAnimation, new PropertyPath(Canvas.LeftProperty));
             this._curMoveLeftStoryboard.Begin(this._window, true);
 
             this.SwapMedia = media;
-//            this._swapContainer.Opacity = 1.0;
+            this._swapContainer.Opacity = 1.0;
             this._swapMediaElement.Play();
             this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
             Storyboard.SetTargetName(this._swapMoveLeftDoubleAnimation, this._swapContainer.Name);

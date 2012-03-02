@@ -45,6 +45,10 @@ namespace YouMote
 
         public Boolean isSameState(ScenarioState ss)
         {
+            if (ss == null)
+            {
+                return false;
+            }
             if (!ss.GetType().Equals(this.GetType()))
             {
                 return false;

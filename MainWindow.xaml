@@ -4,12 +4,12 @@
         Title="MainWindow" Height="1024" Width="1280" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
     <Canvas Name="MainCanvas" Height="1024" Width="1280" Background="Black">
         <Canvas Name="MediaContainer1" Height="1024" Width="1280">
-            <MediaElement Name="mediaElement1"  LoadedBehavior="Manual" />
+            <MediaElement Name="mediaElement1"  LoadedBehavior="Manual"/>
         </Canvas>
         <Canvas Name="MediaContainer2" Height="1024" Width="1280">
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual" />
         </Canvas>
-            <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="White"/>
+            <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="554" FontSize="40" Background="White"/>
             <TextBox Name="DebugGestureTextBox" Canvas.Left="580" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="BlanchedAlmond" />        
     </Canvas>
 

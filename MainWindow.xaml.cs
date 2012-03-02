@@ -28,7 +28,7 @@ namespace YouMote
     using System.Threading;
     using Microsoft.Speech.AudioFormat;
     using Microsoft.Speech.Recognition;
-    using System.IO; 
+    using System.IO;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -83,11 +83,10 @@ namespace YouMote
             youmoteController = new YoumoteController(this);
             currentController = youmoteController;
 
-            
-            audioSource = nui.AudioSource;
-            audioSource.EchoCancellationMode = EchoCancellationMode.None; // No AEC for this sample
-            audioSource.AutomaticGainControlEnabled = false; // Important to turn this off for speech recognition
-            this.sre = this.CreateSpeechRecognizer();
+            //            audioSource = nui.AudioSource;
+            //            audioSource.EchoCancellationMode = EchoCancellationMode.None; // No AEC for this sample
+            //            audioSource.AutomaticGainControlEnabled = false; // Important to turn this off for speech recognition
+            //            this.sre = this.CreateSpeechRecognizer();
         }
 
         private SpeechRecognitionEngine CreateSpeechRecognizer()
@@ -173,31 +172,31 @@ Ensure you have the Microsoft Speech SDK installed and configured.",
 
             targets[0].setTargetText("recognize as: " + e.Result.Text);
 
-/*            switch (e.Result.Text.ToUpperInvariant())
-            {
-                case "RED":
-                    brush = this.redBrush;
-                    break;
-                case "GREEN":
-                    brush = this.greenBrush;
-                    break;
-                case "BLUE":
-                    brush = this.blueBrush;
-                    break;
-                case "CAMERA ON":
-                    System.Diagnostics.Process.Start("notepad.exe");
-                    this.kinectColorViewer1.Visibility = System.Windows.Visibility.Visible;
-                    brush = this.blackBrush;
-                    break;
-                case "CAMERA OFF":
-                    this.kinectColorViewer1.Visibility = System.Windows.Visibility.Hidden;
-                    brush = this.blackBrush;
-                    break;
-                default:
-                    brush = this.blackBrush;
-                    break;
-            }
- */
+            /*            switch (e.Result.Text.ToUpperInvariant())
+                        {
+                            case "RED":
+                                brush = this.redBrush;
+                                break;
+                            case "GREEN":
+                                brush = this.greenBrush;
+                                break;
+                            case "BLUE":
+                                brush = this.blueBrush;
+                                break;
+                            case "CAMERA ON":
+                                System.Diagnostics.Process.Start("notepad.exe");
+                                this.kinectColorViewer1.Visibility = System.Windows.Visibility.Visible;
+                                brush = this.blackBrush;
+                                break;
+                            case "CAMERA OFF":
+                                this.kinectColorViewer1.Visibility = System.Windows.Visibility.Hidden;
+                                brush = this.blackBrush;
+                                break;
+                            default:
+                                brush = this.blackBrush;
+                                break;
+                        }
+             */
         }
 
         private static RecognizerInfo GetKinectRecognizer()
@@ -236,7 +235,7 @@ Ensure you have the Microsoft Speech SDK installed and configured.",
                 nui.Start();
 
                 //need 4 seconds for kinect speech to be ready
-                
+
                 int wait = 4;
                 while (wait > 0)
                 {

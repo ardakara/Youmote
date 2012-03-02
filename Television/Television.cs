@@ -20,6 +20,18 @@ namespace Youmote.Television
                 return this._isOn;
             }
         }
+        public Boolean _isPaused = true;
+        public Boolean IsPaused
+        {
+            get
+            {
+                return this._isPaused;
+            }
+            set
+            {
+                this._isPaused = value;
+            }
+        }
         private Media _cachedMedia = Media.NULL_MEDIA;
         private static int CACHE_CHANNEL_ID = -1;
         private static String CACHE_CHANNEL_NAME = "CACHED_CHANNEL";
@@ -104,7 +116,7 @@ namespace Youmote.Television
             {
                 // do a little bob animation to show that there are no more channels
             }
-
+            this.IsPaused = false;
         }
 
         public void moveMediaToLeft()
@@ -126,6 +138,7 @@ namespace Youmote.Television
             {
                 // do a little bob animation to show that there are no more channels
             }
+            this.IsPaused = false;
         }
 
         /// <summary>
@@ -134,25 +147,35 @@ namespace Youmote.Television
 
         public void turnOn()
         {
-            this._isOn = true;
-            this.updateChannelListings();
-            if (!this._cachedMedia.Equals(Media.NULL_MEDIA))
+            if (!this.IsOn)
             {
-                this._screenController.turnOn(this._cachedMedia);
-            }
-            else
-            {
-                Channel onChannel = this.Channels.First();
-                Media onMedia = onChannel.Media;
-                this._screenController.turnOn(onMedia);
+                this._isOn = true;
+                this.updateChannelListings();
+                this.IsPaused = false;
+                if (!this._cachedMedia.Equals(Media.NULL_MEDIA))
+                {
+                    this._currentChannelIndex = CACHE_CHANNEL_ID;
+                    this._screenController.turnOn(this._cachedMedia);
+                }
+                else
+                {
+                    this._currentChannelIndex = 0;
+                    Channel onChannel = this.Channels.First();
+                    Media onMedia = onChannel.Media;
+                    this._screenController.turnOn(onMedia);
+                }
             }
         }
 
         public void turnOff()
         {
-            this.pause();
-            this._isOn = false;
-            this._screenController.turnOff();
+            if (this.IsOn)
+            {
+                this.pause();
+                this._isOn = false;
+                this.IsPaused = true;
+                this._screenController.turnOff();
+            }
         }
 
         /// <summary>
@@ -161,16 +184,24 @@ namespace Youmote.Television
         /// </summary>
         public void pause()
         {
-            double position = this._screenController.pause();
-            Channel curChannel = this.getCurrentChannel();
-            this._cachedMedia = curChannel.Media;
-            this._cachedMedia.CurrentTime = position;
-            this._currentChannelIndex = CACHE_CHANNEL_ID;
+            if (!this.IsPaused)
+            {
+                this.IsPaused = true;
+                double position = this._screenController.pause();
+                Channel curChannel = this.getCurrentChannel();
+                this._cachedMedia = curChannel.Media;
+                this._cachedMedia.CurrentTime = position;
+                this._currentChannelIndex = CACHE_CHANNEL_ID;
+            }
         }
 
         public void play()
         {
-            this._screenController.play();
+            if (this.IsPaused)
+            {
+                this.IsPaused = false;
+                this._screenController.play();
+            }
         }
 
 
@@ -180,34 +211,35 @@ namespace Youmote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m1 = new Media(1, 100, 0, "test", VIDEO_PATH + "batman.avi");
-            Media m2 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
+            Media m2 = new Media(1, 100, 0, "test", VIDEO_PATH + "batman.avi");
+            Media m1 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
             Media m3 = new Media(1, 100, 0, "test", VIDEO_PATH + "spiderman.avi");
             Media m4 = new Media(1, 100, 0, "test", VIDEO_PATH + "hobbit.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
             Channel c2 = new Channel(0, "channel 2", m2);
+            Channel c3 = new Channel(0, "channel 3", m3);
+            Channel c4 = new Channel(0, "channel 4", m4);
             this._channels.Clear();
             this._channels.Add(c1);
             this._channels.Add(c2);
+            this._channels.Add(c3);
+            this._channels.Add(c4);
 
         }
+
         public void fakeTVRun()
         {
-            Media m0 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
-            this._cachedMedia = m0;
-
-
             // worker that creates a channel change worker that turns the tv on
 
-            this.simulateFakeAction(this.turnOn, 2);
-//            this.simulateFakeAction(this.moveMediaToLeft, 7);
-//            this.simulateFakeAction(this.moveMediaToRight, 10);
-//            this.simulateFakeAction(this.moveMediaToLeft, 13);
-//            this.simulateFakeAction(this.moveMediaToLeft, 15);
-//            this.simulateFakeAction(this.moveMediaToRight, 17);
-//            this.simulateFakeAction(this.pause, 20);
-//            this.simulateFakeAction(this.moveMediaToLeft, 23);
-//            this.simulateFakeAction(this.turnOff, 28);
+            this.simulateFakeAction(this.turnOn, 2); // batman
+            this.simulateFakeAction(this.play, 10); // to pixar 
+            this.simulateFakeAction(this.play, 11); // to pixar 
+            this.simulateFakeAction(this.moveMediaToLeft, 15); // to pixar
+            this.simulateFakeAction(this.moveMediaToRight, 25); // top batman
+            this.simulateFakeAction(this.moveMediaToLeft, 35); // to pixar
+            this.simulateFakeAction(this.moveMediaToLeft, 45); // to vat?
+            this.simulateFakeAction(this.pause, 60);
+          this.simulateFakeAction(this.turnOff, 65);
         }
 
         private delegate void FakeActionDelegate();
