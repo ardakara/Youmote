@@ -21,8 +21,8 @@ namespace YouMote
         private double endX;
         private Boolean swipeInitiated;
 
-        private static double MAX_Y_ALLOWANCE = 0.1f;
-        private static double MIN_SWIPE_DISTANCE = 0.25f;
+        private static double MAX_Y_ALLOWANCE = 0.05f;
+        private static double MIN_SWIPE_DISTANCE = 0.3f;
 
         public SwipeRightDetector()
         {

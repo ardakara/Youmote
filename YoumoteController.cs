@@ -206,12 +206,14 @@ namespace YouMote
                 if (ambiSwipeLeftDetector.isScenarioDetected())
                 {
                     this._debugGestureBox.Text = "Swipe left!";
+                    this._tv.moveMediaToLeft();
                 }
 
                 ambiSwipeRightDetector.processSkeleton(skeleton);
                 if (ambiSwipeRightDetector.isScenarioDetected())
                 {
                     this._debugGestureBox.Text = "Right swipe!";
+                    this._tv.moveMediaToRight();
                 }
                 /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
                 if (!barycenterHelper.IsStable(skeleton.TrackingId))
