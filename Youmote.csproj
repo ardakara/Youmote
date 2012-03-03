@@ -120,6 +120,7 @@
     <Compile Include="Detectors\PresenceDetector.cs" />
     <Compile Include="States\PresenceState.cs" />
     <Compile Include="Detectors\StandingDetector.cs" />
+    <Compile Include="SpeechRecognizer.cs" />
     <Compile Include="WaveDetector.cs" />
     <Compile Include="States\WaveState.cs" />
     <Compile Include="Indicators\AbsentIndicator.cs" />

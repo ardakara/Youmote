@@ -138,12 +138,10 @@ namespace Youmote.Television
             this._currentMediaElement = this._swapMediaElement;
             this._currentMedia = this._swapMedia;
             this._currentContainer = this._swapContainer;
-            this._currentMediaElement.Opacity = 1.0;
 
             this._swapMedia = Media.NULL_MEDIA;
             this._swapMediaElement = tempMediaElement;
             this._swapContainer = tempContainer;
-            this._swapMediaElement.Opacity = 0.0;
         }
         private void initializeMediaElements()
         {
@@ -239,7 +237,6 @@ namespace Youmote.Television
             this._curMoveRightStoryboard.Begin(this._window, true);
 
             this.SwapMedia = media;
-            this._swapContainer.Opacity = 1.0;
             this._swapMediaElement.Play();
             this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
             Storyboard.SetTargetName(this._swapMoveRightDoubleAnimation, this._swapContainer.Name);
@@ -258,7 +255,6 @@ namespace Youmote.Television
             this._curMoveLeftStoryboard.Begin(this._window, true);
 
             this.SwapMedia = media;
-            this._swapContainer.Opacity = 1.0;
             this._swapMediaElement.Play();
             this._swapMediaElement.Position = TimeSpan.FromSeconds(this.SwapMedia.CurrentTime);
             Storyboard.SetTargetName(this._swapMoveLeftDoubleAnimation, this._swapContainer.Name);
