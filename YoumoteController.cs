@@ -31,7 +31,8 @@ namespace YouMote
         private AmbidextrousWaveDetector ambiHandWaveDetector = new AmbidextrousWaveDetector();
         private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
         private AmbidextrousWaveDetector ambiResumeDetector = new AmbidextrousWaveDetector();
-
+        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
+        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
         private MessageList messageList = new MessageList();
@@ -201,7 +202,18 @@ namespace YouMote
 
             if (skeleton != null)
             {
-                barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
+                ambiSwipeLeftDetector.processSkeleton(skeleton);
+                if (ambiSwipeLeftDetector.isScenarioDetected())
+                {
+                    this._debugGestureBox.Text = "Swipe left!";
+                }
+
+                ambiSwipeRightDetector.processSkeleton(skeleton);
+                if (ambiSwipeRightDetector.isScenarioDetected())
+                {
+                    this._debugGestureBox.Text = "Right swipe!";
+                }
+                /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
                 if (!barycenterHelper.IsStable(skeleton.TrackingId))
                     return;
 
@@ -216,7 +228,7 @@ namespace YouMote
                     }
                 }
 
-                algorithmicPostureRecognizer.TrackPostures(skeleton);
+                algorithmicPostureRecognizer.TrackPostures(skeleton);*/
             }
         }
 
@@ -236,15 +248,16 @@ namespace YouMote
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
                 if (hasWaved)
                 {
-                    this._debugPositionBox.Text = "Has waved!";
+                    this._debugGestureBox.Text = "Has waved!";
                     // turn on the tv
                     this._tv.turnOn();
+                    Console.WriteLine("Has waved");
                 }
             }
             else
             {
 
-                detectSittingStandingScenarios(skeleton);
+                //detectSittingStandingScenarios(skeleton);
                 detectChannelChangingScenarios(skeleton, nui);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -265,7 +278,7 @@ namespace YouMote
                 Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
                 if (hasPulledDownScreen)
                 {
-                    this._debugPositionBox.Text = "Has pulled down screen!";
+                    this._debugGestureBox.Text = "Has pulled down screen!";
                     this._tv.turnOff();
                 }
 
