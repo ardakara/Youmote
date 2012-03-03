@@ -99,14 +99,16 @@ namespace Youmote.Television
             this.updateChannelListings();
             if (this.CurrentChannelIndex >= 0)
             {
-                this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
-                if (this.CurrentChannelIndex == CACHE_CHANNEL_ID)
+
+                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == CACHE_CHANNEL_ID)
                 {
+                    this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
                     Media nextMedia = this._cachedMedia;
                     this._screenController.moveMediaToRight(nextMedia);
                 }
                 else
                 {
+                    this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
                     Channel nextChannel = this._channels[this.CurrentChannelIndex];
                     Media nextMedia = nextChannel.Media;
                     this._screenController.moveMediaToRight(nextMedia);
@@ -239,7 +241,7 @@ namespace Youmote.Television
             this.simulateFakeAction(this.moveMediaToLeft, 35); // to pixar
             this.simulateFakeAction(this.moveMediaToLeft, 45); // to vat?
             this.simulateFakeAction(this.pause, 60);
-          this.simulateFakeAction(this.turnOff, 65);
+            this.simulateFakeAction(this.turnOff, 65);
         }
 
         private delegate void FakeActionDelegate();
