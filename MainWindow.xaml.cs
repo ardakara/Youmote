@@ -107,7 +107,6 @@ namespace YouMote
                 nui.Start();
 
                 //need 4 seconds for kinect speech to be ready
-               
                 int wait = 4;
                 while (wait > 0)
                 {

@@ -16,7 +16,7 @@ namespace YouMote
             List<ScenarioState> recentStates = history.getLastNStates(3);
             if (recentStates.Count == 3)
             {
-                Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
+                //Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
             }
             double pull_duration = 0;
             double arm_down_duration = 0;
