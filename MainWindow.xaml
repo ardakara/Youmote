@@ -10,7 +10,8 @@
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual" />
         </Canvas>
             <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="White"/>
-            <TextBox Name="DebugGestureTextBox" Canvas.Left="580" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="BlanchedAlmond" />        
+            <TextBox Name="DebugGestureTextBox" Canvas.Left="580" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="BlanchedAlmond" />
+            <TextBox Name="DebugSpeechTextBox" Canvas.Left="580" Text="speech" Canvas.Top="100" Height="88" Width="366" FontSize="20" Background="BlanchedAlmond" />
     </Canvas>
 
 </Window>
