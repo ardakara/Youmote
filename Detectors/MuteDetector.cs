@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
 using YouMote.Indicators;
+using YouMote.States;
+
 namespace YouMote
 {
     public abstract class MuteDetector : ScenarioDetector

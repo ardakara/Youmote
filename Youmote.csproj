@@ -106,6 +106,7 @@
     <Compile Include="Detectors\AmbidextrousSwipeLeftDetector.cs" />
     <Compile Include="Detectors\AmbidextrousSwipeRightDetector.cs" />
     <Compile Include="Detectors\SwipeRightDetector.cs" />
+    <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
     <Compile Include="States\SwipeState.cs" />
     <Compile Include="Detectors\SwipeLeftDetector.cs" />
     <Compile Include="States\ScreenState.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="States\PresenceState.cs" />
     <Compile Include="Detectors\StandingDetector.cs" />
     <Compile Include="SpeechRecognizer.cs" />
+    <Compile Include="States\TalkOnPhoneState.cs" />
     <Compile Include="WaveDetector.cs" />
     <Compile Include="States\WaveState.cs" />
     <Compile Include="Indicators\AbsentIndicator.cs" />
