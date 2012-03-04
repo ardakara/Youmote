@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Threading;
 using YouMote;
 
-namespace Youmote.Television
+namespace YouMote.Television
 {
     public class Television
     {

@@ -17,7 +17,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
-using Youmote.Television;
+using YouMote.Television;
 
 namespace YouMote
 {
@@ -33,6 +33,8 @@ namespace YouMote
         private AmbidextrousWaveDetector ambiResumeDetector = new AmbidextrousWaveDetector();
         private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
         private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private TalkOnPhoneDetector talkOnPhoneDetector = new TalkOnPhoneDetector();
+
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
         private MessageList messageList = new MessageList();
@@ -53,7 +55,7 @@ namespace YouMote
 
 
         /* Stuff needed to 'turn on the tv'*/
-        private Television _tv;
+        private YouMote.Television.Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
@@ -74,7 +76,7 @@ namespace YouMote
             this._debugGestureBox = win.DebugGestureTextBox;
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
-            this._tv = new Television(win);
+            this._tv = new YouMote.Television.Television(win);
             this._isOverridePause = false;
             this._isOverrideResume = false;
         }
@@ -122,12 +124,14 @@ namespace YouMote
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
             this.ambiResumeDetector.processSkeleton(skeleton);
+            this.talkOnPhoneDetector.processSkeleton(skeleton);
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
             Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+            Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
 
             if (hasResumed)
             {
@@ -165,7 +169,7 @@ namespace YouMote
                 }
 
             }
-            else if (isStanding)
+            else if (isStanding || isTalkingOnPhone)
             {
                 if (!this._isOverrideResume)
                 {
@@ -260,6 +264,8 @@ namespace YouMote
             {
 
                 //detectSittingStandingScenarios(skeleton);
+
+
                 detectChannelChangingScenarios(skeleton, nui);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
@@ -275,6 +281,7 @@ namespace YouMote
                     remove_message(message);
                     message.stopMessageTimer();
                 }
+
 
                 this.ambiScreenDetector.processSkeleton(skeleton);
                 Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();

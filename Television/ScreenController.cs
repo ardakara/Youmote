@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Shapes;
 using YouMote;
 
-namespace Youmote.Television
+namespace YouMote.Television
 {
     /// <summary>
     /// Class that controllers what is happening on the users screen.. Paused video, moving videos etc.
