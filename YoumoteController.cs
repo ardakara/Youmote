@@ -17,7 +17,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 // FOR CIRCLE Gesture:
 using System.IO;
 using SysPath = System.IO.Path;
-using Youmote.Television;
+using YouMote.Television;
 
 namespace YouMote
 {
@@ -53,7 +53,7 @@ namespace YouMote
 
 
         /* Stuff needed to 'turn on the tv'*/
-        private Television _tv;
+        private YouMote.Television.Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
@@ -74,7 +74,7 @@ namespace YouMote
             this._debugGestureBox = win.DebugGestureTextBox;
             swipeGestureRecognizer = new SwipeGestureDetector();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
-            this._tv = new Television(win);
+            this._tv = new YouMote.Television.Television(win);
             this._isOverridePause = false;
             this._isOverrideResume = false;
         }
