@@ -105,6 +105,8 @@
     <Compile Include="Detectors\AmbidextrousScreenDetector.cs" />
     <Compile Include="Detectors\AmbidextrousSwipeLeftDetector.cs" />
     <Compile Include="Detectors\AmbidextrousSwipeRightDetector.cs" />
+    <Compile Include="Detectors\SwipeDetector.cs" />
+    <Compile Include="Detectors\SwipeGestureDetector.cs" />
     <Compile Include="Detectors\SwipeRightDetector.cs" />
     <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
     <Compile Include="States\SwipeState.cs" />
@@ -123,7 +125,7 @@
     <Compile Include="Detectors\StandingDetector.cs" />
     <Compile Include="SpeechRecognizer.cs" />
     <Compile Include="States\TalkOnPhoneState.cs" />
-    <Compile Include="WaveDetector.cs" />
+    <Compile Include="Detectors\WaveDetector.cs" />
     <Compile Include="States\WaveState.cs" />
     <Compile Include="Indicators\AbsentIndicator.cs" />
     <Compile Include="Indicators\LeftHandOnFaceIndicator.cs" />
@@ -213,6 +215,17 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Video\batman.avi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\hobbit.avi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\spiderman.avi">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

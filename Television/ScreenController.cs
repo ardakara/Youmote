@@ -73,7 +73,6 @@ namespace YouMote.Television
         private DoubleAnimation _swapMoveRightDoubleAnimation = new DoubleAnimation();
         private DoubleAnimation _swapMoveLeftDoubleAnimation = new DoubleAnimation();
 
-
         public ScreenController(MainWindow window)
         {
             this._window = window;
