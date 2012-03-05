@@ -105,6 +105,7 @@
     <Compile Include="Detectors\AmbidextrousScreenDetector.cs" />
     <Compile Include="Detectors\AmbidextrousSwipeLeftDetector.cs" />
     <Compile Include="Detectors\AmbidextrousSwipeRightDetector.cs" />
+    <Compile Include="Detectors\SwipeGestureDetector.cs" />
     <Compile Include="Detectors\SwipeRightDetector.cs" />
     <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
     <Compile Include="States\SwipeState.cs" />

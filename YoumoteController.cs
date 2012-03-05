@@ -47,7 +47,7 @@ namespace YouMote
         private Boolean _isOverridePause;
 
         //using the Toolkit
-        SwipeGestureDetector swipeGestureRecognizer;
+        SwipeGestureDetectorMod swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
         readonly DepthStreamManager depthManager = new DepthStreamManager();
         readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
@@ -74,7 +74,7 @@ namespace YouMote
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
-            swipeGestureRecognizer = new SwipeGestureDetector();
+            swipeGestureRecognizer = new SwipeGestureDetectorMod();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
             this._isOverridePause = false;

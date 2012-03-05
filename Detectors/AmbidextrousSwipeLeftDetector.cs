@@ -9,7 +9,7 @@ namespace YouMote
 {
     public class AmbidextrousSwipeLeftDetector : SwipeLeftDetector
     {
-        protected static double MAX_SWIPE_DURATION = 500;
+        protected static double MAX_SWIPE_DURATION = 450;
         protected static double MAX_SWIPE_FINISH_DURATION = 60;
 
         private Boolean isSwipeLeft(ScenarioStateHistory history)
