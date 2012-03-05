@@ -16,7 +16,6 @@ using System;
 using System.Configuration;
 using System.ServiceModel;
 using YouMote;
-using Youmote;
 
 namespace Microsoft.ServiceModel.Samples
 {
