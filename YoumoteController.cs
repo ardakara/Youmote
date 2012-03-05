@@ -28,11 +28,8 @@ namespace YouMote
         private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
-        private AmbidextrousWaveDetector ambiHandWaveDetector = new AmbidextrousWaveDetector();
         private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
-        private AmbidextrousWaveDetector ambiResumeDetector = new AmbidextrousWaveDetector();
-        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
-        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private AmbidextrousResumeDetector ambiResumeDetector = new AmbidextrousResumeDetector();
         private TalkOnPhoneDetector talkOnPhoneDetector = new TalkOnPhoneDetector();
 
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
@@ -40,6 +37,14 @@ namespace YouMote
         private MessageList messageList = new MessageList();
         private Stopwatch sw = new Stopwatch();
 
+        /* To get channels changing */
+        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
+        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private Stopwatch swipe_sw = new Stopwatch();
+
+        /* To turn TV on and off */
+        private AmbidextrousWaveDetector ambiHandWaveDetector = new AmbidextrousWaveDetector();
+        private Stopwatch wave_sw = new Stopwatch();
 
 
         /* Flags to handle complex manual overrides */
@@ -79,6 +84,8 @@ namespace YouMote
             this._tv = new YouMote.Television.Television(win);
             this._isOverridePause = false;
             this._isOverrideResume = false;
+            wave_sw.Start();
+            swipe_sw.Start();
         }
 
         void OnGestureDetected(string gesture)
@@ -207,17 +214,19 @@ namespace YouMote
             if (skeleton != null)
             {
                 ambiSwipeLeftDetector.processSkeleton(skeleton);
-                if (ambiSwipeLeftDetector.isScenarioDetected())
+                if (ambiSwipeLeftDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000) )
                 {
                     this._debugGestureBox.Text = "Swipe left!";
                     this._tv.moveMediaToLeft();
+                    swipe_sw.Restart();
                 }
 
                 ambiSwipeRightDetector.processSkeleton(skeleton);
-                if (ambiSwipeRightDetector.isScenarioDetected())
+                if (ambiSwipeRightDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000) )
                 {
                     this._debugGestureBox.Text = "Right swipe!";
                     this._tv.moveMediaToRight();
+                    swipe_sw.Restart();
                 }
                 /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
                 if (!barycenterHelper.IsStable(skeleton.TrackingId))
@@ -252,18 +261,19 @@ namespace YouMote
                 }
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
-                if (hasWaved)
+                if (hasWaved && wave_sw.ElapsedMilliseconds > 1500)
                 {
-                    this._debugGestureBox.Text = "Has waved!";
+                    this._debugGestureBox.Text = "ON-has waved";
                     // turn on the tv
                     this._tv.turnOn();
-                    Console.WriteLine("Has waved");
+                    wave_sw.Reset();
+                    wave_sw.Start();
                 }
             }
             else
             {
 
-                //detectSittingStandingScenarios(skeleton);
+                detectSittingStandingScenarios(skeleton);
 
 
                 detectChannelChangingScenarios(skeleton, nui);
@@ -282,22 +292,31 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-
+                /*
                 this.ambiScreenDetector.processSkeleton(skeleton);
                 Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
                 if (hasPulledDownScreen)
                 {
                     this._debugGestureBox.Text = "Has pulled down screen!";
                     this._tv.turnOff();
+                }*/
+
+                this.ambiHandWaveDetector.processSkeleton(skeleton);
+                Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
+                if (hasWaved && wave_sw.ElapsedMilliseconds > 1500)
+                {
+                    this._debugGestureBox.Text = "OFF-has waved";
+                    this._tv.turnOff();
+                    wave_sw.Reset();
+                    wave_sw.Start();
                 }
 
- 
             }
         }
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-
+            
 //            this._tv.fakeTVRun();
         }
 
