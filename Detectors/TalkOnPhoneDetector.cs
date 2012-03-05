@@ -36,7 +36,13 @@ namespace YouMote.Detectors
 
         public Boolean isScenarioDetected()
         {
-            return isTalkingOnPhone;
+            ScenarioState lastState = this._history.Peek();
+            if (TalkOnPhoneState.TALK_ON_PHONE.isSameState(lastState))
+            {
+                return true;
+                
+            }
+            return false;
         }
         public void processSkeleton(Skeleton skeleton)
         {

@@ -179,7 +179,7 @@ namespace YouMote
                 }
 
             }
-            else if (isStanding || isTalkingOnPhone)
+            else if (isStanding)
             {
                 if (!this._isOverrideResume)
                 {
@@ -189,6 +189,18 @@ namespace YouMote
                 else
                 {
                     this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
+                }
+            }
+            else if (isTalkingOnPhone)
+            {
+                if (!this._isOverrideResume)
+                {
+                    this._debugPositionBox.Text = "I'm talking on phone and paused.";
+                    this._tv.pause();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "I'm on phone but didn't pause b/c override resume";
                 }
             }
             else if (isSitting)
