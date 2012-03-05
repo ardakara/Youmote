@@ -10,12 +10,13 @@ using YouMote;
 
 namespace YouMote.Speech
 {
-    class SpeechRecognizer
+    public class SpeechRecognizer
     {
         private SpeechRecognitionEngine sre;
         private KinectAudioSource kinectAudioSource;
         private MainWindow mainWindow;
         private bool isDisposed;
+        private String wordSaid;
 
         public SpeechRecognizer(MainWindow window)
         {
@@ -111,26 +112,18 @@ namespace YouMote.Speech
                 this.RejectSpeech(e.Result);
                 return;
             }
-
+            wordSaid = e.Result.Text;
             mainWindow.DebugSpeechTextBox.Text = "recognize as: " + e.Result.Text;
         }
-/*
-        public static SpeechRecognizer Create()
+
+        public String Word
         {
-            SpeechRecognizer recognizer = null;
-
-            try
+            get
             {
-                recognizer = new SpeechRecognizer(mainWindow);
+                return this.wordSaid;
             }
-            catch (Exception)
-            {
-                // speech prereq isn't installed. a null recognizer will be handled properly by the app.
-            }
-
-            return recognizer;
         }
-*/
+
         private static RecognizerInfo GetKinectRecognizer()
         {
             Func<RecognizerInfo, bool> matchingFunc = r =>

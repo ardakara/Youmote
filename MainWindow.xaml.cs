@@ -73,7 +73,22 @@ namespace YouMote
         public float k_yMaxJointScale = 3.0f;
         private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
 
-        private SpeechRecognizer mySpeechRecognizer;
+        SpeechRecognizer mySpeechRecognizer;
+
+        /*
+        public SpeechRecognizer getSpeechRecognizer()
+        {
+            return this.mySpeechRecognizer;
+        }
+*/
+        public SpeechRecognizer speechRecognizer
+        {
+            get
+            {
+                return this.mySpeechRecognizer;
+            }
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -110,7 +125,6 @@ namespace YouMote
                 int wait = 4;
                 while (wait > 0)
                 {
- //                   this.DebugSpeechTextBox.Text = "Device will be ready for speech recognition in" + wait +  "second(s).";
                     wait--;
                     Thread.Sleep(1000);
                 }
@@ -118,7 +132,6 @@ namespace YouMote
                 //add event to receive skeleton data
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
                 this.mySpeechRecognizer = new SpeechRecognizer(this);
-//                this.mySpeechRecognizer.SaidSomething += this.RecognizerSaidSomething;
                 this.mySpeechRecognizer.Start(nui.AudioSource);
 
             }
