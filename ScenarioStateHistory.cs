@@ -89,6 +89,23 @@ namespace YouMote
                     {
                         this._history.Add(cappedOldState);
                     }
+                    else if(this._history.Count>0)
+                    {
+                        ScenarioState lastGoodState = this.Pop();
+
+                        if (lastGoodState.isSameState(nextState))
+                        {
+                            // same state, merge them
+                            ScenarioState newState = lastGoodState.mergeEqualStates(nextState);
+                            this._history.Add(newState);
+                        }
+                        else
+                        {
+                            ScenarioState cappedLastGoodState = lastGoodState.finishState(nextState);
+                            this._history.Add(cappedLastGoodState);
+                        }
+                    }
+
                     this._history.Add(nextState);
                 }
             }

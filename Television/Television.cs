@@ -14,7 +14,7 @@ namespace YouMote.Television
         // Charlton's path for quick copying: "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\"
         // Kenny's path for quick copying: "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\"
         // Arda's path for quick copyinh: "C:\\Users\\ardakara\\Documents\\CS247\\Youmote\\Video\\"
-        private static String VIDEO_PATH = "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
+        private static String VIDEO_PATH = "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\";
         private double _volume = 1.0;
         public double Volume
         {

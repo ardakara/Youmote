@@ -111,7 +111,7 @@ namespace YouMote.Speech
         {
             //SolidColorBrush brush;
 
-            if (e.Result.Confidence < 0.3)
+            if (e.Result.Confidence < 0.5)
             {
                 this.RejectSpeech(e.Result);
                 return;
