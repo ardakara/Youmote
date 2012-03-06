@@ -149,7 +149,7 @@ namespace YouMote
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
-            //            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+
             Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
             Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected();
             Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected();

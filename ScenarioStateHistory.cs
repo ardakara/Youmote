@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using YouMote.States;
 namespace YouMote
 {
     public class ScenarioStateHistory
@@ -84,13 +84,17 @@ namespace YouMote
                 }
                 else
                 {
+
                     ScenarioState cappedOldState = lastState.finishState(nextState);
+
                     if (cappedOldState.getDurationInSeconds() > this._falseStateDuration)
                     {
                         this._history.Add(cappedOldState);
+                        this._history.Add(nextState);
                     }
-                    else if(this._history.Count>0)
+                    else if (this._history.Count > 0)
                     {
+
                         ScenarioState lastGoodState = this.Pop();
 
                         if (lastGoodState.isSameState(nextState))
@@ -103,10 +107,13 @@ namespace YouMote
                         {
                             ScenarioState cappedLastGoodState = lastGoodState.finishState(nextState);
                             this._history.Add(cappedLastGoodState);
+                            this._history.Add(nextState);
                         }
                     }
-
-                    this._history.Add(nextState);
+                    else
+                    {
+                        this._history.Add(nextState);
+                    }
                 }
             }
             else

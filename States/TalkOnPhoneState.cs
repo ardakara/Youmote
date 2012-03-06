@@ -45,6 +45,10 @@ namespace YouMote.States
             this._state = phoneState._state;
         }
 
+      public TalkOnPhoneState()
+        {
+        }
+
         public Boolean isSameState(ScenarioState ss)
         {
             if (!ss.GetType().Equals(this.GetType()))
