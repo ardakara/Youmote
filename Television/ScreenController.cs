@@ -18,8 +18,8 @@ namespace YouMote.Television
     /// </summary>
     public class ScreenController
     {
-
         public enum PauseReason { STANDUP, PHONE, LEAVE };
+
         private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
         private static String STANDUP_FILE = "Images\\icons\\icon-solid-standup.png";
