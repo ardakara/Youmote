@@ -19,10 +19,11 @@ namespace YouMote.Television
     {
 
         public enum PauseReason { STANDUP, PHONE, LEAVE };
-        // QUICK COPY BLAKES PATH C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\
+        // QUICK COPY BLAKES PATH C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Images\\icons\\
         // QUICK COPY KENNY'S PATH "C:\\Users\\Kenny\\CS247\\Youmote\\Images\\icons\\"
         // QUICK COPY CHARLTON'S PATH "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Images\\icons\\"
         private static String ICON_PATH = "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Images\\icons\\";
+        // Arda's Path "C:\\Users\\ardakara\\Documents\\CS247\\Youmote\\Images\\icons\\"
         private static String PAUSE_FILE = ICON_PATH + "icon-solid-pause.png";
         private static String PLAY_FILE = ICON_PATH + "icon-solid-play.png";
         private static String STANDUP_FILE = ICON_PATH + "icon-solid-standup.png";

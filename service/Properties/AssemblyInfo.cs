@@ -15,7 +15,7 @@ using System.Security.Permissions;
 // associated with an assembly.
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
-[assembly: SecurityPermissionAttribute(SecurityAction.RequestMinimum)]
+//[assembly: SecurityPermissionAttribute(SecurityAction.RequestMinimum)]
 [assembly: AssemblyTitle("service")]
 [assembly: AssemblyDescription("SelfHost")]
 [assembly: AssemblyConfiguration("")]

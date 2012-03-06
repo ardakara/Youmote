@@ -14,6 +14,7 @@ namespace YouMote.Television
         // Charlton's path for quick copying: "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\"
         // Kenny's path for quick copying: "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\"
         private static String VIDEO_PATH = "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\";
+        // Arda's path for quick copyinh: "C:\\Users\\ardakara\\Documents\\CS247\\Youmote\\Video\\"
         private double _volume = 1.0;
         public double Volume
         {
@@ -116,20 +117,31 @@ namespace YouMote.Television
             this.updateChannelListings();
             if (this.CurrentChannelIndex >= 0)
             {
-                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == CACHE_CHANNEL_ID)
+
+                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == 0)
                 {
-                    this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
+                    // if current channel is 0, and the cache media isnt null
+                    // show the cached media
+                    this.CurrentChannelIndex = Television.CACHE_CHANNEL_ID;
+
                     Media nextMedia = this._cachedMedia;
                     this._screenController.moveMediaToRight(nextMedia);
+                    return true;
                 }
-                else
+                else if (this._currentChannelIndex - 1 >= 0 && this._currentChannelIndex - 1 < this._channels.Count)
                 {
+                    // otherwise show the next media if it is still in range
                     this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
                     Channel nextChannel = this._channels[this.CurrentChannelIndex];
                     Media nextMedia = nextChannel.Media;
                     this._screenController.moveMediaToRight(nextMedia);
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
+
             }
             else
             {
@@ -142,14 +154,29 @@ namespace YouMote.Television
         public Boolean moveMediaToLeft()
         {
             this.updateChannelListings();
-            if (this.CurrentChannelIndex + 1 < this._channels.Count)
+            if (this.CurrentChannelIndex + 1 < this._channels.Count || this._currentChannelIndex == CACHE_CHANNEL_ID)
             {
                 if (this.CurrentChannelIndex == CACHE_CHANNEL_ID)
                 {
+                    // if we are currently in cached channel
+                    // save where we are and make next channel be the beginning
                     double position = this._screenController.getCurrentMediaPosition();
                     this._cachedMedia.CurrentTime = position;
+                    if (this._channels.Count > 0)
+                    {
+                        this._currentChannelIndex = 0;
+                    }
+                    else
+                    {
+                        // no channels available
+                        return false;
+                    }
                 }
-                this.CurrentChannelIndex++;
+                else
+                {
+                    this.CurrentChannelIndex++;
+                }
+
                 Channel nextChannel = this._channels[this.CurrentChannelIndex];
                 Media nextMedia = nextChannel.Media;
                 this._screenController.moveMediaToLeft(nextMedia);

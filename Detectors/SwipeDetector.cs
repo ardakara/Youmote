@@ -15,7 +15,7 @@ namespace YouMote
         protected static double MAX_Z_ALLOWANCE = 0.15f;
         protected static double MAX_Y_ALLOWANCE = 0.075f;
         protected static double MIN_SWIPE_DISTANCE = 0.21f;
-        protected static double MAX_SWIPE_DISTANCE = 0.4f;
+        protected static double MAX_SWIPE_DISTANCE = 0.8f;
 
         protected static double MAX_SWIPE_DURATION = 1000;
         protected static double MAX_SWIPE_FINISH_DURATION = 60;
@@ -88,12 +88,13 @@ namespace YouMote
         protected Boolean stillWithinZBounds(double hand_z, Point3D start)
         {
             Console.WriteLine("Z Diff: " + Math.Abs(hand_z - start.Z));
-            return (Math.Abs(hand_z - start.Z) < MAX_Z_ALLOWANCE);
-            //return true;
+            //return (Math.Abs(hand_z - start.Z) < MAX_Z_ALLOWANCE);
+            return true;
         }
 
         protected Boolean stillWithinYBounds(double hand_y, Point3D start)
         {
+            return true;
             //return true;
             Console.WriteLine("Y Diff: " + Math.Abs(hand_y - start.Y));
             return (Math.Abs(hand_y - start.Y) < MAX_Y_ALLOWANCE);
