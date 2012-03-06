@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,17 +18,13 @@ namespace YouMote.Television
     /// </summary>
     public class ScreenController
     {
-
         public enum PauseReason { STANDUP, PHONE, LEAVE };
-        // QUICK COPY BLAKES PATH C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Images\\icons\\
-        // QUICK COPY KENNY'S PATH "C:\\Users\\Kenny\\CS247\\Youmote\\Images\\icons\\"
-        // Arda's Path "C:\\Users\\ardakara\\Documents\\CS247\\Youmote\\Images\\icons\\"
-        private static String ICON_PATH = "C:\\Users\\Kenny\\CS247\\Youmote\\Images\\icons\\";
-        private static String PAUSE_FILE = ICON_PATH + "icon-solid-pause.png";
-        private static String PLAY_FILE = ICON_PATH + "icon-solid-play.png";
-        private static String STANDUP_FILE = ICON_PATH + "icon-solid-standup.png";
-        private static String LEAVE_FILE = ICON_PATH + "icon-solid-leave.png";
-        private static String PHONE_FILE = ICON_PATH + "icon-solid-phone.png";
+
+        private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
+        private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
+        private static String STANDUP_FILE = "Images\\icons\\icon-solid-standup.png";
+        private static String LEAVE_FILE =   "Images\\icons\\icon-solid-leave.png";
+        private static String PHONE_FILE =   "Images\\icons\\icon-solid-phone.png";
 
         private static double PAUSE_FADE_OUT_DURATION = 3.0;
         private static double PLAY_FADE_IN_DURATION = 1.0;
@@ -148,7 +145,7 @@ namespace YouMote.Television
         public void turnOn(Media m)
         {
             this.CurrentMedia = m;
-            this._currentMediaElement.Source = new Uri(this._currentMedia.File);
+            this._currentMediaElement.Source = this._currentMedia.FileUri;
             this._currentMediaElement.Play();
             this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
             double startOpacity = this._currentContainer.Opacity;
@@ -171,7 +168,10 @@ namespace YouMote.Television
         {
             BitmapImage im = new BitmapImage();
             im.BeginInit();
-            im.UriSource = new Uri(relativeFilename, UriKind.Absolute);
+
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            im.UriSource = new Uri(currentPath + "\\" + relativeFilename);
+
             im.EndInit();
             return im;
         }
@@ -254,7 +254,7 @@ namespace YouMote.Television
             double currentPosition = this._currentMediaElement.Position.Seconds;
             this._currentMedia.CurrentTime = currentPosition;
 
-            this._onPointMediaElement.Source = new Uri(media.File);
+            this._onPointMediaElement.Source = media.FileUri;
             this._onPointMediaElement.Position = TimeSpan.FromSeconds(media.CurrentTime);
             this._onPointMediaElement.Volume = this._currentMediaElement.Volume;
             this._onPointMediaElement.Play();
