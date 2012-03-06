@@ -10,11 +10,6 @@ namespace YouMote.Television
 {
     public class Television
     {
-        // Blake's Path For Quick Copying:  "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
-        // Charlton's path for quick copying: "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\"
-        // Kenny's path for quick copying: "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\"
-        // Arda's path for quick copyinh: "C:\\Users\\ardakara\\Documents\\CS247\\Youmote\\Video\\"
-        private static String VIDEO_PATH = "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\";
         private double _volume = 1.0;
         public double Volume
         {
@@ -319,10 +314,10 @@ namespace YouMote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m2 = new Media(1, 100, 15, "test", VIDEO_PATH + "batman.avi");
-            Media m1 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
-            Media m3 = new Media(1, 100, 0, "test", VIDEO_PATH + "spiderman.avi");
-            Media m4 = new Media(1, 100, 0, "test", VIDEO_PATH + "hobbit.avi");
+            Media m2 = new Media(1, 100, 15, "test","Video\\batman.avi");
+            Media m1 = new Media(1, 100, 0, "test", "Video\\pixar_short.avi");
+            Media m3 = new Media(1, 100, 0, "test", "Video\\spiderman.avi");
+            Media m4 = new Media(1, 100, 0, "test", "Video\\hobbit.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
             Channel c2 = new Channel(0, "channel 2", m2);
             Channel c3 = new Channel(0, "channel 3", m3);

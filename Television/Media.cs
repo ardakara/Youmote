@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,12 +47,12 @@ namespace YouMote
             }
         }
 
-        private String _file;
-        public String File
+        private Uri _fileUri;
+        public Uri FileUri
         {
             get
             {
-                return this._file;
+                return this._fileUri;
             }
         }
 
@@ -75,7 +76,11 @@ namespace YouMote
             this._duration = duration;
             this._currentTime = currentTime;
             this._name = name;
-            this._file = file;
+            if (!file.Equals(""))
+            {
+                String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+                this._fileUri = new Uri(currentPath + "\\" + file);
+            }
         }
     }
 }
