@@ -92,9 +92,9 @@ namespace YouMote
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SetupKinect();
             youmoteController = new YoumoteController(this);
             currentController = youmoteController;
+            SetupKinect();
         }
 
         private void SetupKinect()
