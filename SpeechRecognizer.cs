@@ -98,6 +98,7 @@ namespace YouMote.Speech
         {
             string status = "Rejected: " + (result == null ? string.Empty : result.Text + " " + result.Confidence);
             mainWindow.DebugSpeechTextBox.Text = status;
+            wordSaid = null;
         }
 
         private void SreSpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
