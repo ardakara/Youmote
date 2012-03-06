@@ -134,6 +134,7 @@ namespace YouMote
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
+
             }
         }
 

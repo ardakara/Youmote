@@ -19,8 +19,6 @@ using System.IO;
 using SysPath = System.IO.Path;
 using YouMote.Television;
 
-//debug indicator for hand on face
-using YouMote.Indicators;
 
 namespace YouMote
 {
@@ -44,8 +42,8 @@ namespace YouMote
         private Stopwatch sw = new Stopwatch();
 
         /* To get channels changing */
-        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
-        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private AmbidextrousStiffSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousStiffSwipeLeftDetector();
+        private AmbidextrousStiffSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousStiffSwipeRightDetector();
         private Stopwatch swipe_sw = new Stopwatch();
 
         /* To turn TV on and off */
@@ -312,14 +310,6 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-                /*
-                this.ambiScreenDetector.processSkeleton(skeleton);
-                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
-                if (hasPulledDownScreen)
-                {
-                    this._debugGestureBox.Text = "Has pulled down screen!";
-                    this._tv.turnOff();
-                }*/
 
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();

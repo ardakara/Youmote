@@ -7,7 +7,7 @@ using YouMote.States;
 
 namespace YouMote
 {
-    public class AmbidextrousSwipeRightDetector : SwipeRightDetector
+    public class AmbidextrousStiffSwipeRightDetector : StiffSwipeRightDetector
     {
 
         private Boolean isSwipeRight(ScenarioStateHistory history)
@@ -15,7 +15,7 @@ namespace YouMote
             List<ScenarioState> recentStates = history.getLastNStates(3);
             if (recentStates.Count == 3)
             {
-                //Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
+                Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
             }
             double swipe_duration = 0;
             double finish_duration = 0;
@@ -25,8 +25,8 @@ namespace YouMote
                 {
                     swipe_duration = recentStates[1].getDurationInMilliseconds();
                     finish_duration = recentStates[0].getDurationInMilliseconds();
-                    Console.WriteLine("swipe_duration: " + swipe_duration + ", finish_duration: " + finish_duration);
-                    if (swipe_duration < MAX_SWIPE_DURATION && finish_duration < MAX_SWIPE_FINISH_DURATION)
+                    //Console.WriteLine("swipe_duration: " + swipe_duration + ", finish_duration: " + finish_duration);
+                    if (swipe_duration < MAX_SWIPE_DURATION)
                     {
                         return true;
                     }

@@ -8,7 +8,7 @@ using YouMote.Indicators;
 using YouMote.States;
 namespace YouMote
 {
-    public abstract class SwipeRightDetector : SwipeDetector
+    public abstract class StiffSwipeRightDetector : StiffSwipeDetector
     {
 
         private void processRightSwipeRightHand(Joint rightHand, double swipeCrossLine)
@@ -19,7 +19,7 @@ namespace YouMote
 
 
             //if right hand is right of cross line AND the person hasn't started a swipe yet, start the swipe!
-            if (/*!isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && */!this.rh_swipeInitiated)
+            if (!isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && !this.rh_swipeInitiated)
             {
                 this.rh_start.X = rightHand.Position.X;
                 this.rh_start.Y = rightHand.Position.Y;
@@ -37,17 +37,7 @@ namespace YouMote
             else
             { //the swipe has been started, check if in bounds and moving to the right!
 
-                if (stillWithinYBounds(rightHand.Position.Y, this.lh_start))
-                {
-                    Console.WriteLine("\n Swipe Right: within bounds!");
-                }
-
-                if (curX >= this.rh_last.X)
-                {
-                    Console.WriteLine("Swipe Right: moving right!) \n");
-                }
-
-                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(rightHand.Position.Z, this.rh_start) && curX >= this.rh_last.X)
+                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && curX >= this.rh_last.X)
                 {
 
                     if (curX > this.rh_endX)
@@ -67,9 +57,9 @@ namespace YouMote
                 else
                 {
                     resetVars("right");
+                    Console.WriteLine("right arm out of bounds or moving left--CANCEL!");
                     SwipeState state = new SwipeState(SwipeState.SwipePosition.SWIPE_CANCELLED, DateTime.Now, DateTime.Now);
                     this._rightHandHistory.addState(state);
-                    //ADD CANCEL STATE
                 }
             }
         }
@@ -101,7 +91,7 @@ namespace YouMote
             { //the swipe has been started, check if in bounds and moving to the right!
 
 
-                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(leftHand.Position.Z, this.lh_start) && curX >= this.lh_last.X)
+                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(curZ, this.lh_start) && curX >= this.lh_last.X)
                 {
 
                     if (curX > this.lh_endX)
@@ -135,14 +125,37 @@ namespace YouMote
                 //ONLY TO FIGURE OUT THE DISTANCE--otherwise, hardcode it into swipeRightDetector
 
                 Joint rightHand = skeleton.Joints[JointType.HandRight];
-                //double rightArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderRight].Position.X;
-                double rightArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderRight].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
+                double rightArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderRight].Position.X;
+                //double rightArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderRight].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
 
                 Joint leftHand = skeleton.Joints[JointType.HandLeft];
-                double leftArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderLeft].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
+                double leftArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderLeft].Position.X;
+                //double leftArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderLeft].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
 
-                processRightSwipeRightHand(rightHand, rightArmSwipeCrossLine);
-                processRightSwipeLeftHand(leftHand, leftArmSwipeCrossLine);
+                Boolean isRightArmStraight = this._straightArmIndicator.isRightArmStraight(skeleton);
+                Boolean isLeftArmStraight = this._straightArmIndicator.isLeftArmStraight(skeleton);
+
+                if (isRightArmStraight)
+                {
+                    processRightSwipeRightHand(rightHand, rightArmSwipeCrossLine);
+                }
+                else
+                {
+                    Console.WriteLine("Right arm wasn't straight-cancel!");
+                    SwipeState state = new SwipeState(SwipeState.SwipePosition.SWIPE_CANCELLED, DateTime.Now, DateTime.Now);
+                    this._rightHandHistory.addState(state);
+                }
+
+                if (isLeftArmStraight)
+                {
+                    processRightSwipeLeftHand(leftHand, leftArmSwipeCrossLine);
+                }
+                else
+                {
+                    SwipeState state = new SwipeState(SwipeState.SwipePosition.SWIPE_CANCELLED, DateTime.Now, DateTime.Now);
+                    this._leftHandHistory.addState(state);
+                }
+
 
             }
         }
