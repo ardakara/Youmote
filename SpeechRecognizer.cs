@@ -73,6 +73,8 @@ namespace YouMote.Speech
             grammar.Add("What's up");
             grammar.Add("Sup");
             grammar.Add("Hey");
+            grammar.Add("TV pause");
+            grammar.Add("TV play");
 
             var gb = new GrammarBuilder { Culture = speechRecognitionEngine.RecognizerInfo.Culture };
             gb.Append(grammar);

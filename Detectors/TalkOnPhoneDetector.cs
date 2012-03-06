@@ -37,27 +37,31 @@ namespace YouMote.Detectors
         {
             ScenarioState lastState = this._history.Peek();
             return isTalkingOnPhone;
-            /*
-            if (TalkOnPhoneState.TALK_ON_PHONE.isSameState(lastState))
-            {
-                return true;
-                
-            }
-            return false;*/
+            
         }
         public void processSkeleton(Skeleton skeleton)
         {
+            /*
+            Boolean handIsOnFace = this._handOnFaceIndicator.isPositionDetected(skeleton);
+            String wordsSaid = speechRecognizer.Word;
+            if (handIsOnFace && greeting.Contains(wordsSaid))
+            {
+                isTalkingOnPhone = true;
+            }else{
+                isTalkingOnPhone = false;
+            }
+             * */
             Boolean handIsOnFace = this._handOnFaceIndicator.isPositionDetected(skeleton);
             TalkOnPhoneState state = null;
             if (handIsOnFace && speechRecognizer != null)
             {
                 String wordsSaid = speechRecognizer.Word;
-                
+
                 if (greeting.Contains(wordsSaid))
                 {
                     state = new TalkOnPhoneState(TalkOnPhoneState.PhoneState.TALK_ON_PHONE, DateTime.Now, DateTime.Now);
                     isTalkingOnPhone = true;
-                    
+
                 }
                 else
                 {

@@ -31,6 +31,8 @@ namespace YouMote
         private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
         private AmbidextrousResumeDetector ambiResumeDetector = new AmbidextrousResumeDetector();
         private TalkOnPhoneDetector talkOnPhoneDetector;
+        private SpeechPauseOverrideDetector speechPauseOverrideDetector;
+        private SpeechResumeOverrideDetector speechResumeOverrideDetector;
 
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
@@ -91,6 +93,8 @@ namespace YouMote
             wave_sw.Start();
             swipe_sw.Start();
             talkOnPhoneDetector = new TalkOnPhoneDetector(win);
+            speechPauseOverrideDetector = new SpeechPauseOverrideDetector(win);
+            speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
         }
 
         void OnGestureDetected(string gesture)
@@ -142,23 +146,67 @@ namespace YouMote
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
-            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+//            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
             Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
+            this._isOverridePause = speechPauseOverrideDetector.isScenarioDetected();
+            this._isOverrideResume = speechResumeOverrideDetector.isScenarioDetected();
 
-            if (hasResumed)
+            if (this._isOverridePause)
             {
-                this._debugPositionBox.Text = "Has RESUMED";
-                if (this._isOverridePause)
+                this._isOverrideResume = false;
+                this._isOverridePause = false;
+                this._debugPositionBox.Text = "override pause!";
+                this._tv.pause();
+
+            }
+            else if (this._isOverrideResume)
+            {
+                this._isOverridePause = false;
+                this._isOverrideResume = false;
+                this._debugPositionBox.Text = "override resume!";
+                this._tv.play();
+            }
+            else
+            {
+                this._isOverridePause = false;
+                this._isOverrideResume = false;
+                //all the detector logic
+                if (isAbsent)
                 {
-                    this._isOverridePause = false;
+                    if (isPermanentlyGone)
+                    {
+                        this._tv.turnOff();
+                    }
+                    else
+                    {
+                        this._tv.pause(ScreenController.PauseReason.LEAVE);
+                    }
+                }
+                else if (isStanding)
+                {
+                    //                this._isOverridePause = false;
+                    this._debugPositionBox.Text = "I'm standing and paused.";
+                    ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                    this._tv.pause(reason);
+                }
+                else if (isTalkingOnPhone)
+                {
+                    //              this._isOverridePause = false;
+                    this._debugPositionBox.Text = "I'm talking on phone and paused.";
+                    this._tv.pause();
+                }
+                else if (isSitting)
+                {
+                    //            this._isOverrideResume = false;                
+                    this._debugPositionBox.Text = "Sitting -- so resume!";
+                    this._tv.play();
                 }
                 else
                 {
-                    this._isOverrideResume = true;
+                    this._debugPositionBox.Text = "Neither!";
                 }
             }
-
-
+/*
             if (isAbsent)
             {
                 if (isPermanentlyGone)
@@ -183,6 +231,7 @@ namespace YouMote
             }
             else if (isStanding)
             {
+                this._isOverridePause = false;
                 if (!this._isOverrideResume)
                 {
                     this._debugPositionBox.Text = "I'm standing and paused.";
@@ -228,7 +277,7 @@ namespace YouMote
             {
                 this._debugPositionBox.Text = "Neither!";
             }
-
+*/
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
