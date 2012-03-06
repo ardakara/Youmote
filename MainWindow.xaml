@@ -2,19 +2,24 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="1024" Width="1280" Closed="Window_Closed" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
-    <Canvas Name="MainCanvas" Height="1024" Width="1280" Background="Black">
+    <Canvas Name="MainCanvas" Height="1024" Width="1280" Background="Black" Canvas.Left="0" Canvas.Top="0">
         <Canvas.Clip>
             <RectangleGeometry Rect="0,0,1280,1024"/>
         </Canvas.Clip>
+
         <Canvas Name="MediaContainer1" Height="1024" Width="1280">
             <MediaElement Name="mediaElement1"  LoadedBehavior="Manual"/>
         </Canvas>
-        <Canvas Name="MediaContainer2" Height="1024" Width="1280">
+        <Canvas Name="MediaContainer2" Height="1024" Width="1280" Canvas.Left="-12" Canvas.Top="-26">
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual"/>
+
         </Canvas>
-        <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="White"/>
-        <TextBox Name="DebugGestureTextBox" Canvas.Left="580" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="BlanchedAlmond" />
-        <TextBox Name="DebugSpeechTextBox" Canvas.Left="580" Text="speech" Canvas.Top="100" Height="88" Width="366" FontSize="20" Background="BlanchedAlmond" />
+
+        <TextBox Name="DebugGestureTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="60" Background="BlanchedAlmond" />
+        <TextBox Name="DebugSpeechTextBox" Canvas.Left="0" Text="speech" Canvas.Top="100" Height="88" Width="366" FontSize="20" Background="BlanchedAlmond" />
+        <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="200" Height="88" Width="366" FontSize="60" Background="White" />
+        <Image Name="CenterIcon" Width="512" Height="512" Canvas.Left="384" Canvas.Top="256" />
+        <Image Name="CornerIcon" Width="128" Height="128" Canvas.Right="20" Canvas.Top="20" />
     </Canvas>
 
 </Window>

@@ -12,8 +12,23 @@ namespace YouMote.Television
     {
         // Blake's Path For Quick Copying:  "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
         // Charlton's path for quick copying: "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\"
-        private static String VIDEO_PATH = "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\";
+        private static String VIDEO_PATH = "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
+        private double _volume = 1.0;
+        public double Volume
+        {
+            get
+            {
+                return this._volume;
+            }
+
+            set
+            {
+                this._volume = value;
+                this._screenController.setCurrentMediaVolume(value);
+            }
+        }
         private Boolean _isOn = false;
+
         public Boolean IsOn
         {
             get
@@ -94,13 +109,12 @@ namespace YouMote.Television
         /// We are viewing 1 frame at a time and can movie the striip to left or right.
         /// This is how to imagine changing channels
         /// </summary>
-        public void moveMediaToRight()
+        public Boolean moveMediaToRight()
         {
 
             this.updateChannelListings();
             if (this.CurrentChannelIndex >= 0)
             {
-
                 if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == CACHE_CHANNEL_ID)
                 {
                     this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
@@ -114,41 +128,45 @@ namespace YouMote.Television
                     Media nextMedia = nextChannel.Media;
                     this._screenController.moveMediaToRight(nextMedia);
                 }
+                return true;
             }
             else
             {
                 // do a little bob animation to show that there are no more channels
+                return false;
             }
-            this.IsPaused = false;
+
         }
 
-        public void moveMediaToLeft()
+        public Boolean moveMediaToLeft()
         {
             this.updateChannelListings();
             if (this.CurrentChannelIndex + 1 < this._channels.Count)
             {
                 if (this.CurrentChannelIndex == CACHE_CHANNEL_ID)
                 {
-                    // currently watching cache.. pause the cache
-                    this.pause();
+                    double position = this._screenController.getCurrentMediaPosition();
+                    this._cachedMedia.CurrentTime = position;
                 }
                 this.CurrentChannelIndex++;
                 Channel nextChannel = this._channels[this.CurrentChannelIndex];
                 Media nextMedia = nextChannel.Media;
                 this._screenController.moveMediaToLeft(nextMedia);
+                return true;
             }
             else
             {
                 // do a little bob animation to show that there are no more channels
+                return false;
             }
-            this.IsPaused = false;
+
         }
 
         /// <summary>
         ///  turns on and plays content
         /// </summary>
 
-        public void turnOn()
+        public Boolean turnOn()
         {
             if (!this.IsOn)
             {
@@ -167,10 +185,15 @@ namespace YouMote.Television
                     Media onMedia = onChannel.Media;
                     this._screenController.turnOn(onMedia);
                 }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        public void turnOff()
+        public Boolean turnOff()
         {
             if (this.IsOn)
             {
@@ -178,6 +201,11 @@ namespace YouMote.Television
                 this._isOn = false;
                 this.IsPaused = true;
                 this._screenController.turnOff();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -185,28 +213,77 @@ namespace YouMote.Television
         ///  pauses the media and media element
         ///  WARNING: PAUSING A CHANNEL INSTANTLY TURNS THAT INTO THE CACHE
         /// </summary>
-        public void pause()
+        public Boolean pause(ScreenController.PauseReason pr)
         {
             if (!this.IsPaused)
             {
                 this.IsPaused = true;
-                double position = this._screenController.pause();
+                double position = this._screenController.pause(pr);
                 Channel curChannel = this.getCurrentChannel();
                 this._cachedMedia = curChannel.Media;
                 this._cachedMedia.CurrentTime = position;
                 this._currentChannelIndex = CACHE_CHANNEL_ID;
+                // fade off the pause button
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        public void play()
+
+        public Boolean pause()
+        {
+            ScreenController.PauseReason pr = ScreenController.PauseReason.LEAVE;
+            if (!this.IsPaused)
+            {
+                this.IsPaused = true;
+                double position = this._screenController.pause(pr);
+                Channel curChannel = this.getCurrentChannel();
+                this._cachedMedia = curChannel.Media;
+                this._cachedMedia.CurrentTime = position;
+                this._currentChannelIndex = CACHE_CHANNEL_ID;
+                // fade off the pause button
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// plays the current media.  Returns true if media went from stop to play.  False otherwise
+        /// </summary>
+        /// <returns></returns>
+
+        public Boolean play()
         {
             if (this.IsPaused)
             {
                 this.IsPaused = false;
                 this._screenController.play();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
+
+        public Boolean resume()
+        {
+            Boolean isPlay = this.play();
+            if (isPlay)
+            {
+                // fade in the resume icon
+            }
+            return isPlay;
+        }
 
         /// <summary>
         /// Talks to server and updates current channels
@@ -214,7 +291,7 @@ namespace YouMote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m2 = new Media(1, 100, 0, "test", VIDEO_PATH + "batman.avi");
+            Media m2 = new Media(1, 100, 15, "test", VIDEO_PATH + "batman.avi");
             Media m1 = new Media(1, 100, 0, "test", VIDEO_PATH + "pixar_short.avi");
             Media m3 = new Media(1, 100, 0, "test", VIDEO_PATH + "spiderman.avi");
             Media m4 = new Media(1, 100, 0, "test", VIDEO_PATH + "hobbit.avi");
@@ -234,18 +311,28 @@ namespace YouMote.Television
         {
             // worker that creates a channel change worker that turns the tv on
 
-            this.simulateFakeAction(this.turnOn, 2); // batman
-            this.simulateFakeAction(this.play, 10); // to pixar 
-            this.simulateFakeAction(this.play, 11); // to pixar 
+            this.simulateFakeAction(this.turnOn, 1); // batman
+            this.simulateFakeAction(this.moveMediaToLeft, 5); // to pixar
+            this.simulateFakeAction(this.moveMediaToLeft, 10); // to pixar
             this.simulateFakeAction(this.moveMediaToLeft, 15); // to pixar
-            this.simulateFakeAction(this.moveMediaToRight, 25); // top batman
-            this.simulateFakeAction(this.moveMediaToLeft, 35); // to pixar
-            this.simulateFakeAction(this.moveMediaToLeft, 45); // to vat?
-            this.simulateFakeAction(this.pause, 60);
-            this.simulateFakeAction(this.turnOff, 65);
+            this.simulateFakeAction(this.moveMediaToRight, 20); // to pixar
+            this.simulateFakeAction(this.pause, 25); // batman
+            this.simulateFakeAction(this.play, 30); // to pixar 
+            this.simulateFakeAction(this.play, 35); // to pixar 
+            this.simulateFakeAction(this.pause, 37); // batman
+            this.simulateFakeAction(this.moveMediaToRight, 40); // to pixar
+            this.simulateFakeAction(this.moveMediaToLeft, 45); // to pixar
+            /*            this.simulateFakeAction(this.play, 11); // to pixar 
+                        this.simulateFakeAction(this.moveMediaToLeft, 15); // to pixar
+                        this.simulateFakeAction(this.moveMediaToRight, 25); // top batman
+                        this.simulateFakeAction(this.moveMediaToLeft, 35); // to pixar
+                        this.simulateFakeAction(this.moveMediaToLeft, 45); // to vat?
+                        this.simulateFakeAction(this.pause, 60);
+                        this.simulateFakeAction(this.turnOff, 65);
+             */
         }
 
-        private delegate void FakeActionDelegate();
+        private delegate Boolean FakeActionDelegate();
         private void simulateFakeAction(FakeActionDelegate fakeAction, double time)
         {
             BackgroundWorker workerInvoker = new BackgroundWorker();
