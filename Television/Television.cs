@@ -153,14 +153,29 @@ namespace YouMote.Television
         public Boolean moveMediaToLeft()
         {
             this.updateChannelListings();
-            if (this.CurrentChannelIndex + 1 < this._channels.Count)
+            if (this.CurrentChannelIndex + 1 < this._channels.Count || this._currentChannelIndex == CACHE_CHANNEL_ID)
             {
                 if (this.CurrentChannelIndex == CACHE_CHANNEL_ID)
                 {
+                    // if we are currently in cached channel
+                    // save where we are and make next channel be the beginning
                     double position = this._screenController.getCurrentMediaPosition();
                     this._cachedMedia.CurrentTime = position;
+                    if (this._channels.Count > 0)
+                    {
+                        this._currentChannelIndex = 0;
+                    }
+                    else
+                    {
+                        // no channels available
+                        return false;
+                    }
                 }
-                this.CurrentChannelIndex++;
+                else
+                {
+                    this.CurrentChannelIndex++;
+                }
+
                 Channel nextChannel = this._channels[this.CurrentChannelIndex];
                 Media nextMedia = nextChannel.Media;
                 this._screenController.moveMediaToLeft(nextMedia);
