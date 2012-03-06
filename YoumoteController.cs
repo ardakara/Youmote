@@ -51,6 +51,8 @@ namespace YouMote
         private Boolean _isOverrideResume;
         private Boolean _isOverridePause;
 
+        readonly
+
         //using the Toolkit
         SwipeGestureDetectorMod swipeGestureRecognizer;
         readonly ColorStreamManager colorManager = new ColorStreamManager();
@@ -169,7 +171,7 @@ namespace YouMote
                     if (!this._isOverrideResume)
                     {
                         this._debugPositionBox.Text = "I'm off screen so pause TV";
-                        this._tv.pause();
+                        this._tv.pause(ScreenController.PauseReason.LEAVE);
                     }
                     else
                     {
@@ -184,7 +186,13 @@ namespace YouMote
                 if (!this._isOverrideResume)
                 {
                     this._debugPositionBox.Text = "I'm standing and paused.";
-                    this._tv.pause();
+                    ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                    if (isTalkingOnPhone)
+                    {
+                        reason = ScreenController.PauseReason.PHONE;
+                    }
+                    this._tv.pause(reason);
+
                 }
                 else
                 {
@@ -229,7 +237,7 @@ namespace YouMote
             if (skeleton != null)
             {
                 ambiSwipeLeftDetector.processSkeleton(skeleton);
-                if (ambiSwipeLeftDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000) )
+                if (ambiSwipeLeftDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000))
                 {
                     this._debugGestureBox.Text = "Swipe left!";
                     this._tv.moveMediaToLeft();
@@ -237,7 +245,7 @@ namespace YouMote
                 }
 
                 ambiSwipeRightDetector.processSkeleton(skeleton);
-                if (ambiSwipeRightDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000) )
+                if (ambiSwipeRightDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000))
                 {
                     this._debugGestureBox.Text = "Right swipe!";
                     this._tv.moveMediaToRight();
@@ -262,7 +270,7 @@ namespace YouMote
             }
         }
 
-        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int,Target> targets)
+        public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
             if (!this._tv.IsOn)
             {
@@ -331,7 +339,7 @@ namespace YouMote
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-            
+
 //            this._tv.fakeTVRun();
         }
 
