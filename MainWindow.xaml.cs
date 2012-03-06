@@ -119,11 +119,6 @@ namespace YouMote
                 });
                 nui.Start();
 
-                //add event to receive skeleton data
-                youmoteController = new YoumoteController(this);
-                currentController = youmoteController;
-                nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
-
                 //need 4 seconds for kinect speech to be ready
                 int wait = 4;
                 while (wait > 0)
@@ -134,6 +129,11 @@ namespace YouMote
 
                 this.mySpeechRecognizer = new SpeechRecognizer(this);
                 this.mySpeechRecognizer.Start(nui.AudioSource);
+
+                //add event to receive skeleton data
+                youmoteController = new YoumoteController(this);
+                currentController = youmoteController;
+                nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
             }
         }
 
