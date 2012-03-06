@@ -55,15 +55,8 @@ namespace YouMote
         private Boolean _isManualResume = false;
         private Boolean _isManualPause = false;
 
-        readonly
-
-        //using the Toolkit
-        SwipeGestureDetectorMod swipeGestureRecognizer;
-        readonly ColorStreamManager colorManager = new ColorStreamManager();
-        readonly DepthStreamManager depthManager = new DepthStreamManager();
-        readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
-        readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
-
+        /*Handling volume*/
+        private VolumeDecreaseDetector volumeDetector = new VolumeDecreaseDetector();
 
         /* Stuff needed to 'turn on the tv'*/
         private YouMote.Television.Television _tv;
@@ -88,8 +81,8 @@ namespace YouMote
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
-            swipeGestureRecognizer = new SwipeGestureDetectorMod();
-            swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
+            //swipeGestureRecognizer = new SwipeGestureDetectorMod();
+            //swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
             this._isManualPause = false;
             this._isManualResume = false;
@@ -265,6 +258,18 @@ namespace YouMote
             }
         }
 
+        private void detectVolumeChangingScenarios(Skeleton skeleton)
+        {
+            if (skeleton != null)
+            {
+                volumeDetector.processSkeleton(skeleton);
+                double deltaVolume = volumeDetector.getVolumeDelta();
+                if (deltaVolume != 0) {
+                    this._debugGestureBox.Text = "Volume changed by: " + deltaVolume;
+                }
+            }
+        }
+
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
             if (!this._tv.IsOn)
@@ -292,9 +297,8 @@ namespace YouMote
             {
 
                 detectSittingStandingScenarios(skeleton);
-
-
                 detectChannelChangingScenarios(skeleton, nui);
+                //detectVolumeChangingScenarios(skeleton);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)

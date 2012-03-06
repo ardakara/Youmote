@@ -13,10 +13,7 @@ namespace YouMote
         private Boolean isSwipeRight(ScenarioStateHistory history)
         {
             List<ScenarioState> recentStates = history.getLastNStates(3);
-            if (recentStates.Count == 3)
-            {
-                Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
-            }
+
             double swipe_duration = 0;
             double finish_duration = 0;
             if (recentStates.Count >= 3)
@@ -43,16 +40,6 @@ namespace YouMote
         {
             Boolean rh_isSwipeRight = this.isSwipeRight(this._rightHandHistory);
             Boolean lh_isSwipeRight = this.isSwipeRight(this._leftHandHistory);
-
-            if (rh_isSwipeRight)
-            {
-                Console.WriteLine("right hand right swipe");
-            }
-            if (lh_isSwipeRight)
-            {
-                Console.WriteLine("left hand right swipe");
-            }
-
 
             if (rh_isSwipeRight || lh_isSwipeRight)
             {

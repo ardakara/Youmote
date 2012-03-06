@@ -105,7 +105,7 @@ namespace YouMote
             {
                 //use first Kinect
                 nui = KinectSensor.KinectSensors[0];
-
+                  
                 //Initialize to do skeletal tracking
                 nui.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                 nui.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);

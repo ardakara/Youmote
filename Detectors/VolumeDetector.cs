@@ -9,17 +9,14 @@ using YouMote.States;
 namespace YouMote
 {
 
-    public abstract class StiffSwipeDetector : ScenarioDetector
+    public abstract class VolumeDetector : ScenarioDetector
     {
 
-        protected static double MAX_Z_ALLOWANCE = 0.15f;
-        protected static double MAX_Y_ALLOWANCE = 0.1f;
-        protected static double MIN_SWIPE_DISTANCE = 0.30f;
-        protected static double MAX_SWIPE_DISTANCE = 0.70f;
+        protected static double MAX_X_ALLOWANCE = 0.1f;
+        protected static double MIN_ADJUST_DISTANCE = 0.11f;
+        protected static double MAX_ADJUST_DISTANCE = 0.80f;
 
-        protected static double MAX_SWIPE_DURATION = 1000;
-        
-        protected static double MAX_SWIPE_FINISH_DURATION = 60;
+        protected static double MAX_SWIPE_DURATION = 10000;
 
         protected ScenarioStateHistory _rightHandHistory;
         protected ScenarioStateHistory _leftHandHistory;
@@ -31,23 +28,22 @@ namespace YouMote
         protected Point3D rh_last;
         protected Point3D lh_last;
 
-        protected Double rh_endX;
-        protected Double lh_endX;
+        protected Double rh_endY;
+        protected Double lh_endY;
         
-        protected Boolean rh_swipeInitiated;
-        protected Boolean lh_swipeInitiated;
+        protected Boolean rh_adjustInitiated;
+        protected Boolean lh_adjustInitiated;
 
-        protected double rh_angle;
-        protected double lh_angle;
+        protected double rh_deltaY;
+        protected double lh_deltaY;
 
-
-        public StiffSwipeDetector()
+        public VolumeDetector()
         {
             this._rightHandHistory = new ScenarioStateHistory(30);
             this._leftHandHistory = new ScenarioStateHistory(30);
             
-            rh_swipeInitiated = false;
-            lh_swipeInitiated = false;
+            rh_adjustInitiated = false;
+            lh_adjustInitiated = false;
 
             rh_start = new Point3D(-1, -1, -1);
             lh_start = new Point3D(-1, -1, -1);
@@ -55,8 +51,8 @@ namespace YouMote
             rh_last = new Point3D(-1, -1, -1);
             lh_last = new Point3D(-1, -1, -1);
 
-            rh_endX = -1;
-            lh_endX = -1;
+            rh_deltaY = 0;
+            lh_deltaY = 0;
         }
 
         protected double calculate_midpoint(double pos1, double pos2)
@@ -64,14 +60,14 @@ namespace YouMote
             return (pos1 + pos2) / 2;
         }
 
-        protected Boolean isLeftOfCrossLine(double crossline_x, double joint_x)
+        protected Boolean isAboveCrossLine(double crossline_y, double joint_y)
         {
-            return (joint_x < crossline_x);
+            return (joint_y > crossline_y);
         }
 
-        protected Boolean isRightOfCrossline(double crossline_x, double joint_x)
+        protected Boolean isBelowCrossline(double crossline_y, double joint_y)
         {
-            return (joint_x > crossline_x);
+            return (joint_y < crossline_y);
         }
 
         protected Boolean isIncreasingZ(double cur_z, double last_z)
@@ -84,48 +80,39 @@ namespace YouMote
             return (cur_z <= last_z);
         }
 
-        protected Boolean stillWithinZBounds(double hand_z, Point3D start)
+        protected Boolean stillWithinXBounds(double hand_x, Point3D start)
         {
             //Console.WriteLine("Z Diff: " + Math.Abs(hand_z - start.Z));
-            return (Math.Abs(hand_z - start.Z) < MAX_Z_ALLOWANCE);
+            return (Math.Abs(hand_x - start.X) < MAX_X_ALLOWANCE);
             //return true;
-        }
-
-        protected Boolean stillWithinYBounds(double hand_y, Point3D start)
-        {
-            //return true;
-            //Console.WriteLine("Y Diff: " + Math.Abs(hand_y - start.Y));
-            return (Math.Abs(hand_y - start.Y) < MAX_Y_ALLOWANCE);
         }
 
         protected void resetVars(String hand)
         {
             if (hand.Equals("right")) {
-                this.rh_swipeInitiated = false;
+                this.rh_adjustInitiated = false;
                 this.rh_start.X = -1;
                 this.rh_start.Y = -1;
                 this.rh_start.Z = -1;
                 this.rh_last.X = -1;
                 this.rh_last.Y = -1;
                 this.rh_last.Z = -1;
-                this.rh_endX = -1;
+                this.rh_deltaY = 0;
             } else {
-                this.lh_swipeInitiated = false;
+                this.lh_adjustInitiated = false;
                 this.lh_start.X = -1;
                 this.lh_start.Y = -1;
                 this.lh_start.Z = -1;
                 this.lh_last.X = -1;
                 this.lh_last.Y = -1;
                 this.lh_last.Z = -1;
-                this.lh_endX = -1;
+                this.lh_deltaY = 0;
             }
 
-            //initial_theta = -1;
         }
 
         protected double dotProduct(double x1, double y1, double z1, double x2, double y2, double z2)
         {
-       
             return (x1 * x2 + y1 * y2 + z1 * z2);
         }
 

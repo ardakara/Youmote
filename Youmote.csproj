@@ -105,13 +105,15 @@
     <Compile Include="Detectors\AmbidextrousScreenDetector.cs" />
     <Compile Include="Detectors\AmbidextrousStiffSwipeLeftDetector.cs" />
     <Compile Include="Detectors\AmbidextrousStiffSwipeRightDetector.cs" />
+    <Compile Include="Detectors\VolumeDecreaseDetector.cs" />
+    <Compile Include="Detectors\VolumeDetector.cs" />
     <Compile Include="Detectors\StiffSwipeRightDetector.cs" />
     <Compile Include="Detectors\StiffSwipeLeftDetector.cs" />
     <Compile Include="Detectors\StiffSwipeDetector.cs" />
     <Compile Include="Detectors\SpeechPauseOverrideDetector.cs" />
     <Compile Include="Detectors\SpeechResumeOverrideDetector.cs" />
-    <Compile Include="Detectors\SwipeGestureDetector.cs" />
     <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
+    <Compile Include="States\VolumeState.cs" />
     <Compile Include="States\SwipeState.cs" />
     <Compile Include="States\ScreenState.cs" />
     <Compile Include="Detectors\PullDownScreenDetector.cs" />
