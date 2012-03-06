@@ -19,18 +19,22 @@ using System.IO;
 using SysPath = System.IO.Path;
 using YouMote.Television;
 
+
 namespace YouMote
 {
     class YoumoteController : SkeletonController
     {
         private StandingDetector standingDetector = new StandingDetector();
         private SittingDetector sittingDetector = new SittingDetector();
-        private HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
         private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
         private AmbidextrousResumeDetector ambiResumeDetector = new AmbidextrousResumeDetector();
         private TalkOnPhoneDetector talkOnPhoneDetector;
+        private SpeechPauseOverrideDetector speechPauseOverrideDetector;
+        private SpeechResumeOverrideDetector speechResumeOverrideDetector;
+
+        private MainWindow window;
 
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
@@ -48,8 +52,8 @@ namespace YouMote
 
 
         /* Flags to handle complex manual overrides */
-        private Boolean _isOverrideResume;
-        private Boolean _isOverridePause;
+        private Boolean _isManualResume = false;
+        private Boolean _isManualPause = false;
 
         readonly
 
@@ -79,6 +83,7 @@ namespace YouMote
         public YoumoteController(MainWindow win)
             : base(win)
         {
+            this.window = win;
             // repeat for all the messages
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
@@ -86,24 +91,26 @@ namespace YouMote
             swipeGestureRecognizer = new SwipeGestureDetectorMod();
             swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
-            this._isOverridePause = false;
-            this._isOverrideResume = false;
+            this._isManualPause = false;
+            this._isManualResume = false;
             wave_sw.Start();
             swipe_sw.Start();
             talkOnPhoneDetector = new TalkOnPhoneDetector(win);
+            speechPauseOverrideDetector = new SpeechPauseOverrideDetector(win);
+            speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
         }
 
         void OnGestureDetected(string gesture)
         {
             if (gesture == "SwipeToLeft")
             {
-                this._isOverrideResume = true;
+                this._isManualResume = true;
                 this._debugGestureBox.Text = "you swiped left!";
                 this._tv.moveMediaToLeft();
             }
             else if (gesture == "SwipeToRight")
             {
-                this._isOverrideResume = true;
+                this._isManualResume = true;
                 this._debugGestureBox.Text = "to the RIGHT you swiped!!";
                 this._tv.moveMediaToRight();
             }
@@ -130,6 +137,13 @@ namespace YouMote
 
         private void detectSittingStandingScenarios(Skeleton skeleton)
         {
+            /*
+            String hello = window.speechRecognizer.Word;
+            if(hello !=null && hello.Equals("hello")){
+                int a = 3;
+
+            }
+*/
 
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
@@ -142,93 +156,74 @@ namespace YouMote
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
-            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+            //            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
             Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
+            Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected();
+            Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected();
 
-            if (hasResumed)
+
+
+            if (isTalkingOnPhone)
             {
-                this._debugPositionBox.Text = "Has RESUMED";
-                if (this._isOverridePause)
-                {
-                    this._isOverridePause = false;
-                }
-                else
-                {
-                    this._isOverrideResume = true;
-                }
+                this._debugGestureBox.Text = "talking on phone";
+            }
+
+            HandOnFaceIndicator handOnFaceIndicator = new HandOnFaceIndicator();
+            if (handOnFaceIndicator.isPositionDetected(skeleton))
+            {
+                this._debugGestureBox.Text = "hand on face";
             }
 
 
-            if (isAbsent)
+            if (isManualPause)
+            {
+                this._isManualPause = isManualPause;
+                this._debugPositionBox.Text = "Manual pause!";
+                this._tv.pause();
+
+            }
+            else if (isManualResume)
+            {
+                this._isManualResume = isManualResume;
+                this._debugPositionBox.Text = "manual Resume!";
+                this._tv.play();
+            }
+
+            //all the detector logic
+            if (isAbsent && !this._isManualResume)
             {
                 if (isPermanentlyGone)
                 {
-                    this._debugPositionBox.Text = "I'm permanently gone";
                     this._tv.turnOff();
                 }
                 else
                 {
-                    if (!this._isOverrideResume)
-                    {
-                        this._debugPositionBox.Text = "I'm off screen so pause TV";
-                        this._tv.pause(ScreenController.PauseReason.LEAVE);
-                    }
-                    else
-                    {
-                        this._debugPositionBox.Text = "I'm off screen but override resume keeps playing show!";
-                        this._tv.play();
-                    }
-                }
-
-            }
-            else if (isStanding)
-            {
-                if (!this._isOverrideResume)
-                {
-                    this._debugPositionBox.Text = "I'm standing and paused.";
-                    ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
-                    if (isTalkingOnPhone)
-                    {
-                        reason = ScreenController.PauseReason.PHONE;
-                    }
-                    this._tv.pause(reason);
-
-                }
-                else
-                {
-                    this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
+                    this._tv.pause(ScreenController.PauseReason.LEAVE);
                 }
             }
-            else if (isTalkingOnPhone)
+            else if (isTalkingOnPhone && !this._isManualResume)
             {
-                if (!this._isOverrideResume)
-                {
-                    this._debugPositionBox.Text = "I'm talking on phone and paused.";
-                    this._tv.pause();
-                }
-                else
-                {
-                    this._debugPositionBox.Text = "I'm on phone but didn't pause b/c override resume";
-                }
+                this._isManualPause = false;
+                this._debugPositionBox.Text = "I'm talking on phone and paused.";
+                this._tv.pause();
             }
-            else if (isSitting)
+            else if (isStanding && !this._isManualResume)
             {
-                this._isOverrideResume = false;
-                if (!this._isOverridePause)
-                {
-                    this._debugPositionBox.Text = "Sitting -- so resume!";
-                    this._tv.play();
-                }
-                else
-                {
-                    this._debugPositionBox.Text = "Sitting, but manual override presents play!";
-                }
+                this._isManualPause = false;
+                this._debugPositionBox.Text = "I'm standing and paused.";
+                ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                this._tv.pause(reason);
+            }
+            else if (isSitting && !this._isManualPause)
+            {
+                this._isManualResume = false;
+                this._debugPositionBox.Text = "Sitting -- so resume!";
+                this._tv.play();
             }
             else
             {
                 this._debugPositionBox.Text = "Neither!";
             }
-
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
@@ -332,7 +327,7 @@ namespace YouMote
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
 
-//            this._tv.fakeTVRun();
+            //            this._tv.fakeTVRun();
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)

@@ -14,7 +14,6 @@ namespace YouMote.Detectors
     {
         protected ScenarioStateHistory _history;
         protected HandOnFaceIndicator _handOnFaceIndicator = new HandOnFaceIndicator();
-        private Boolean isTalkingOnPhone = false;
         private MainWindow window;
         private SpeechRecognizer speechRecognizer;
 
@@ -26,8 +25,8 @@ namespace YouMote.Detectors
             this._history = new ScenarioStateHistory(30);
             this.window = win;
             this.speechRecognizer = win.speechRecognizer;
-            greeting.Add("Hi");
-            greeting.Add("Hello");
+            greeting.Add("hi");
+            greeting.Add("hello");
             greeting.Add("What's up");
             greeting.Add("Sup");
             greeting.Add("Hey");
@@ -35,15 +34,26 @@ namespace YouMote.Detectors
 
         public Boolean isScenarioDetected()
         {
-            ScenarioState lastState = this._history.Peek();
-            return isTalkingOnPhone;
-            /*
-            if (TalkOnPhoneState.TALK_ON_PHONE.isSameState(lastState))
+            ScenarioState curState = this._history.Peek();
+            if (curState!=null && TalkOnPhoneState.TALK_ON_PHONE.isSameState(curState))
             {
                 return true;
-                
             }
-            return false;*/
+
+            List<ScenarioState> prevStates = this._history.getLastNStates(2);
+            if (prevStates.Count == 2)
+            {
+                Boolean prevStateOnPhone = TalkOnPhoneState.TALK_ON_PHONE.isSameState(prevStates[1]);
+                Boolean curStateHandOnHead = TalkOnPhoneState.HAND_ON_FACE.isSameState(prevStates[0]);
+                if (prevStateOnPhone && curStateHandOnHead)
+                {
+                    return true;
+                }
+            }
+
+
+            return false;
+            
         }
         public void processSkeleton(Skeleton skeleton)
         {
@@ -52,23 +62,20 @@ namespace YouMote.Detectors
             if (handIsOnFace && speechRecognizer != null)
             {
                 String wordsSaid = speechRecognizer.Word;
-                
+
                 if (greeting.Contains(wordsSaid))
                 {
                     state = new TalkOnPhoneState(TalkOnPhoneState.PhoneState.TALK_ON_PHONE, DateTime.Now, DateTime.Now);
-                    isTalkingOnPhone = true;
-                    
+
                 }
                 else
                 {
                     state = new TalkOnPhoneState(TalkOnPhoneState.PhoneState.HAND_ON_FACE, DateTime.Now, DateTime.Now);
-                    isTalkingOnPhone = false;
                 }
             }
             else
             {
                 state = new TalkOnPhoneState(TalkOnPhoneState.PhoneState.HAND_DOWN, DateTime.Now, DateTime.Now);
-                isTalkingOnPhone = false;
             }
             this._history.addState(state);
         }

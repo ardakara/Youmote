@@ -73,6 +73,8 @@ namespace YouMote.Speech
             grammar.Add("What's up");
             grammar.Add("Sup");
             grammar.Add("Hey");
+            grammar.Add("TV pause");
+            grammar.Add("TV play");
 
             var gb = new GrammarBuilder { Culture = speechRecognitionEngine.RecognizerInfo.Culture };
             gb.Append(grammar);
@@ -96,6 +98,7 @@ namespace YouMote.Speech
         {
             string status = "Rejected: " + (result == null ? string.Empty : result.Text + " " + result.Confidence);
             mainWindow.DebugSpeechTextBox.Text = status;
+            wordSaid = null;
         }
 
         private void SreSpeechHypothesized(object sender, SpeechHypothesizedEventArgs e)
@@ -108,7 +111,7 @@ namespace YouMote.Speech
         {
             //SolidColorBrush brush;
 
-            if (e.Result.Confidence < 0.3)
+            if (e.Result.Confidence < 0.5)
             {
                 this.RejectSpeech(e.Result);
                 return;
