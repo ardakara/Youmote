@@ -117,20 +117,31 @@ namespace YouMote.Television
             this.updateChannelListings();
             if (this.CurrentChannelIndex >= 0)
             {
-                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == CACHE_CHANNEL_ID)
+
+                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == 0)
                 {
-                    this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
+                    // if current channel is 0, and the cache media isnt null
+                    // show the cached media
+                    this.CurrentChannelIndex = Television.CACHE_CHANNEL_ID;
+
                     Media nextMedia = this._cachedMedia;
                     this._screenController.moveMediaToRight(nextMedia);
+                    return true;
                 }
-                else
+                else if (this._currentChannelIndex - 1 >= 0 && this._currentChannelIndex - 1 < this._channels.Count)
                 {
+                    // otherwise show the next media if it is still in range
                     this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
                     Channel nextChannel = this._channels[this.CurrentChannelIndex];
                     Media nextMedia = nextChannel.Media;
                     this._screenController.moveMediaToRight(nextMedia);
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
+
             }
             else
             {
