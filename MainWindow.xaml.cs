@@ -92,8 +92,6 @@ namespace YouMote
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            youmoteController = new YoumoteController(this);
-            currentController = youmoteController;
             SetupKinect();
         }
 
@@ -133,7 +131,6 @@ namespace YouMote
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
                 this.mySpeechRecognizer = new SpeechRecognizer(this);
                 this.mySpeechRecognizer.Start(nui.AudioSource);
-
             }
         }
 
@@ -158,7 +155,14 @@ namespace YouMote
                     Skeleton skeleton = (from s in this.skeletons
                                          where s.TrackingState == SkeletonTrackingState.Tracked
                                          select s).FirstOrDefault();
-
+                    if (youmoteController == null)
+                    {
+                        youmoteController = new YoumoteController(this);
+                    }
+                    if (currentController == null)
+                    {
+                        currentController = youmoteController;
+                    }
                     currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
