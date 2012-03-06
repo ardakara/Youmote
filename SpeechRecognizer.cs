@@ -23,6 +23,7 @@ namespace YouMote.Speech
             mainWindow = window;
             RecognizerInfo ri = GetKinectRecognizer();
             this.sre = new SpeechRecognitionEngine(ri);
+            this.isDisposed = false;
             this.LoadGrammar(this.sre);
         }
 

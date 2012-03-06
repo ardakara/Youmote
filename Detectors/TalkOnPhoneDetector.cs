@@ -49,7 +49,7 @@ namespace YouMote.Detectors
         {
             Boolean handIsOnFace = this._handOnFaceIndicator.isPositionDetected(skeleton);
             TalkOnPhoneState state = null;
-            if (handIsOnFace)
+            if (handIsOnFace && speechRecognizer != null)
             {
                 String wordsSaid = speechRecognizer.Word;
                 
