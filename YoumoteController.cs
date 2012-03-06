@@ -30,7 +30,7 @@ namespace YouMote
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
         private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
         private AmbidextrousResumeDetector ambiResumeDetector = new AmbidextrousResumeDetector();
-        private TalkOnPhoneDetector talkOnPhoneDetector = new TalkOnPhoneDetector();
+        private TalkOnPhoneDetector talkOnPhoneDetector;
 
         private PullDownIndicator pullDownIndicator = new PullDownIndicator();
 
@@ -74,6 +74,8 @@ namespace YouMote
             this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
         }
 
+
+
         public YoumoteController(MainWindow win)
             : base(win)
         {
@@ -88,6 +90,7 @@ namespace YouMote
             this._isOverrideResume = false;
             wave_sw.Start();
             swipe_sw.Start();
+            talkOnPhoneDetector = new TalkOnPhoneDetector(win);
         }
 
         void OnGestureDetected(string gesture)
@@ -178,7 +181,7 @@ namespace YouMote
                 }
 
             }
-            else if (isStanding || isTalkingOnPhone)
+            else if (isStanding)
             {
                 if (!this._isOverrideResume)
                 {
@@ -194,6 +197,18 @@ namespace YouMote
                 else
                 {
                     this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
+                }
+            }
+            else if (isTalkingOnPhone)
+            {
+                if (!this._isOverrideResume)
+                {
+                    this._debugPositionBox.Text = "I'm talking on phone and paused.";
+                    this._tv.pause();
+                }
+                else
+                {
+                    this._debugPositionBox.Text = "I'm on phone but didn't pause b/c override resume";
                 }
             }
             else if (isSitting)
