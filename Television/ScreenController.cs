@@ -35,7 +35,7 @@ namespace YouMote.Television
         private static double FADE_IN_DURATION = 3.0;
         private static double SCREEN_CHANGE_DURATION = 1.0;
         private double screenX = 0;
-        private double screenY = 0;
+        //private double screenY = 0;
         private double screenWidth;
         private double screenHeight;
         private Image _centerIcon;
