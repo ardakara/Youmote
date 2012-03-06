@@ -18,7 +18,7 @@ namespace YouMote
             double curZ = rightHand.Position.Z;
 
             //if right hand is right of cross line AND the person hasn't started a swipe yet, start the swipe!
-            if ( /*isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && */!this.rh_swipeInitiated)
+            if ( isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && !this.rh_swipeInitiated)
             {
                 this.rh_start.X = rightHand.Position.X;
                 this.rh_start.Y = rightHand.Position.Y;
@@ -35,7 +35,7 @@ namespace YouMote
             }
             else
             { //the swipe has been started, check if in bounds and moving to the left!
-                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(rightHand.Position.Z, this.rh_start))
+                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(curZ, this.rh_last))
                 {
                     Console.WriteLine("\n Swipe Left: within bounds!");
                 }
@@ -46,7 +46,7 @@ namespace YouMote
                 }
 
 
-                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(rightHand.Position.Z, this.rh_start) && curX <= this.rh_last.X)
+                if (stillWithinYBounds(curY, this.rh_start) && stillWithinZBounds(curZ, this.rh_start) && curX <= this.rh_last.X)
                 {
 
                     if (curX < this.rh_endX)
@@ -79,7 +79,7 @@ namespace YouMote
             double curZ = leftHand.Position.Z;
 
             //if right hand is right of cross line AND the person hasn't started a swipe yet, start the swipe!
-            if ( /*isRightOfCrossline(swipeCrossLine, leftHand.Position.X) && */!this.lh_swipeInitiated)
+            if ( isRightOfCrossline(swipeCrossLine, leftHand.Position.X) && !this.lh_swipeInitiated)
             {
                 this.lh_start.X = leftHand.Position.X;
                 this.lh_start.Y = leftHand.Position.Y;
@@ -98,7 +98,7 @@ namespace YouMote
             { //the swipe has been started, check if in bounds and moving to the left!
 
 
-                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(leftHand.Position.Z, this.lh_start) && curX <= this.lh_last.X)
+                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(curZ, this.rh_start) && curX <= this.lh_last.X)
                 {
 
                     if (curX < this.lh_endX)
@@ -135,8 +135,8 @@ namespace YouMote
                 double rightArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderRight].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
 
                 Joint leftHand = skeleton.Joints[JointType.HandLeft];
-                //double leftArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderLeft].Position.X;
-                double leftArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderLeft].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
+                double leftArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderLeft].Position.X;
+                //double leftArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderLeft].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
 
                 processLeftSwipeRightHand(rightHand, rightArmSwipeCrossLine);
                 processLeftSwipeLeftHand(leftHand, leftArmSwipeCrossLine);

@@ -25,7 +25,7 @@ namespace YouMote
                     swipe_duration = recentStates[1].getDurationInMilliseconds();
                     finish_duration = recentStates[0].getDurationInMilliseconds();
                     Console.WriteLine("swipe_duration: " + swipe_duration + ", finish_duration: " + finish_duration);
-                    if (swipe_duration < MAX_SWIPE_DURATION && finish_duration < MAX_SWIPE_FINISH_DURATION)
+                    if (swipe_duration < MAX_SWIPE_DURATION)
                     {
                         return true;
                     }

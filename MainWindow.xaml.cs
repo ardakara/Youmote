@@ -131,8 +131,8 @@ namespace YouMote
 
                 //add event to receive skeleton data
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
-                this.mySpeechRecognizer = new SpeechRecognizer(this);
-                this.mySpeechRecognizer.Start(nui.AudioSource);
+                //this.mySpeechRecognizer = new SpeechRecognizer(this);
+                //this.mySpeechRecognizer.Start(nui.AudioSource);
 
             }
         }

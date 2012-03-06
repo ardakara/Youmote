@@ -12,10 +12,10 @@ namespace YouMote
     public abstract class SwipeDetector : ScenarioDetector
     {
 
-        protected static double MAX_Z_ALLOWANCE = 0.20f;
-        protected static double MAX_Y_ALLOWANCE = 0.05f;
+        protected static double MAX_Z_ALLOWANCE = 0.15f;
+        protected static double MAX_Y_ALLOWANCE = 0.075f;
         protected static double MIN_SWIPE_DISTANCE = 0.21f;
-        protected static double MAX_SWIPE_DISTANCE = 0.5f;
+        protected static double MAX_SWIPE_DISTANCE = 0.4f;
 
         protected static double MAX_SWIPE_DURATION = 1000;
         protected static double MAX_SWIPE_FINISH_DURATION = 60;
@@ -73,6 +73,16 @@ namespace YouMote
         protected Boolean isRightOfCrossline(double crossline_x, double joint_y)
         {
             return (joint_y > crossline_x);
+        }
+
+        protected Boolean isIncreasingZ(double cur_z, double last_z)
+        {
+            return (cur_z >= last_z);
+        }
+
+        protected Boolean isDecreasingZ(double cur_z, double last_z)
+        {
+            return (cur_z <= last_z);
         }
 
         protected Boolean stillWithinZBounds(double hand_z, Point3D start)

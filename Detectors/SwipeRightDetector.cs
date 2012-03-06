@@ -19,7 +19,7 @@ namespace YouMote
 
 
             //if right hand is right of cross line AND the person hasn't started a swipe yet, start the swipe!
-            if (/*!isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && */!this.rh_swipeInitiated)
+            if (!isRightOfCrossline(swipeCrossLine, rightHand.Position.X) && !this.rh_swipeInitiated)
             {
                 this.rh_start.X = rightHand.Position.X;
                 this.rh_start.Y = rightHand.Position.Y;
@@ -37,7 +37,7 @@ namespace YouMote
             else
             { //the swipe has been started, check if in bounds and moving to the right!
 
-                if (stillWithinYBounds(rightHand.Position.Y, this.lh_start))
+                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start))
                 {
                     Console.WriteLine("\n Swipe Right: within bounds!");
                 }
@@ -47,7 +47,7 @@ namespace YouMote
                     Console.WriteLine("Swipe Right: moving right!) \n");
                 }
 
-                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(rightHand.Position.Z, this.rh_start) && curX >= this.rh_last.X)
+                if (stillWithinYBounds(rightHand.Position.Y, this.rh_start) && stillWithinZBounds(rightHand.Position.Z, this.rh_start ) && curX >= this.rh_last.X)
                 {
 
                     if (curX > this.rh_endX)
@@ -101,7 +101,7 @@ namespace YouMote
             { //the swipe has been started, check if in bounds and moving to the right!
 
 
-                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(leftHand.Position.Z, this.lh_start) && curX >= this.lh_last.X)
+                if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && stillWithinZBounds(curZ, this.lh_start) && curX >= this.lh_last.X)
                 {
 
                     if (curX > this.lh_endX)
@@ -135,8 +135,8 @@ namespace YouMote
                 //ONLY TO FIGURE OUT THE DISTANCE--otherwise, hardcode it into swipeRightDetector
 
                 Joint rightHand = skeleton.Joints[JointType.HandRight];
-                //double rightArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderRight].Position.X;
-                double rightArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderRight].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
+                double rightArmSwipeCrossLine = skeleton.Joints[JointType.ShoulderRight].Position.X;
+                //double rightArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderRight].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
 
                 Joint leftHand = skeleton.Joints[JointType.HandLeft];
                 double leftArmSwipeCrossLine = calculate_midpoint(skeleton.Joints[JointType.ShoulderLeft].Position.X, skeleton.Joints[JointType.ShoulderCenter].Position.X);
