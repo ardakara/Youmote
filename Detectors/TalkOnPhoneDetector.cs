@@ -12,7 +12,6 @@ namespace YouMote.Detectors
 {
     class TalkOnPhoneDetector : ScenarioDetector
     {
-        private static double MIN_HAND_ON_FACE_TIME_IN_SECONDS = 0.5;
         protected ScenarioStateHistory _history;
         protected HandOnFaceIndicator _handOnFaceIndicator = new HandOnFaceIndicator();
         private Boolean isTalkingOnPhone = false;
@@ -37,12 +36,14 @@ namespace YouMote.Detectors
         public Boolean isScenarioDetected()
         {
             ScenarioState lastState = this._history.Peek();
+            return isTalkingOnPhone;
+            /*
             if (TalkOnPhoneState.TALK_ON_PHONE.isSameState(lastState))
             {
                 return true;
                 
             }
-            return false;
+            return false;*/
         }
         public void processSkeleton(Skeleton skeleton)
         {

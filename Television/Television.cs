@@ -12,7 +12,8 @@ namespace YouMote.Television
     {
         // Blake's Path For Quick Copying:  "C:\\Users\\Blake\\Documents\\CS247\\P4\\Youmote\\Video\\";
         // Charlton's path for quick copying: "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\"
-        private static String VIDEO_PATH = "C:\\Users\\Charlton Soesanto\\Desktop\\Youmote\\Video\\";
+        // Kenny's path for quick copying: "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\"
+        private static String VIDEO_PATH = "C:\\Users\\Kenny\\CS247\\Youmote\\Video\\";
         private Boolean _isOn = false;
         public Boolean IsOn
         {
