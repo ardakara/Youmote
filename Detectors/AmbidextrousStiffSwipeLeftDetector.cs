@@ -7,10 +7,9 @@ using YouMote.States;
 
 namespace YouMote
 {
-    public class AmbidextrousSwipeRightDetector : SwipeRightDetector
+    public class AmbidextrousStiffSwipeLeftDetector : StiffSwipeLeftDetector
     {
-
-        private Boolean isSwipeRight(ScenarioStateHistory history)
+        private Boolean isSwipeLeft(ScenarioStateHistory history)
         {
             List<ScenarioState> recentStates = history.getLastNStates(3);
             if (recentStates.Count == 3)
@@ -21,7 +20,7 @@ namespace YouMote
             double finish_duration = 0;
             if (recentStates.Count >= 3)
             {
-                if (SwipeState.SWIPE_FINISHED.isSameState(recentStates[0]) && SwipeState.MOVING_RIGHT.isSameState(recentStates[1]) && SwipeState.SWIPE_STARTED.isSameState(recentStates[2]))
+                if (SwipeState.SWIPE_FINISHED.isSameState(recentStates[0]) && SwipeState.MOVING_LEFT.isSameState(recentStates[1]) && SwipeState.SWIPE_STARTED.isSameState(recentStates[2]))
                 {
                     swipe_duration = recentStates[1].getDurationInMilliseconds();
                     finish_duration = recentStates[0].getDurationInMilliseconds();
@@ -41,27 +40,23 @@ namespace YouMote
         
         public override Boolean isScenarioDetected()
         {
-            Boolean rh_isSwipeRight = this.isSwipeRight(this._rightHandHistory);
-            Boolean lh_isSwipeRight = this.isSwipeRight(this._leftHandHistory);
+            Boolean rh_isSwipeLeft = this.isSwipeLeft(this._rightHandHistory);
+            Boolean lh_isSwipeLeft = this.isSwipeLeft(this._leftHandHistory);
 
-            if (rh_isSwipeRight)
+            if (rh_isSwipeLeft)
             {
-                Console.WriteLine("right hand right swipe");
+                Console.WriteLine("right hand left swipe");
             }
-            if (lh_isSwipeRight)
+            if (lh_isSwipeLeft)
             {
-                Console.WriteLine("left hand right swipe");
+                Console.WriteLine("left hand left swipe");
             }
 
-
-            if (rh_isSwipeRight || lh_isSwipeRight)
+            if (rh_isSwipeLeft || lh_isSwipeLeft)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
     }

@@ -12,9 +12,9 @@ namespace YouMote
 
         private Boolean isWaveDetected(ScenarioStateHistory history)
         {
-            List<ScenarioState> recentStates = history.getLastNStates(3);
+            List<ScenarioState> recentStates = history.getLastNStates(4);
 
-            if (recentStates.Count == 3)
+            if (recentStates.Count == 4)
             {
                 //Console.WriteLine("\t RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
             }
@@ -25,13 +25,13 @@ namespace YouMote
                 wave_duration += recentStates[i].getDurationInMilliseconds();
             }
 
-            if (wave_duration < MAX_WAVE_DURATION && recentStates.Count >= 3 )
+            if (wave_duration < MAX_WAVE_DURATION && recentStates.Count >= 4 )
             {
-                if (WaveState.HAND_RIGHT.isSameState(recentStates[0]) && WaveState.HAND_LEFT.isSameState(recentStates[1]) && WaveState.HAND_RIGHT.isSameState(recentStates[2]))
+                if (WaveState.HAND_RIGHT.isSameState(recentStates[0]) && WaveState.HAND_LEFT.isSameState(recentStates[1]) && WaveState.HAND_RIGHT.isSameState(recentStates[2]) && WaveState.HAND_LEFT.isSameState(recentStates[3]))
                 {
                     return true;
                 }
-                else if (WaveState.HAND_LEFT.isSameState(recentStates[0]) && WaveState.HAND_RIGHT.isSameState(recentStates[1]) && WaveState.HAND_LEFT.isSameState(recentStates[2]))
+                else if (WaveState.HAND_LEFT.isSameState(recentStates[0]) && WaveState.HAND_RIGHT.isSameState(recentStates[1]) && WaveState.HAND_LEFT.isSameState(recentStates[2]) && WaveState.HAND_RIGHT.isSameState(recentStates[3]))
                 {
                     return true;
                 }

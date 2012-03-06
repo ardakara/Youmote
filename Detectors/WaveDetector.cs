@@ -19,6 +19,7 @@ namespace YouMote
         protected ScenarioStateHistory _leftHandHistory;
         protected WaveIndicator _righthandwaveindicator = new WaveIndicator();
         protected WaveIndicator _lefthandwaveindicator = new WaveIndicator();
+        protected PullDownIndicator _straightarmindicator = new PullDownIndicator();
 
         protected double _rh_most_left;
         protected double _rh_most_right;
@@ -141,6 +142,25 @@ namespace YouMote
                 //update right hand state
                 update_rh_state(rightHand, rightHandLeft, rightHandRight);
                 double rh_diff = this._rh_most_right - this._rh_most_left;
+
+                /*to prevent mix-ups with swiping*/
+                Boolean rightArmStraight = this._straightarmindicator.isRightArmStraight(skeleton);
+                Boolean leftArmStraight = this._straightarmindicator.isLeftArmStraight(skeleton);
+
+                if (rightArmStraight)
+                {
+                    WaveState state = new WaveState(WaveState.WavePosition.HAND_BELOW, DateTime.Now, DateTime.Now);
+                    this._rightHandHistory.addState(state);
+                    reset_extremes("right");
+                }
+
+                if (leftArmStraight)
+                {
+                    WaveState state = new WaveState(WaveState.WavePosition.HAND_BELOW, DateTime.Now, DateTime.Now);
+                    this._leftHandHistory.addState(state);
+                    reset_extremes("left");
+                }
+                /**/
 
                 if (!IsWithinBounds(rh_diff) && rh_diff > 0)
                 {

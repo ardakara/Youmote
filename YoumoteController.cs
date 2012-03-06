@@ -38,8 +38,8 @@ namespace YouMote
         private Stopwatch sw = new Stopwatch();
 
         /* To get channels changing */
-        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
-        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private AmbidextrousStiffSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousStiffSwipeLeftDetector();
+        private AmbidextrousStiffSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousStiffSwipeRightDetector();
         private Stopwatch swipe_sw = new Stopwatch();
 
         /* To turn TV on and off */
@@ -136,14 +136,14 @@ namespace YouMote
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
             this.ambiResumeDetector.processSkeleton(skeleton);
-            //this.talkOnPhoneDetector.processSkeleton(skeleton);
+            this.talkOnPhoneDetector.processSkeleton(skeleton);
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
             Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
-            //Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
+            Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
 
             if (hasResumed)
             {
@@ -187,10 +187,10 @@ namespace YouMote
                 {
                     this._debugPositionBox.Text = "I'm standing and paused.";
                     ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
-                    /*if (isTalkingOnPhone)
+                    if (isTalkingOnPhone)
                     {
                         reason = ScreenController.PauseReason.PHONE;
-                    }*/
+                    }
                     this._tv.pause(reason);
 
                 }
@@ -199,7 +199,7 @@ namespace YouMote
                     this._debugPositionBox.Text = "I'm standing but didn't pause b/c override resume";
                 }
             }
-            else if (false/*isTalkingOnPhone*/)
+            else if (isTalkingOnPhone)
             {
                 if (!this._isOverrideResume)
                 {
@@ -315,14 +315,6 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-                /*
-                this.ambiScreenDetector.processSkeleton(skeleton);
-                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
-                if (hasPulledDownScreen)
-                {
-                    this._debugGestureBox.Text = "Has pulled down screen!";
-                    this._tv.turnOff();
-                }*/
 
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();

@@ -9,18 +9,17 @@ using YouMote.States;
 namespace YouMote
 {
 
-    public abstract class SwipeDetector : ScenarioDetector
+    public abstract class StiffSwipeDetector : ScenarioDetector
     {
 
         protected static double MAX_Z_ALLOWANCE = 0.15f;
-        protected static double MAX_Y_ALLOWANCE = 0.075f;
-        protected static double MIN_SWIPE_DISTANCE = 0.21f;
-        protected static double MAX_SWIPE_DISTANCE = 0.8f;
+        protected static double MAX_Y_ALLOWANCE = 0.1f;
+        protected static double MIN_SWIPE_DISTANCE = 0.30f;
+        protected static double MAX_SWIPE_DISTANCE = 0.70f;
 
         protected static double MAX_SWIPE_DURATION = 1000;
+        
         protected static double MAX_SWIPE_FINISH_DURATION = 60;
-
-        protected static double MIN_SWIPE_LENGTH = 0.2f;
 
         protected ScenarioStateHistory _rightHandHistory;
         protected ScenarioStateHistory _leftHandHistory;
@@ -42,7 +41,7 @@ namespace YouMote
         protected double lh_angle;
 
 
-        public SwipeDetector()
+        public StiffSwipeDetector()
         {
             this._rightHandHistory = new ScenarioStateHistory(30);
             this._leftHandHistory = new ScenarioStateHistory(30);
@@ -87,16 +86,15 @@ namespace YouMote
 
         protected Boolean stillWithinZBounds(double hand_z, Point3D start)
         {
-            Console.WriteLine("Z Diff: " + Math.Abs(hand_z - start.Z));
-            //return (Math.Abs(hand_z - start.Z) < MAX_Z_ALLOWANCE);
-            return true;
+            //Console.WriteLine("Z Diff: " + Math.Abs(hand_z - start.Z));
+            return (Math.Abs(hand_z - start.Z) < MAX_Z_ALLOWANCE);
+            //return true;
         }
 
         protected Boolean stillWithinYBounds(double hand_y, Point3D start)
         {
-            return true;
             //return true;
-            Console.WriteLine("Y Diff: " + Math.Abs(hand_y - start.Y));
+            //Console.WriteLine("Y Diff: " + Math.Abs(hand_y - start.Y));
             return (Math.Abs(hand_y - start.Y) < MAX_Y_ALLOWANCE);
         }
 
