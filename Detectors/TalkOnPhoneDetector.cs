@@ -40,9 +40,10 @@ namespace YouMote.Detectors
                 return true;
             }
 
-            List<ScenarioState> prevStates = this._history.getLastNStates(2);
-            if (prevStates.Count == 2)
+            List<ScenarioState> prevStates = this._history.getLastNStates(3);
+            if (prevStates.Count >= 2)
             {
+                
                 Boolean prevStateOnPhone = TalkOnPhoneState.TALK_ON_PHONE.isSameState(prevStates[1]);
                 Boolean curStateHandOnHead = TalkOnPhoneState.HAND_ON_FACE.isSameState(prevStates[0]);
                 if (prevStateOnPhone && curStateHandOnHead)
@@ -50,6 +51,22 @@ namespace YouMote.Detectors
                     return true;
                 }
             }
+
+            if (prevStates.Count == 3)
+            {
+
+                ScenarioState thirdRecentState = prevStates[2];
+                ScenarioState secondRecentState = prevStates[1];
+                ScenarioState firstRecentState = prevStates[0];
+                Boolean thirdRecentStateOnPhone = TalkOnPhoneState.TALK_ON_PHONE.isSameState(thirdRecentState);
+                Boolean secondRecentStateHandOnHead = TalkOnPhoneState.HAND_ON_FACE.isSameState(secondRecentState);
+                Boolean firstRecentStateHandDown = TalkOnPhoneState.HAND_DOWN.isSameState(firstRecentState)&& firstRecentState.getDurationInSeconds()<0.5;
+                if (firstRecentStateHandDown && secondRecentStateHandOnHead && thirdRecentStateOnPhone)
+                {
+                    return true;
+                }
+            }
+
 
 
             return false;
