@@ -49,8 +49,7 @@ namespace YouMote.Television
 
         private Stopwatch _stopWatch = new Stopwatch();
         private Media _cachedMedia = Media.NULL_MEDIA;
-        private static int CACHE_CHANNEL_ID = -1;
-        private static String CACHE_CHANNEL_NAME = "CACHED_CHANNEL";
+        private int _cachedMediaIndex = -1;
         private ScreenController _screenController;
         private List<Channel> _channels = new List<Channel>();
         public List<Channel> Channels
@@ -60,6 +59,18 @@ namespace YouMote.Television
                 return this._channels;
             }
 
+        }
+        private int _lastChannelIndex;
+        public int LastChannelIndex
+        {
+            get
+            {
+                return this._lastChannelIndex;
+            }
+            set
+            {
+                this._lastChannelIndex = value;
+            }
         }
         private int _currentChannelIndex;
         public int CurrentChannelIndex
@@ -77,15 +88,9 @@ namespace YouMote.Television
         public Television(MainWindow window)
         {
             this._screenController = new ScreenController(window);
-            this.CurrentChannelIndex = CACHE_CHANNEL_ID;
-
+            this.CurrentChannelIndex = 0;
         }
 
-        private Channel generateCachedChannel()
-        {
-            Channel cachedChannel = new Channel(CACHE_CHANNEL_ID, CACHE_CHANNEL_NAME, this._cachedMedia);
-            return cachedChannel;
-        }
 
         /// <summary>
         /// Returns the channel currently being viewed
@@ -94,14 +99,7 @@ namespace YouMote.Television
         public Channel getCurrentChannel()
         {
             int currentChannelIndex = this.CurrentChannelIndex;
-            if (currentChannelIndex >= 0 && currentChannelIndex < this.Channels.Count)
-            {
-                return this.Channels[currentChannelIndex];
-            }
-            else
-            {
-                return this.generateCachedChannel();
-            }
+            return this.Channels[currentChannelIndex];
 
         }
 
@@ -112,82 +110,22 @@ namespace YouMote.Television
         /// </summary>
         public Boolean moveMediaToRight()
         {
-
             this.updateChannelListings();
-            if (this.CurrentChannelIndex >= 0)
-            {
-
-                if (!this._cachedMedia.Equals(Media.NULL_MEDIA) && this.CurrentChannelIndex == 0)
-                {
-                    // if current channel is 0, and the cache media isnt null
-                    // show the cached media
-                    this.CurrentChannelIndex = Television.CACHE_CHANNEL_ID;
-
-                    Media nextMedia = this._cachedMedia;
-                    this._screenController.moveMediaToRight(nextMedia);
-                    return true;
-                }
-                else if (this._currentChannelIndex - 1 >= 0 && this._currentChannelIndex - 1 < this._channels.Count)
-                {
-                    // otherwise show the next media if it is still in range
-                    this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
-                    Channel nextChannel = this._channels[this.CurrentChannelIndex];
-                    Media nextMedia = nextChannel.Media;
-                    nextMedia.CurrentTime = this.computeMediaTime(nextMedia);
-                    this._screenController.moveMediaToRight(nextMedia);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            else
-            {
-                // do a little bob animation to show that there are no more channels
-                return false;
-            }
-
+            this.CurrentChannelIndex = (this.CurrentChannelIndex - 1) % this.Channels.Count;
+            Channel nextChannel = this._channels[this.CurrentChannelIndex];
+            Media nextMedia = nextChannel.Media;
+            this._screenController.moveMediaToLeft(nextMedia);
+            return true;
         }
 
         public Boolean moveMediaToLeft()
         {
             this.updateChannelListings();
-            if (this.CurrentChannelIndex + 1 < this._channels.Count || this._currentChannelIndex == CACHE_CHANNEL_ID)
-            {
-                if (this.CurrentChannelIndex == CACHE_CHANNEL_ID)
-                {
-                    // if we are currently in cached channel
-                    // save where we are and make next channel be the beginning
-                    double position = this._screenController.getCurrentMediaPosition();
-                    this._cachedMedia.CurrentTime = position;
-                    if (this._channels.Count > 0)
-                    {
-                        this._currentChannelIndex = 0;
-                    }
-                    else
-                    {
-                        // no channels available
-                        return false;
-                    }
-                }
-                else
-                {
-                    this.CurrentChannelIndex++;
-                }
-
-                Channel nextChannel = this._channels[this.CurrentChannelIndex];
-                Media nextMedia = nextChannel.Media;
-                nextMedia.CurrentTime = this.computeMediaTime(nextMedia);
-                this._screenController.moveMediaToLeft(nextMedia);
-                return true;
-            }
-            else
-            {
-                // do a little bob animation to show that there are no more channels
-                return false;
-            }
+            this.CurrentChannelIndex = (this.CurrentChannelIndex + 1) % this.Channels.Count;
+            Channel nextChannel = this._channels[this.CurrentChannelIndex];
+            Media nextMedia = nextChannel.Media;
+            this._screenController.moveMediaToLeft(nextMedia);
+            return true;
 
         }
 
@@ -203,19 +141,9 @@ namespace YouMote.Television
                 this._isOn = true;
                 this.updateChannelListings();
                 this.IsPaused = false;
-                if (!this._cachedMedia.Equals(Media.NULL_MEDIA))
-                {
-                    this._currentChannelIndex = CACHE_CHANNEL_ID;
-                    this._screenController.turnOn(this._cachedMedia);
-                }
-                else
-                {
-                    this._currentChannelIndex = 0;
-                    Channel onChannel = this.Channels.First();
-                    Media onMedia = onChannel.Media;
-                    onMedia.CurrentTime = this.computeMediaTime(onMedia);
-                    this._screenController.turnOn(onMedia);
-                }
+                Channel nextChannel = this._channels[this.CurrentChannelIndex];
+                Media nextMedia = nextChannel.Media;
+                this._screenController.turnOn(nextMedia);
                 return true;
             }
             else
@@ -231,6 +159,7 @@ namespace YouMote.Television
             double time = elapsed % mediaDuration;
             return time;
         }
+
         public Boolean turnOff()
         {
             if (this.IsOn)
@@ -262,9 +191,8 @@ namespace YouMote.Television
                 Channel curChannel = this.getCurrentChannel();
                 this._cachedMedia = curChannel.Media;
                 this._cachedMedia.CurrentTime = position;
-                this._currentChannelIndex = CACHE_CHANNEL_ID;
+                this._cachedMediaIndex = this._currentChannelIndex;
                 // fade off the pause button
-
                 return true;
             }
             else
@@ -277,22 +205,7 @@ namespace YouMote.Television
         public Boolean pause()
         {
             ScreenController.PauseReason pr = ScreenController.PauseReason.LEAVE;
-            if (!this.IsPaused)
-            {
-                this.IsPaused = true;
-                double position = this._screenController.pause(pr);
-                Channel curChannel = this.getCurrentChannel();
-                this._cachedMedia = curChannel.Media;
-                this._cachedMedia.CurrentTime = position;
-                this._currentChannelIndex = CACHE_CHANNEL_ID;
-                // fade off the pause button
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return this.pause(pr);
         }
 
         /// <summary>
@@ -330,9 +243,11 @@ namespace YouMote.Television
         /// </summary>
         private void updateChannelListings()
         {
+
+
             // generate fake media
-            Media m2 = new Media(1, 2 * 60 + 9, 15, "test", "Video\\batman.avi");
             Media m1 = new Media(1, 4 * 60 + 40, 0, "test", "Video\\pixar_short.avi");
+            Media m2 = new Media(1, 2 * 60 + 9, 15, "test", "Video\\batman.avi");
             Media m3 = new Media(1, 2 * 60 + 32, 0, "test", "Video\\spiderman.avi");
             Media m4 = new Media(1, 2 * 60 * 30, 0, "test", "Video\\hobbit.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
@@ -344,7 +259,18 @@ namespace YouMote.Television
             this._channels.Add(c2);
             this._channels.Add(c3);
             this._channels.Add(c4);
-
+            for (int i = 0; i < this._channels.Count; i++)
+            {
+                Channel c = this._channels[i];
+                if (i == this._cachedMediaIndex)
+                {
+                    c.Media.CurrentTime = this._cachedMedia.CurrentTime;
+                }
+                else
+                {
+                    c.Media.CurrentTime = this.computeMediaTime(c.Media);
+                }
+            }
         }
 
         public void fakeTVRun()
