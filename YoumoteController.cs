@@ -33,7 +33,7 @@ namespace YouMote
         private TalkOnPhoneDetector talkOnPhoneDetector;
         private SpeechPauseOverrideDetector speechPauseOverrideDetector;
         private SpeechResumeOverrideDetector speechResumeOverrideDetector;
-        private SpeechStartOverrideDetector speechStartOverrideDetector;
+        private SpeechOnOverrideDetector speechStartOverrideDetector;
         private SpeechOffOverrideDetector speechOffOverrideDetector;
 
         private MainWindow window;
@@ -93,7 +93,7 @@ namespace YouMote
             talkOnPhoneDetector = new TalkOnPhoneDetector(win);
             speechPauseOverrideDetector = new SpeechPauseOverrideDetector(win);
             speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
-            speechStartOverrideDetector = new SpeechStartOverrideDetector(win);
+            speechStartOverrideDetector = new SpeechOnOverrideDetector(win);
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
         }
 
