@@ -11,7 +11,7 @@ namespace YouMote
     public abstract class WaveDetector : ScenarioDetector
     {
 
-        protected static double MAX_WAVE_DURATION = 1000;
+        protected static double MAX_WAVE_DURATION = 2000;
         protected static double MAX_WAVE_DISTANCE = 0.2f;
         protected static double MIN_WAVE_DISTANCE = 0.05f;
 

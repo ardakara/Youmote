@@ -18,13 +18,15 @@ namespace YouMote.Television
     /// </summary>
     public class ScreenController
     {
-        public enum PauseReason { STANDUP, PHONE, LEAVE };
+        public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH };
 
         private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
         private static String STANDUP_FILE = "Images\\icons\\icon-solid-standup.png";
         private static String LEAVE_FILE =   "Images\\icons\\icon-solid-leave.png";
         private static String PHONE_FILE =   "Images\\icons\\icon-solid-phone.png";
+        private static String SPEECH_FILE =   "Images\\icons\\icon-solid-speech.png";
+        private static String OFF_FILE =    "Images\\icons\\icon-solid-off.png";
 
         private static double PAUSE_FADE_OUT_DURATION = 3.0;
         private static double PLAY_FADE_IN_DURATION = 1.0;
@@ -210,6 +212,10 @@ namespace YouMote.Television
             {
                 return ScreenController.PHONE_FILE;
             }
+            else if (pr.Equals(PauseReason.SPEECH))
+            {
+                return ScreenController.SPEECH_FILE;
+            }
             else if (pr.Equals(PauseReason.LEAVE))
             {
                 return ScreenController.LEAVE_FILE;
@@ -222,6 +228,8 @@ namespace YouMote.Television
 
         public double turnOff()
         {
+            
+            
             double position = this.pause(PauseReason.LEAVE);
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));

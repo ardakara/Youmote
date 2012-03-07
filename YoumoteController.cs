@@ -33,7 +33,7 @@ namespace YouMote
         private TalkOnPhoneDetector talkOnPhoneDetector;
         private SpeechPauseOverrideDetector speechPauseOverrideDetector;
         private SpeechResumeOverrideDetector speechResumeOverrideDetector;
-        private SpeechStartOverrideDetector speechStartOverrideDetector;
+        private SpeechOnOverrideDetector speechStartOverrideDetector;
         private SpeechOffOverrideDetector speechOffOverrideDetector;
 
         private MainWindow window;
@@ -83,6 +83,9 @@ namespace YouMote
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
+
+            //this._debugGestureBox.Visibility = Visibility.Hidden;
+            //this._debugPositionBox.Visibility = Visibility.Hidden;
             //swipeGestureRecognizer = new SwipeGestureDetectorMod();
             //swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
@@ -93,7 +96,7 @@ namespace YouMote
             talkOnPhoneDetector = new TalkOnPhoneDetector(win);
             speechPauseOverrideDetector = new SpeechPauseOverrideDetector(win);
             speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
-            speechStartOverrideDetector = new SpeechStartOverrideDetector(win);
+            speechStartOverrideDetector = new SpeechOnOverrideDetector(win);
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
         }
 
@@ -175,13 +178,15 @@ namespace YouMote
             if (isManualPause)
             {
                 this._isManualPause = isManualPause;
+                this._isManualResume = false;
                 this._debugPositionBox.Text = "Manual pause!";
-                this._tv.pause();
+                this._tv.pause(ScreenController.PauseReason.SPEECH);
 
             }
             else if (isManualResume)
             {
                 this._isManualResume = isManualResume;
+                this._isManualPause = false;
                 this._debugPositionBox.Text = "manual Resume!";
                 this._tv.play();
             }
@@ -200,28 +205,35 @@ namespace YouMote
             }
             else if (isTalkingOnPhone && !this._isManualResume)
             {
-                this._isManualPause = false;
-                this._debugPositionBox.Text = "I'm talking on phone and paused.";
+                //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
             else if (isStanding && !this._isManualResume)
             {
-                this._isManualPause = false;
-                this._debugPositionBox.Text = "I'm standing and paused.";
+                //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
             }
             else if (isSitting && !this._isManualPause)
             {
                 this._isManualResume = false;
-                this._debugPositionBox.Text = "Sitting -- so resume!";
                 this._tv.play();
             }
-            else
-            {
-                this._debugPositionBox.Text = "Neither!";
+
+            if (isTalkingOnPhone) {
+                this._debugPositionBox.Text = "I'm talking on phone.";
             }
+
+            if (isStanding) {
+                this._debugPositionBox.Text = "I'm standing.";
+            }
+
+            if (isSitting) {
+                this._debugPositionBox.Text = "Sitting!";
+            }
+
+
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
@@ -312,7 +324,6 @@ namespace YouMote
                     this._tv.turnOn();
                     wave_sw.Reset();
                     wave_sw.Start();
-                    this._tv.Volume = 0.05;
                 }
                 Boolean manualOverrideOn = speechStartOverrideDetector.isScenarioDetected();
                 if (manualOverrideOn)
@@ -328,7 +339,7 @@ namespace YouMote
 
                 detectSittingStandingScenarios(skeleton);
                 detectChannelChangingScenarios(skeleton, nui);
-                //detectVolumeChangingScenarios(skeleton);
+                detectVolumeChangingScenarios(skeleton);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)

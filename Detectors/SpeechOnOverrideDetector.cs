@@ -8,13 +8,13 @@ using Coding4Fun.Kinect.Wpf;
 
 namespace YouMote.Detectors
 {
-    class SpeechStartOverrideDetector : ScenarioDetector
+    class SpeechOnOverrideDetector : ScenarioDetector
     {
         MainWindow window;
         private SpeechRecognizer speechRecognizer;
 
 
-        public SpeechStartOverrideDetector(MainWindow win)
+        public SpeechOnOverrideDetector(MainWindow win)
         {
             window = win;
             this.speechRecognizer = win.speechRecognizer;
@@ -24,7 +24,7 @@ namespace YouMote.Detectors
         {
             String wordsSaid = speechRecognizer.Word;
             if (wordsSaid == null) return false;
-            if (wordsSaid.Equals("TV start"))
+            if (wordsSaid.Equals("TV on"))
             {
                 return true;
             }
