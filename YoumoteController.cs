@@ -206,27 +206,34 @@ namespace YouMote
             else if (isTalkingOnPhone && !this._isManualResume)
             {
                 //this._isManualPause = false;
-                this._debugPositionBox.Text = "I'm talking on phone and paused.";
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
             else if (isStanding && !this._isManualResume)
             {
                 //this._isManualPause = false;
-                this._debugPositionBox.Text = "I'm standing and paused.";
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
             }
             else if (isSitting && !this._isManualPause)
             {
                 this._isManualResume = false;
-                this._debugPositionBox.Text = "Sitting -- so resume!";
                 this._tv.play();
             }
-            else
-            {
-                this._debugPositionBox.Text = "Neither!";
+
+            if (isTalkingOnPhone) {
+                this._debugPositionBox.Text = "I'm talking on phone.";
             }
+
+            if (isStanding) {
+                this._debugPositionBox.Text = "I'm standing.";
+            }
+
+            if (isSitting) {
+                this._debugPositionBox.Text = "Sitting!";
+            }
+
+
         }
 
         private void detectChannelChangingScenarios(Skeleton skeleton, KinectSensor nui)
