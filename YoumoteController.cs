@@ -81,6 +81,9 @@ namespace YouMote
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
+
+            //this._debugGestureBox.Visibility = Visibility.Hidden;
+            //this._debugPositionBox.Visibility = Visibility.Hidden;
             //swipeGestureRecognizer = new SwipeGestureDetectorMod();
             //swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
@@ -306,7 +309,6 @@ namespace YouMote
                     this._tv.turnOn();
                     wave_sw.Reset();
                     wave_sw.Start();
-                    this._tv.Volume = 0.05;
                 }
             }
             else
@@ -314,7 +316,7 @@ namespace YouMote
 
                 detectSittingStandingScenarios(skeleton);
                 detectChannelChangingScenarios(skeleton, nui);
-                //detectVolumeChangingScenarios(skeleton);
+                detectVolumeChangingScenarios(skeleton);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)
