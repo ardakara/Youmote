@@ -22,7 +22,7 @@ namespace YouMote
         {
             get
             {
-                return this._id;
+                return this._duration;
             }
         }
         private double _currentTime;

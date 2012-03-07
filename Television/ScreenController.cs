@@ -255,7 +255,6 @@ namespace YouMote.Television
             this._currentMedia.CurrentTime = currentPosition;
 
             this._onPointMediaElement.Source = media.FileUri;
-            this._onPointMediaElement.Position = TimeSpan.FromSeconds(media.CurrentTime);
             this._onPointMediaElement.Volume = this._currentMediaElement.Volume;
             this._onPointMediaElement.Play();
             this._onPointMediaElement.Position = TimeSpan.FromSeconds(media.CurrentTime);

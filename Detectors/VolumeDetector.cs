@@ -39,8 +39,8 @@ namespace YouMote
 
         public VolumeDetector()
         {
-            this._rightHandHistory = new ScenarioStateHistory(30);
-            this._leftHandHistory = new ScenarioStateHistory(30);
+            this._rightHandHistory = new ScenarioStateHistory(30,0);
+            this._leftHandHistory = new ScenarioStateHistory(30,0);
             
             rh_adjustInitiated = false;
             lh_adjustInitiated = false;
