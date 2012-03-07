@@ -105,6 +105,8 @@
     <Compile Include="Detectors\AmbidextrousScreenDetector.cs" />
     <Compile Include="Detectors\AmbidextrousStiffSwipeLeftDetector.cs" />
     <Compile Include="Detectors\AmbidextrousStiffSwipeRightDetector.cs" />
+    <Compile Include="Detectors\SpeechOffOverrideDetector.cs" />
+    <Compile Include="Detectors\SpeechStartOverrideDetector.cs" />
     <Compile Include="Detectors\VolumeDecreaseDetector.cs" />
     <Compile Include="Detectors\VolumeDetector.cs" />
     <Compile Include="Detectors\StiffSwipeRightDetector.cs" />
