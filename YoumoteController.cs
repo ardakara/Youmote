@@ -202,7 +202,8 @@ namespace YouMote
             {
                 this._isManualPause = false;
                 this._debugPositionBox.Text = "I'm talking on phone and paused.";
-                this._tv.pause();
+                ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
+                this._tv.pause(reason);
             }
             else if (isStanding && !this._isManualResume)
             {
