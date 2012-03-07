@@ -28,7 +28,7 @@ namespace YouMote.Television
 
         private static double PAUSE_FADE_OUT_DURATION = 3.0;
         private static double PLAY_FADE_IN_DURATION = 1.0;
-        private static double FADE_OUT_DURATION = 5.0;
+        private static double OFF_FADE_OUT_DURATION = 5.0;
         private static double FADE_IN_DURATION = 3.0;
         private static double SCREEN_CHANGE_DURATION = 1.0;
         private double screenX = 0;
@@ -224,7 +224,7 @@ namespace YouMote.Television
         {
             double position = this.pause(PauseReason.LEAVE);
             double startOpacity = this._currentContainer.Opacity;
-            this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.FADE_OUT_DURATION));
+            this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             return position;
         }
 

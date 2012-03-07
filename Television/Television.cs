@@ -236,7 +236,8 @@ namespace YouMote.Television
             if (this.IsOn)
             {
                 this._stopWatch.Stop();
-                this.pause();
+                ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                this.pause(reason);
                 this._isOn = false;
                 this.IsPaused = true;
                 this._screenController.turnOff();
