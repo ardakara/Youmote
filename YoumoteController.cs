@@ -33,6 +33,8 @@ namespace YouMote
         private TalkOnPhoneDetector talkOnPhoneDetector;
         private SpeechPauseOverrideDetector speechPauseOverrideDetector;
         private SpeechResumeOverrideDetector speechResumeOverrideDetector;
+        private SpeechStartOverrideDetector speechStartOverrideDetector;
+        private SpeechOffOverrideDetector speechOffOverrideDetector;
 
         private MainWindow window;
 
@@ -91,6 +93,8 @@ namespace YouMote
             talkOnPhoneDetector = new TalkOnPhoneDetector(win);
             speechPauseOverrideDetector = new SpeechPauseOverrideDetector(win);
             speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
+            speechStartOverrideDetector = new SpeechStartOverrideDetector(win);
+            speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
         }
 
         void OnGestureDetected(string gesture)
@@ -287,6 +291,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
+           
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)
@@ -306,6 +311,14 @@ namespace YouMote
                     this._tv.turnOn();
                     wave_sw.Reset();
                     wave_sw.Start();
+                    this._tv.Volume = 0.05;
+                }
+                Boolean manualOverrideOn = speechStartOverrideDetector.isScenarioDetected();
+                if (manualOverrideOn)
+                {
+                    this._debugGestureBox.Text = "ON-speech override";
+                    // turn on the tv
+                    this._tv.turnOn();
                     this._tv.Volume = 0.05;
                 }
             }
@@ -340,7 +353,12 @@ namespace YouMote
                     wave_sw.Reset();
                     wave_sw.Start();
                 }
-
+                Boolean manualOverrideOff = speechOffOverrideDetector.isScenarioDetected();
+                if (manualOverrideOff)
+                {
+                    this._debugGestureBox.Text = "OFF-speech override";
+                    this._tv.turnOff();
+                }
             }
         }
 
