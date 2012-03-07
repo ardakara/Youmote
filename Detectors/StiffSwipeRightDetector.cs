@@ -98,7 +98,7 @@ namespace YouMote
                 if (stillWithinYBounds(leftHand.Position.Y, this.lh_start) && curX >= this.lh_last.X)
                 {
 
-                    if (curX > this.rh_endX)
+                    if (curX > this.lh_endX)
                     { //they've completed the swipe!
                         SwipeState state = new SwipeState(SwipeState.SwipePosition.SWIPE_FINISHED, DateTime.Now, DateTime.Now);
                         this._leftHandHistory.addState(state);
