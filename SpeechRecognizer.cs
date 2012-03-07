@@ -75,7 +75,7 @@ namespace YouMote.Speech
             grammar.Add("Hey");
             grammar.Add("TV pause");
             grammar.Add("TV play");
-            grammar.Add("TV start");
+            grammar.Add("TV on");
             grammar.Add("TV off");
 
             var gb = new GrammarBuilder { Culture = speechRecognitionEngine.RecognizerInfo.Culture };

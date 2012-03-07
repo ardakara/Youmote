@@ -18,6 +18,10 @@ namespace YouMote
             double finish_duration = 0;
             if (recentStates.Count >= 3)
             {
+                if (recentStates.Count == 3)
+                {
+                    Console.WriteLine("Swipe Right, RS0: " + recentStates[0] + ", RS1: " + recentStates[1] + ", RS2: " + recentStates[2]);
+                }
                 if (SwipeState.SWIPE_FINISHED.isSameState(recentStates[0]) && SwipeState.MOVING_RIGHT.isSameState(recentStates[1]) && SwipeState.SWIPE_STARTED.isSameState(recentStates[2]))
                 {
                     swipe_duration = recentStates[1].getDurationInMilliseconds();
@@ -42,7 +46,7 @@ namespace YouMote
             Boolean lh_isSwipeRight = this.isSwipeRight(this._leftHandHistory);
 
             if (rh_isSwipeRight || lh_isSwipeRight)
-            {
+            {   
                 return true;
             }
             else
