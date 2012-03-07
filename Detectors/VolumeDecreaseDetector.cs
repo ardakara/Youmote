@@ -18,7 +18,7 @@ namespace YouMote
             double curZ = rightHand.Position.Z;
 
             //if right hand is right of cross line AND the person hasn't started a swipe yet, start the swipe!
-            if (/* isAboveCrossLine(adjustCrossLine, rightHand.Position.Y) && */!this.rh_adjustInitiated)
+            if (!this.rh_adjustInitiated)
             {
                 this.rh_start.X = rightHand.Position.X;
                 this.rh_start.Y = rightHand.Position.Y;
@@ -35,14 +35,12 @@ namespace YouMote
             else
             { //the swipe has been started, check if in bounds and moving to the left!
 
-                if (stillWithinXBounds(curX, this.rh_start) && curY <= this.rh_last.Y)
+                if (stillWithinXBounds(curX, this.rh_start))
                 {
-                    if (curY < this.rh_endY)
-                    {
-                        VolumeState state = new VolumeState(VolumeState.VolumePosition.ADJUST_VOLUME, DateTime.Now, DateTime.Now);
-                        this._rightHandHistory.addState(state);
-                        this.rh_deltaY = curY - rh_last.Y;
-                    }
+                    VolumeState state = new VolumeState(VolumeState.VolumePosition.ADJUST_VOLUME, DateTime.Now, DateTime.Now);
+                    this._rightHandHistory.addState(state);
+                    this.rh_deltaY = curY - rh_last.Y;
+               
                     this.rh_last.X = curX;
                     this.rh_last.Y = curY;
                     this.rh_last.Z = curZ;
@@ -63,9 +61,9 @@ namespace YouMote
 
         public double getVolumeDelta() {
             List<ScenarioState> recentStates = _rightHandHistory.getLastNStates(2);
-            if (recentStates.Count == 3)
+            if (recentStates.Count == 2)
             {
-                //Console.WriteLine("\t VOLUME RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString() + ", RS 2: " + recentStates[2].ToString());
+                Console.WriteLine("\t VOLUME RS 0: " + recentStates[0].ToString() + ", RS 1: " + recentStates[1].ToString());
             }
 
             if (recentStates.Count >= 2) 
@@ -75,7 +73,7 @@ namespace YouMote
                     Console.WriteLine("rh_deltaY: " + this.rh_deltaY);
                     double change_since_start = this.rh_last.Y - this.rh_start.Y;
                     Console.WriteLine("rh delta since arm straight: " + change_since_start);
-                    return (this.rh_deltaY);
+                    return (this.rh_deltaY / 0.8);
                     //return (this.rh_last.Y - this.rh_start.Y);
                 }
             }
@@ -94,13 +92,14 @@ namespace YouMote
                 double swipeCrossLine = skeleton.Joints[JointType.ShoulderRight].Position.Y;
 
 
-                Boolean isRightArmStraight = this._straightArmIndicator.isRightArmStraight(skeleton);
+                Boolean isRightArmStraight = this._straightArmIndicator.isRightArmStraight(skeleton, false);
                 if (isRightArmStraight)
                 {
                     processVolumeDecreaseRightHand(rightHand, swipeCrossLine);
                 }
                 else
                 {
+                    resetVars("right");
                     VolumeState state = new VolumeState(VolumeState.VolumePosition.NON_VOLUME, DateTime.Now, DateTime.Now);
                     this._rightHandHistory.addState(state);
                 }

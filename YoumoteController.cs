@@ -258,6 +258,18 @@ namespace YouMote
             }
         }
 
+        private double adjustVolume(double deltaV)
+        {
+            if (this._tv.Volume + deltaV > 1)
+            {
+                return 1;
+            } else if (this._tv.Volume + deltaV < 0) {
+                return 0;
+            } else {
+                return this._tv.Volume + deltaV;
+            }
+        }
+
         private void detectVolumeChangingScenarios(Skeleton skeleton)
         {
             if (skeleton != null)
@@ -265,7 +277,10 @@ namespace YouMote
                 volumeDetector.processSkeleton(skeleton);
                 double deltaVolume = volumeDetector.getVolumeDelta();
                 if (deltaVolume != 0) {
-                    this._debugGestureBox.Text = "Volume changed by: " + deltaVolume;
+                    Console.WriteLine("curVol: " + this._tv.Volume);
+                    Console.WriteLine("dVol: "+ deltaVolume);
+                    this._debugGestureBox.Text = "cV " + this._tv.Volume;
+                    this._tv.Volume = adjustVolume(deltaVolume);
                 }
             }
         }
@@ -291,6 +306,7 @@ namespace YouMote
                     this._tv.turnOn();
                     wave_sw.Reset();
                     wave_sw.Start();
+                    this._tv.Volume = 0.05;
                 }
             }
             else

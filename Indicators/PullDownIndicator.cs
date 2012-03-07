@@ -42,7 +42,21 @@ namespace YouMote
             }
         }
 
-        public Boolean isRightArmStraight(Skeleton skeleton)
+        private Boolean isStraightLine(double degrees)
+        {
+            if (degrees <= 180 && degrees > 160)
+            {
+                Console.WriteLine("Straight line! b/c degrees: " + degrees);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Not straight! degrees: " + degrees);
+                return false;
+            }
+        }
+
+        public Boolean isRightArmStraight(Skeleton skeleton, bool isLenient)
         {
             if (skeleton == null)
             {
@@ -65,17 +79,14 @@ namespace YouMote
             
             //Console.WriteLine("Degrees: " + shoulderRightTohandRight_degrees);
 
-            if (isStraightLineApprox(shoulderRightTohandRight_degrees))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
+            if (isLenient) {
+                return isStraightLineApprox(shoulderRightTohandRight_degrees);
+            } else {
+                return isStraightLine(shoulderRightTohandRight_degrees);
             }
         }
 
-        public Boolean isLeftArmStraight(Skeleton skeleton)
+        public Boolean isLeftArmStraight(Skeleton skeleton, bool isLenient)
         {
             if (skeleton == null)
             {
@@ -98,13 +109,13 @@ namespace YouMote
 
             //Console.WriteLine("Degrees: " + shoulderRightTohandRight_degrees);
 
-            if (isStraightLineApprox(shoulderLeftTohandLeft_degrees))
+            if (isLenient)
             {
-                return true;
+                return isStraightLineApprox(shoulderLeftTohandLeft_degrees);
             }
             else
             {
-                return false;
+                return isStraightLine(shoulderLeftTohandLeft_degrees);
             }
         }
 

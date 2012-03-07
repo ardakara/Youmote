@@ -43,8 +43,8 @@ namespace YouMote
 
         public WaveDetector()
         {
-            this._rightHandHistory = new ScenarioStateHistory(30,0);
-            this._leftHandHistory = new ScenarioStateHistory(30,0);
+            this._rightHandHistory = new ScenarioStateHistory(30);
+            this._leftHandHistory = new ScenarioStateHistory(30);
             reset_extremes("right");
             reset_extremes("left");
         }
@@ -144,8 +144,8 @@ namespace YouMote
                 double rh_diff = this._rh_most_right - this._rh_most_left;
 
                 /*to prevent mix-ups with swiping*/
-                Boolean rightArmStraight = this._straightarmindicator.isRightArmStraight(skeleton);
-                Boolean leftArmStraight = this._straightarmindicator.isLeftArmStraight(skeleton);
+                Boolean rightArmStraight = this._straightarmindicator.isRightArmStraight(skeleton, true);
+                Boolean leftArmStraight = this._straightarmindicator.isLeftArmStraight(skeleton, true);
 
                 if (rightArmStraight)
                 {

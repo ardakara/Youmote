@@ -40,7 +40,7 @@ namespace YouMote
         {
             if (skeleton != null)
             {
-                Boolean rightArmStraight = this._straightArmIndicator.isRightArmStraight(skeleton);
+                Boolean rightArmStraight = this._straightArmIndicator.isRightArmStraight(skeleton, false);
                 Boolean rightArmUp = this._straightArmIndicator.rightArmUp(skeleton);
 
                 ScreenState state;
