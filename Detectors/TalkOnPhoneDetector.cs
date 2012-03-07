@@ -51,7 +51,6 @@ namespace YouMote.Detectors
                     return true;
                 }
             }
-
             if (prevStates.Count == 3)
             {
 
@@ -66,7 +65,6 @@ namespace YouMote.Detectors
                     return true;
                 }
             }
-
 
 
             return false;

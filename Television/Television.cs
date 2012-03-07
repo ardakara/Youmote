@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Threading;
 using YouMote;
+using System.Diagnostics;
 
 namespace YouMote.Television
 {
@@ -45,6 +46,8 @@ namespace YouMote.Television
                 this._isPaused = value;
             }
         }
+
+        private Stopwatch _stopWatch = new Stopwatch();
         private Media _cachedMedia = Media.NULL_MEDIA;
         private static int CACHE_CHANNEL_ID = -1;
         private static String CACHE_CHANNEL_NAME = "CACHED_CHANNEL";
@@ -75,6 +78,7 @@ namespace YouMote.Television
         {
             this._screenController = new ScreenController(window);
             this.CurrentChannelIndex = CACHE_CHANNEL_ID;
+
         }
 
         private Channel generateCachedChannel()
@@ -129,6 +133,7 @@ namespace YouMote.Television
                     this.CurrentChannelIndex = this.CurrentChannelIndex - 1;
                     Channel nextChannel = this._channels[this.CurrentChannelIndex];
                     Media nextMedia = nextChannel.Media;
+                    nextMedia.CurrentTime = this.computeMediaTime(nextMedia);
                     this._screenController.moveMediaToRight(nextMedia);
                     return true;
                 }
@@ -174,6 +179,7 @@ namespace YouMote.Television
 
                 Channel nextChannel = this._channels[this.CurrentChannelIndex];
                 Media nextMedia = nextChannel.Media;
+                nextMedia.CurrentTime = this.computeMediaTime(nextMedia);
                 this._screenController.moveMediaToLeft(nextMedia);
                 return true;
             }
@@ -193,6 +199,7 @@ namespace YouMote.Television
         {
             if (!this.IsOn)
             {
+                this._stopWatch.Start();
                 this._isOn = true;
                 this.updateChannelListings();
                 this.IsPaused = false;
@@ -206,6 +213,7 @@ namespace YouMote.Television
                     this._currentChannelIndex = 0;
                     Channel onChannel = this.Channels.First();
                     Media onMedia = onChannel.Media;
+                    onMedia.CurrentTime = this.computeMediaTime(onMedia);
                     this._screenController.turnOn(onMedia);
                 }
                 return true;
@@ -216,11 +224,20 @@ namespace YouMote.Television
             }
         }
 
+        private double computeMediaTime(Media m)
+        {
+            double elapsed = this._stopWatch.Elapsed.Seconds;
+            double mediaDuration = m.Duration;
+            double time = elapsed % mediaDuration;
+            return time;
+        }
         public Boolean turnOff()
         {
             if (this.IsOn)
             {
-                this.pause();
+                this._stopWatch.Stop();
+                ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                this.pause(reason);
                 this._isOn = false;
                 this.IsPaused = true;
                 this._screenController.turnOff();
@@ -314,10 +331,10 @@ namespace YouMote.Television
         private void updateChannelListings()
         {
             // generate fake media
-            Media m2 = new Media(1, 100, 15, "test","Video\\batman.avi");
-            Media m1 = new Media(1, 100, 0, "test", "Video\\pixar_short.avi");
-            Media m3 = new Media(1, 100, 0, "test", "Video\\spiderman.avi");
-            Media m4 = new Media(1, 100, 0, "test", "Video\\hobbit.avi");
+            Media m2 = new Media(1, 2 * 60 + 9, 15, "test", "Video\\batman.avi");
+            Media m1 = new Media(1, 4 * 60 + 40, 0, "test", "Video\\pixar_short.avi");
+            Media m3 = new Media(1, 2 * 60 + 32, 0, "test", "Video\\spiderman.avi");
+            Media m4 = new Media(1, 2 * 60 * 30, 0, "test", "Video\\hobbit.avi");
             Channel c1 = new Channel(0, "channel 1", m1);
             Channel c2 = new Channel(0, "channel 2", m2);
             Channel c3 = new Channel(0, "channel 3", m3);

@@ -43,8 +43,8 @@ namespace YouMote
 
         public StiffSwipeDetector()
         {
-            this._rightHandHistory = new ScenarioStateHistory(30);
-            this._leftHandHistory = new ScenarioStateHistory(30);
+            this._rightHandHistory = new ScenarioStateHistory(30,0);
+            this._leftHandHistory = new ScenarioStateHistory(30,0);
             
             rh_swipeInitiated = false;
             lh_swipeInitiated = false;
