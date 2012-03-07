@@ -176,7 +176,7 @@ namespace YouMote
             {
                 this._isManualPause = isManualPause;
                 this._debugPositionBox.Text = "Manual pause!";
-                this._tv.pause();
+                this._tv.pause(ScreenController.PauseReason.SPEECH);
 
             }
             else if (isManualResume)
