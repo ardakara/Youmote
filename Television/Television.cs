@@ -114,7 +114,7 @@ namespace YouMote.Television
             this.CurrentChannelIndex = (this.CurrentChannelIndex - 1) % this.Channels.Count;
             Channel nextChannel = this._channels[this.CurrentChannelIndex];
             Media nextMedia = nextChannel.Media;
-            this._screenController.moveMediaToLeft(nextMedia);
+            this._screenController.moveMediaToRight(nextMedia);
             return true;
         }
 
