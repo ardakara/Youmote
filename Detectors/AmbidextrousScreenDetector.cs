@@ -27,7 +27,6 @@ namespace YouMote
                 {
                     pull_duration = recentStates[1].getDurationInMilliseconds();
                     arm_down_duration = recentStates[0].getDurationInMilliseconds();
-                    Console.WriteLine("pull_duration: " + pull_duration + ", arm_down_duration: " + arm_down_duration);
                     if ( (pull_duration < MAX_PULL_DURATION) && (arm_down_duration < MAX_ARM_DOWN_DURATION) )
                     {
                         return true;

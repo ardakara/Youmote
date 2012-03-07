@@ -8,7 +8,7 @@ namespace YouMote
     public class ScenarioStateHistory
     {
 
-        private double _falseStateDuration = 0.3;
+        private static double FALSE_STATE_DURATION_IN_SECONDS = 0;
         private List<ScenarioState> _history;
         private int _maxSize;
         public List<ScenarioState> History
@@ -23,13 +23,6 @@ namespace YouMote
         {
             this._maxSize = maxSize;
             this._history = new List<ScenarioState>();
-        }
-
-        public ScenarioStateHistory(int maxSize, double falseStateDuration)
-        {
-            this._maxSize = maxSize;
-            this._history = new List<ScenarioState>();
-            this._falseStateDuration = falseStateDuration;
         }
 
         public List<ScenarioState> getLastNStates(int n)
@@ -85,27 +78,10 @@ namespace YouMote
                 else
                 {
                     ScenarioState cappedOldState = lastState.finishState(nextState);
-                    if (cappedOldState.getDurationInSeconds() > this._falseStateDuration)
+                    if (cappedOldState.getDurationInSeconds() > ScenarioStateHistory.FALSE_STATE_DURATION_IN_SECONDS)
                     {
                         this._history.Add(cappedOldState);
                     }
-                    else if(this._history.Count>0)
-                    {
-                        ScenarioState lastGoodState = this.Pop();
-
-                        if (lastGoodState.isSameState(nextState))
-                        {
-                            // same state, merge them
-                            ScenarioState newState = lastGoodState.mergeEqualStates(nextState);
-                            this._history.Add(newState);
-                        }
-                        else
-                        {
-                            ScenarioState cappedLastGoodState = lastGoodState.finishState(nextState);
-                            this._history.Add(cappedLastGoodState);
-                        }
-                    }
-
                     this._history.Add(nextState);
                 }
             }

@@ -32,7 +32,7 @@ namespace YouMote
 
         private Boolean isStraightLineApprox(double degrees)
         {
-            if (degrees <= 180 && degrees > 155)
+            if (degrees <= 180 && degrees > 135)
             {
                 return true;
             }
@@ -42,7 +42,21 @@ namespace YouMote
             }
         }
 
-        public Boolean rightArmStraight(Skeleton skeleton)
+        private Boolean isStraightLine(double degrees)
+        {
+            if (degrees <= 180 && degrees > 160)
+            {
+                Console.WriteLine("Straight line! b/c degrees: " + degrees);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Not straight! degrees: " + degrees);
+                return false;
+            }
+        }
+
+        public Boolean isRightArmStraight(Skeleton skeleton, bool isLenient)
         {
             if (skeleton == null)
             {
@@ -65,13 +79,43 @@ namespace YouMote
             
             //Console.WriteLine("Degrees: " + shoulderRightTohandRight_degrees);
 
-            if (isStraightLineApprox(shoulderRightTohandRight_degrees))
+            if (isLenient) {
+                return isStraightLineApprox(shoulderRightTohandRight_degrees);
+            } else {
+                return isStraightLine(shoulderRightTohandRight_degrees);
+            }
+        }
+
+        public Boolean isLeftArmStraight(Skeleton skeleton, bool isLenient)
+        {
+            if (skeleton == null)
             {
-                return true;
+                return false;
+            }
+
+            Joint elbowLeft = skeleton.Joints[JointType.ElbowLeft];
+            Joint shoulderLeft = skeleton.Joints[JointType.ShoulderLeft];
+            Joint handLeft = skeleton.Joints[JointType.HandLeft];
+
+            double elbowLeftToshoulderLeftX = shoulderLeft.Position.X - elbowLeft.Position.X;
+            double elbowLeftToshoulderLeftY = shoulderLeft.Position.Y - elbowLeft.Position.Y;
+            double elbowLeftToshoulderLeftZ = shoulderLeft.Position.Z - elbowLeft.Position.Z;
+
+            double elbowLeftTohandLeftX = handLeft.Position.X - elbowLeft.Position.X;
+            double elbowLeftTohandLeftY = handLeft.Position.Y - elbowLeft.Position.Y;
+            double elbowLeftTohandLeftZ = handLeft.Position.Z - elbowLeft.Position.Z;
+
+            double shoulderLeftTohandLeft_degrees = calculateAngle(elbowLeftToshoulderLeftX, elbowLeftToshoulderLeftY, elbowLeftToshoulderLeftZ, elbowLeftTohandLeftX, elbowLeftTohandLeftY, elbowLeftTohandLeftZ);
+
+            //Console.WriteLine("Degrees: " + shoulderRightTohandRight_degrees);
+
+            if (isLenient)
+            {
+                return isStraightLineApprox(shoulderLeftTohandLeft_degrees);
             }
             else
             {
-                return false;
+                return isStraightLine(shoulderLeftTohandLeft_degrees);
             }
         }
 

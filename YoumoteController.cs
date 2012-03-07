@@ -19,8 +19,6 @@ using System.IO;
 using SysPath = System.IO.Path;
 using YouMote.Television;
 
-//debug indicator for hand on face
-using YouMote.Indicators;
 
 namespace YouMote
 {
@@ -44,8 +42,8 @@ namespace YouMote
         private Stopwatch sw = new Stopwatch();
 
         /* To get channels changing */
-        private AmbidextrousSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousSwipeLeftDetector();
-        private AmbidextrousSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousSwipeRightDetector();
+        private AmbidextrousStiffSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousStiffSwipeLeftDetector();
+        private AmbidextrousStiffSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousStiffSwipeRightDetector();
         private Stopwatch swipe_sw = new Stopwatch();
 
         /* To turn TV on and off */
@@ -57,15 +55,8 @@ namespace YouMote
         private Boolean _isManualResume = false;
         private Boolean _isManualPause = false;
 
-        readonly
-
-        //using the Toolkit
-        SwipeGestureDetectorMod swipeGestureRecognizer;
-        readonly ColorStreamManager colorManager = new ColorStreamManager();
-        readonly DepthStreamManager depthManager = new DepthStreamManager();
-        readonly BarycenterHelper barycenterHelper = new BarycenterHelper();
-        readonly AlgorithmicPostureDetector algorithmicPostureRecognizer = new AlgorithmicPostureDetector();
-
+        /*Handling volume*/
+        private VolumeDecreaseDetector volumeDetector = new VolumeDecreaseDetector();
 
         /* Stuff needed to 'turn on the tv'*/
         private YouMote.Television.Television _tv;
@@ -90,8 +81,8 @@ namespace YouMote
             addMessages();
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
-            swipeGestureRecognizer = new SwipeGestureDetectorMod();
-            swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
+            //swipeGestureRecognizer = new SwipeGestureDetectorMod();
+            //swipeGestureRecognizer.OnGestureDetected += OnGestureDetected;
             this._tv = new YouMote.Television.Television(win);
             this._isManualPause = false;
             this._isManualResume = false;
@@ -158,7 +149,7 @@ namespace YouMote
             Boolean isStanding = standingDetector.isScenarioDetected();
             Boolean isSitting = sittingDetector.isScenarioDetected();
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
-            //            Boolean hasResumed = ambiResumeDetector.isScenarioDetected();
+
             Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
             Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected();
             Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected();
@@ -267,6 +258,33 @@ namespace YouMote
             }
         }
 
+        private double adjustVolume(double deltaV)
+        {
+            if (this._tv.Volume + deltaV > 1)
+            {
+                return 1;
+            } else if (this._tv.Volume + deltaV < 0) {
+                return 0;
+            } else {
+                return this._tv.Volume + deltaV;
+            }
+        }
+
+        private void detectVolumeChangingScenarios(Skeleton skeleton)
+        {
+            if (skeleton != null)
+            {
+                volumeDetector.processSkeleton(skeleton);
+                double deltaVolume = volumeDetector.getVolumeDelta();
+                if (deltaVolume != 0) {
+                    Console.WriteLine("curVol: " + this._tv.Volume);
+                    Console.WriteLine("dVol: "+ deltaVolume);
+                    this._debugGestureBox.Text = "cV " + this._tv.Volume;
+                    this._tv.Volume = adjustVolume(deltaVolume);
+                }
+            }
+        }
+
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
             if (!this._tv.IsOn)
@@ -288,15 +306,15 @@ namespace YouMote
                     this._tv.turnOn();
                     wave_sw.Reset();
                     wave_sw.Start();
+                    this._tv.Volume = 0.05;
                 }
             }
             else
             {
 
                 detectSittingStandingScenarios(skeleton);
-
-
                 detectChannelChangingScenarios(skeleton, nui);
+                //detectVolumeChangingScenarios(skeleton);
 
                 List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
                 foreach (Message message in readyMessages)
@@ -312,14 +330,6 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-                /*
-                this.ambiScreenDetector.processSkeleton(skeleton);
-                Boolean hasPulledDownScreen = this.ambiScreenDetector.isScenarioDetected();
-                if (hasPulledDownScreen)
-                {
-                    this._debugGestureBox.Text = "Has pulled down screen!";
-                    this._tv.turnOff();
-                }*/
 
                 this.ambiHandWaveDetector.processSkeleton(skeleton);
                 Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
