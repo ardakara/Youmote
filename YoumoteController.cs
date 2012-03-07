@@ -175,6 +175,7 @@ namespace YouMote
             if (isManualPause)
             {
                 this._isManualPause = isManualPause;
+                this._isManualResume = false;
                 this._debugPositionBox.Text = "Manual pause!";
                 this._tv.pause(ScreenController.PauseReason.SPEECH);
 
@@ -182,6 +183,7 @@ namespace YouMote
             else if (isManualResume)
             {
                 this._isManualResume = isManualResume;
+                this._isManualPause = false;
                 this._debugPositionBox.Text = "manual Resume!";
                 this._tv.play();
             }
@@ -200,14 +202,14 @@ namespace YouMote
             }
             else if (isTalkingOnPhone && !this._isManualResume)
             {
-                this._isManualPause = false;
+                //this._isManualPause = false;
                 this._debugPositionBox.Text = "I'm talking on phone and paused.";
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
             else if (isStanding && !this._isManualResume)
             {
-                this._isManualPause = false;
+                //this._isManualPause = false;
                 this._debugPositionBox.Text = "I'm standing and paused.";
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
