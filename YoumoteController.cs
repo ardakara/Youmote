@@ -185,7 +185,7 @@ namespace YouMote
             }
             else if (isManualResume)
             {
-                this._isManualResume = false;
+                this._isManualResume = isManualResume;
                 this._isManualPause = false;
                 this._debugPositionBox.Text = "manual Resume!";
                 this._tv.play();
@@ -203,13 +203,13 @@ namespace YouMote
                     this._tv.pause(ScreenController.PauseReason.LEAVE);
                 }
             }
-            else if (isTalkingOnPhone)// && !this._isManualResume)
+            else if (isTalkingOnPhone && !this._isManualResume)
             {
                 //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
-            else if (isStanding)// &&// !this._isManualResume)
+            else if (isStanding && !this._isManualResume)
             {
                 //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
