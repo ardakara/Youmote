@@ -209,7 +209,7 @@ namespace YouMote
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
-            else if (isStanding &&)// !this._isManualResume)
+            else if (isStanding)// &&// !this._isManualResume)
             {
                 //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
