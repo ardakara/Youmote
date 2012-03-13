@@ -43,6 +43,44 @@ namespace YouMote
             this.Y = y;
             this.Z = z;
         }
+
+        public Point3D(Joint j)
+        {
+            this.X = j.Position.X;
+            this.Y = j.Position.Y;
+            this.Z = j.Position.Z;
+        }
+        public Point3D add(Point3D p)
+        {
+            return new Point3D(this.X + p.X, this.Y + p.Y, this.Z + p.Z);
+        }
+
+        public Point3D subtract(Point3D p)
+        {
+            return new Point3D(this.X - p.X, this.Y - p.Y, this.Z - p.Z);
+        }
+
+
+        public double magnitude()
+        {
+            return Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2) + Math.Pow(this.Z, 2));
+        }
+
+
+        public double calculateAngle(Point3D p)
+        {
+            double scalarProduct = this.dotProduct(p);
+            double magnitudeA = this.magnitude();
+            double magnitudeB = p.magnitude();
+
+            double theta = Math.Acos(scalarProduct / (magnitudeA * magnitudeB)) * (180.0 / Math.PI);
+            return theta;
+        }
+
+        public double dotProduct(Point3D p)
+        {
+            return (this.X*p.X + this.Y*p.Y + this.Z*p.Z);
+        }
     }
 
 }
