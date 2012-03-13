@@ -94,9 +94,7 @@ namespace YouMote.Television
         private void initializeMediaElements()
         {
             this._cornerIcon = this._window.CornerIcon;
-            this._cornerIcon.Opacity = 0.0;
-
-            this._centerIcon = this._window.CenterIcon;
+            this._cornerIcon.Opacity = 0.0; 
 
             this._currentContainer = this._window.MediaContainer1;
             this._currentContainer.Height = this.screenHeight;
@@ -116,6 +114,10 @@ namespace YouMote.Television
             this._onPointContainer.Height = this.screenHeight;
             this._onPointContainer.Width = this.screenWidth;
             this._onPointContainer.Opacity = 0.0;
+
+            this._centerIcon = this._window.CenterIcon;
+            Canvas.SetLeft(this._centerIcon, (this.screenWidth - this._centerIcon.Width) / 2.0);
+            Canvas.SetTop(this._centerIcon, (this.screenHeight - this._centerIcon.Height) / 2.0);
 
             this._onPointMediaElement = this._window.mediaElement2;
             this._onPointMediaElement.Height = this.screenHeight;

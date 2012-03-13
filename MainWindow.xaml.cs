@@ -52,7 +52,6 @@ namespace YouMote
                 this.DebugPositionTextBox.Visibility = Visibility.Hidden;
                 this.DebugGestureTextBox.Visibility = Visibility.Hidden;
             }
-
         }
 
         //Kinect Sensor
