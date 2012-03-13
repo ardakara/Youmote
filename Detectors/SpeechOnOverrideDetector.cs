@@ -24,7 +24,7 @@ namespace YouMote.Detectors
         {
             String wordsSaid = speechRecognizer.Word;
             if (wordsSaid == null) return false;
-            if (wordsSaid.Equals("TV on"))
+            if (wordsSaid.Equals("TV play"))
             {
                 return true;
             }

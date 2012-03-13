@@ -37,22 +37,11 @@ namespace YouMote
     /// 
     public partial class MainWindow : Window
     {
-        private static Boolean isDebug = true;
         public MainWindow()
         {
             //YouMote.Client.Client.test();
             InitializeComponent();
-            if (isDebug)
-            {
-                this.DebugPositionTextBox.Visibility = Visibility.Visible;
-                this.DebugGestureTextBox.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.DebugPositionTextBox.Visibility = Visibility.Hidden;
-                this.DebugGestureTextBox.Visibility = Visibility.Hidden;
-            }
-
+            showDebug();
         }
 
         //Kinect Sensor
@@ -75,12 +64,6 @@ namespace YouMote
 
         SpeechRecognizer mySpeechRecognizer;
 
-        /*
-        public SpeechRecognizer getSpeechRecognizer()
-        {
-            return this.mySpeechRecognizer;
-        }
-*/
         public SpeechRecognizer speechRecognizer
         {
             get
@@ -134,7 +117,6 @@ namespace YouMote
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
-
             }
         }
 
@@ -159,6 +141,32 @@ namespace YouMote
                     Skeleton skeleton = (from s in this.skeletons
                                          where s.TrackingState == SkeletonTrackingState.Tracked
                                          select s).FirstOrDefault();
+                    if (skeleton != null)
+                    {
+                        //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
+                        SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
+                        SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
+                        SetEllipsePosition(rightEllipse, skeleton.Joints[JointType.HandRight]);
+                        SetEllipsePosition(shoulderCenter, skeleton.Joints[JointType.ShoulderCenter]);
+                        SetEllipsePosition(shoulderRight, skeleton.Joints[JointType.ShoulderRight]);
+                        SetEllipsePosition(shoulderLeft, skeleton.Joints[JointType.ShoulderLeft]);
+                        SetEllipsePosition(ankleRight, skeleton.Joints[JointType.AnkleRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(elbowLeft, skeleton.Joints[JointType.ElbowLeft]);
+                        SetEllipsePosition(elbowRight, skeleton.Joints[JointType.ElbowRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
+                        SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
+                        SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+                    }
                     currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
@@ -178,7 +186,21 @@ namespace YouMote
             }
         }
 
+        void showDebug()
+        {
+            SkeletonCanvas.Visibility = Visibility.Visible;
+            this.DebugPositionTextBox.Visibility = Visibility.Visible;
+            this.DebugGestureTextBox.Visibility = Visibility.Visible;
+            this.DebugSpeechTextBox.Visibility = Visibility.Visible;
+        }
 
+        void hideDebug()
+        {
+            SkeletonCanvas.Visibility = Visibility.Hidden;
+            this.DebugPositionTextBox.Visibility = Visibility.Hidden;
+            this.DebugGestureTextBox.Visibility = Visibility.Hidden;
+            this.DebugSpeechTextBox.Visibility = Visibility.Hidden;
+        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -188,21 +210,24 @@ namespace YouMote
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-
-            if (e.Key == Key.D1)
+            if (e.Key == Key.Escape)
             {
-                currentController = youmoteController;
-                currentController.controllerActivated(targets);
+                nui.Stop();
+                Application.Current.Shutdown();
+            }
+            else if (e.Key == Key.D1)
+            {
+                hideDebug();
+            }
+            else if (e.Key == Key.D2)
+            {
+                showDebug();
+            }
+            
+            else if (youmoteController != null)
+            {
+                youmoteController.processKeys(e.Key);
             }
         }
-
-
-        private void mediaElement1_MediaOpened(object sender, RoutedEventArgs e)
-        {
-            //mediaElement1.Source = new Uri("Video/pixar_short.avi", UriKind.Relative);
-
-        }
     }
-
-
 }
