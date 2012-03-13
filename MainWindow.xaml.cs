@@ -186,22 +186,21 @@ namespace YouMote
             nui.Stop();
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-
-            if (e.Key == Key.D1)
-            {
-                currentController = youmoteController;
-                currentController.controllerActivated(targets);
-            }
-        }
-
 
         private void mediaElement1_MediaOpened(object sender, RoutedEventArgs e)
         {
             //mediaElement1.Source = new Uri("Video/pixar_short.avi", UriKind.Relative);
 
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (youmoteController != null)
+            {
+                youmoteController.processKeys(e.Key);
+            }
+        }
+
     }
 
 
