@@ -105,6 +105,7 @@ namespace YouMote
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
         }
 
+
         void OnGestureDetected(string gesture)
         {
             if (gesture == "SwipeToLeft")

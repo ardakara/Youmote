@@ -37,6 +37,7 @@ namespace YouMote
     /// 
     public partial class MainWindow : Window
     {
+
         private static Boolean isDebug = true;
         public MainWindow()
         {
@@ -60,6 +61,7 @@ namespace YouMote
 
         //Targets and skeleton controller
         YoumoteController youmoteController;
+        HelpController helpController;
 
         //Holds the currently active controller
         SkeletonController currentController;
@@ -93,6 +95,7 @@ namespace YouMote
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetupKinect();
+            helpController = new HelpController(this);
         }
 
         private void SetupKinect()
@@ -134,7 +137,7 @@ namespace YouMote
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
-
+                setSkeletonToInvisible();
             }
         }
 
@@ -159,6 +162,32 @@ namespace YouMote
                     Skeleton skeleton = (from s in this.skeletons
                                          where s.TrackingState == SkeletonTrackingState.Tracked
                                          select s).FirstOrDefault();
+                    if (skeleton != null)
+                    {
+                        //set positions on our joints of interest (already defined as Ellipse objects in the xaml)
+                        SetEllipsePosition(headEllipse, skeleton.Joints[JointType.Head]);
+                        SetEllipsePosition(leftEllipse, skeleton.Joints[JointType.HandLeft]);
+                        SetEllipsePosition(rightEllipse, skeleton.Joints[JointType.HandRight]);
+                        SetEllipsePosition(shoulderCenter, skeleton.Joints[JointType.ShoulderCenter]);
+                        SetEllipsePosition(shoulderRight, skeleton.Joints[JointType.ShoulderRight]);
+                        SetEllipsePosition(shoulderLeft, skeleton.Joints[JointType.ShoulderLeft]);
+                        SetEllipsePosition(ankleRight, skeleton.Joints[JointType.AnkleRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(elbowLeft, skeleton.Joints[JointType.ElbowLeft]);
+                        SetEllipsePosition(elbowRight, skeleton.Joints[JointType.ElbowRight]);
+                        SetEllipsePosition(ankleLeft, skeleton.Joints[JointType.AnkleLeft]);
+                        SetEllipsePosition(footLeft, skeleton.Joints[JointType.FootLeft]);
+                        SetEllipsePosition(footRight, skeleton.Joints[JointType.FootRight]);
+                        SetEllipsePosition(wristLeft, skeleton.Joints[JointType.WristLeft]);
+                        SetEllipsePosition(wristRight, skeleton.Joints[JointType.WristRight]);
+                        SetEllipsePosition(kneeLeft, skeleton.Joints[JointType.KneeLeft]);
+                        SetEllipsePosition(kneeRight, skeleton.Joints[JointType.KneeRight]);
+                        SetEllipsePosition(hipCenter, skeleton.Joints[JointType.HipCenter]);
+                    }
                     currentController.processSkeletonFrame(skeleton, nui, targets);
                 }
             }
@@ -178,7 +207,58 @@ namespace YouMote
             }
         }
 
+        void setSkeletonToVisible()
+        {
+            headEllipse.Visibility = Visibility.Visible;
+            leftEllipse.Visibility = Visibility.Visible;
+            rightEllipse.Visibility = Visibility.Visible;
+            shoulderCenter.Visibility = Visibility.Visible;
+            shoulderRight.Visibility = Visibility.Visible;
+            shoulderLeft.Visibility = Visibility.Visible;
+            ankleRight.Visibility = Visibility.Visible;
+            ankleLeft.Visibility = Visibility.Visible;
+            footLeft.Visibility = Visibility.Visible;
+            footRight.Visibility = Visibility.Visible;
+            wristLeft.Visibility = Visibility.Visible;
+            wristRight.Visibility = Visibility.Visible;
+            elbowLeft.Visibility = Visibility.Visible;
+            elbowRight.Visibility = Visibility.Visible;
+            ankleLeft.Visibility = Visibility.Visible;
+            footLeft.Visibility = Visibility.Visible;
+            footRight.Visibility = Visibility.Visible;
+            wristLeft.Visibility = Visibility.Visible;
+            wristRight.Visibility = Visibility.Visible;
+            kneeLeft.Visibility = Visibility.Visible;
+            kneeRight.Visibility = Visibility.Visible;
+            hipCenter.Visibility = Visibility.Visible;
+        }
 
+
+        void setSkeletonToInvisible()
+        {
+            headEllipse.Visibility = Visibility.Hidden;
+            leftEllipse.Visibility = Visibility.Hidden;
+            rightEllipse.Visibility = Visibility.Hidden;
+            shoulderCenter.Visibility = Visibility.Hidden;
+            shoulderRight.Visibility = Visibility.Hidden;
+            shoulderLeft.Visibility = Visibility.Hidden;
+            ankleRight.Visibility = Visibility.Hidden;
+            ankleLeft.Visibility = Visibility.Hidden;
+            footLeft.Visibility = Visibility.Hidden;
+            footRight.Visibility = Visibility.Hidden;
+            wristLeft.Visibility = Visibility.Hidden;
+            wristRight.Visibility = Visibility.Hidden;
+            elbowLeft.Visibility = Visibility.Hidden;
+            elbowRight.Visibility = Visibility.Hidden;
+            ankleLeft.Visibility = Visibility.Hidden;
+            footLeft.Visibility = Visibility.Hidden;
+            footRight.Visibility = Visibility.Hidden;
+            wristLeft.Visibility = Visibility.Hidden;
+            wristRight.Visibility = Visibility.Hidden;
+            kneeLeft.Visibility = Visibility.Hidden;
+            kneeRight.Visibility = Visibility.Hidden;
+            hipCenter.Visibility = Visibility.Hidden;
+        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -198,6 +278,25 @@ namespace YouMote
             {
                 Application.Current.Shutdown();
             }
+            else if (e.Key == Key.D1)
+            {
+                if (!(currentController == youmoteController))
+                {
+                    currentController = youmoteController;
+                    this.DebugControllerBox.Text = "Youmote";
+                    setSkeletonToInvisible();
+                }
+            }
+            else if (e.Key == Key.D2)
+            {
+                if (!(currentController == helpController))
+                {
+                    currentController = helpController;
+                    this.DebugControllerBox.Text = "Help";
+                    setSkeletonToVisible();
+                }
+            }
+            
             else if (youmoteController != null)
             {
                 youmoteController.processKeys(e.Key);
