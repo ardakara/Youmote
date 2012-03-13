@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 using System.Diagnostics;
 using Microsoft.Kinect;
 using Coding4Fun.Kinect.Wpf;
@@ -56,6 +57,10 @@ namespace YouMote
         /* Flags to handle complex manual overrides */
         private Boolean _isManualResume = false;
         private Boolean _isManualPause = false;
+
+        private Boolean _keyboardResume = false;
+        private Boolean _keyboardPause = false;
+
 
         /*Handling volume*/
         private VolumeDecreaseDetector volumeDetector = new VolumeDecreaseDetector();
@@ -134,16 +139,54 @@ namespace YouMote
 
         }
 
+        public void processKeys(Key key)
+        {
+            if (key == Key.A)   //pause
+            {
+                this._debugPositionBox.Text = "key = A";
+                manualPauseResume(true);
+            }
+            else if (key == Key.Z)  //play
+            {
+                this._debugPositionBox.Text = "key = Z";
+                if (!this._tv.IsOn)
+                {
+                    this._tv.turnOn();
+                }
+                else
+                {
+                    manualPauseResume(false);
+                }
+            }
+            else if (key == Key.X)
+            {
+                this._debugPositionBox.Text = "key = X";
+                this._tv.turnOff();
+            }
+
+        }
+
+        private void manualPauseResume(Boolean pause)
+        {
+            this._isManualPause = pause;
+            this._isManualResume = !pause;
+            this._keyboardPause = pause;
+            this._keyboardResume = !pause;
+            if (pause)
+            {
+                this._debugPositionBox.Text = "Manual pause!";
+                this._tv.pause(ScreenController.PauseReason.SPEECH);
+            }
+            else
+            {
+                this._debugPositionBox.Text = "Manual Resume!";
+                this._tv.play();
+            }
+        }
+
 
         private void detectSittingStandingScenarios(Skeleton skeleton)
         {
-            /*
-            String hello = window.speechRecognizer.Word;
-            if(hello !=null && hello.Equals("hello")){
-                int a = 3;
-
-            }
-*/
 
             this.permanentLeaveDetector.processSkeleton(skeleton);
             this.absentDetector.processSkeleton(skeleton);
@@ -158,8 +201,8 @@ namespace YouMote
             Boolean isPermanentlyGone = permanentLeaveDetector.isScenarioDetected();
 
             Boolean isTalkingOnPhone = talkOnPhoneDetector.isScenarioDetected();
-            Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected();
-            Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected();
+            Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected() || this._keyboardPause;
+            Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected() || this._keyboardResume;
 
 
 
@@ -177,18 +220,13 @@ namespace YouMote
 
             if (isManualPause)
             {
-                this._isManualPause = isManualPause;
-                this._isManualResume = false;
-                this._debugPositionBox.Text = "Manual pause!";
-                this._tv.pause(ScreenController.PauseReason.SPEECH);
+                manualPauseResume(true);
+                
 
             }
             else if (isManualResume)
             {
-                this._isManualResume = isManualResume;
-                this._isManualPause = false;
-                this._debugPositionBox.Text = "manual Resume!";
-                this._tv.play();
+                manualPauseResume(false);
             }
 
             //all the detector logic
@@ -218,6 +256,7 @@ namespace YouMote
             else if (isSitting) 
             {
                 this._isManualResume = false;
+                this._keyboardResume = false;
                 if(!this._isManualPause){
                     this._tv.play();
                 }
