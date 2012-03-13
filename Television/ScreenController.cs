@@ -19,6 +19,7 @@ namespace YouMote.Television
     public class ScreenController
     {
         public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH };
+        public enum SwipeDirection {LEFT, RIGHT, CENTER};
 
         private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
@@ -42,7 +43,8 @@ namespace YouMote.Television
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
 
-
+        private double swipableWidth;
+        private SwipeDirection lastSwipeDirection;
 
         public Media CurrentMedia
         {
@@ -67,6 +69,8 @@ namespace YouMote.Television
             this._window = window;
             this.screenWidth = window.MainCanvas.Width;
             this.screenHeight = window.MainCanvas.Height;
+            this.swipableWidth = (this.screenWidth / 2.0) - this._window.SwipeIcon.Width;
+            this.lastSwipeDirection = SwipeDirection.CENTER;
             this.initializeMediaElements();
 
         }
@@ -234,6 +238,52 @@ namespace YouMote.Television
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             return position;
+        }
+
+        public void startSwipe()
+        { 
+            this._window.SwipeIcon.Visibility = Visibility.Visible;
+            this.lastSwipeDirection = SwipeDirection.CENTER;
+            this._window.SwipeIcon.Content = "O";
+            Canvas.SetLeft(this._window.SwipeIcon, this.screenWidth / 2.0 - this._window.SwipeIcon.Width);
+            Canvas.SetTop(this._window.SwipeIcon, this.screenHeight / 2.0 - this._window.SwipeIcon.Height);
+        }
+
+        public void updateSwipe(double swipeProgress, SwipeDirection direction)
+        {
+            double swipeOffset = this.swipableWidth * swipeProgress;
+            double newLeft = this.screenWidth / 2.0;
+            if (direction == SwipeDirection.LEFT)
+            {
+                newLeft -= (this._window.SwipeIcon.Width / 2.0) + swipeOffset;
+                if (this.lastSwipeDirection != direction)
+                {
+                    this.lastSwipeDirection = direction;
+                    this._window.SwipeIcon.Content = "<";
+                }
+            }
+            else if (direction == SwipeDirection.RIGHT)
+            {
+                newLeft += swipeOffset;
+                if (this.lastSwipeDirection != direction)
+                {
+                    this.lastSwipeDirection = direction;
+                    this._window.SwipeIcon.Content = ">";
+                }
+            }
+
+            Canvas.SetLeft(this._window.SwipeIcon, newLeft);
+
+            if (swipeProgress >= 1.00)
+            {
+                this._window.SwipeIcon.Visibility = Visibility.Hidden;
+                // TODO: call swipe here
+            }
+        }
+
+        public void abortSwipe()
+        {
+            this._window.SwipeIcon.Visibility = Visibility.Hidden;
         }
 
         public void moveMediaToRight(Media media)
