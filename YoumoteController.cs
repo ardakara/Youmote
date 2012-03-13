@@ -215,10 +215,13 @@ namespace YouMote
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
             }
-            else if (isSitting && !this._isManualPause)
+            else if (isSitting) 
             {
                 this._isManualResume = false;
-                this._tv.play();
+                if(!this._isManualPause){
+                    this._tv.play();
+                }
+                
             }
 
             if (isTalkingOnPhone) {
