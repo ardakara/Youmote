@@ -188,11 +188,6 @@ namespace YouMote
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.D1)
-            {
-                currentController = youmoteController;
-                currentController.controllerActivated(targets);
-            }
             if (e.Key == Key.Escape)
             {
                 Application.Current.Shutdown();
