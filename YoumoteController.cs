@@ -418,8 +418,7 @@ namespace YouMote
 
         public override void controllerActivated(Dictionary<int, Target> targets)
         {
-
-            //            this._tv.fakeTVRun();
+            //this._tv.fakeTVRun();
         }
 
         public override void addUIElements(TextBlock not_speaker, TextBlock not_text, Image not_image, WinRectangle rect)
