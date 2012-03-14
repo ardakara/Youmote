@@ -147,9 +147,9 @@
     <Compile Include="Television\Person.cs" />
     <Compile Include="Television\ScreenController.cs" />
     <Compile Include="Television\Television.cs" />
-    <Compile Include="Test\RightArmSwipeDetector.cs" />
-    <Compile Include="Test\SwipeDetector.cs" />
-    <Compile Include="Test\SwipeState.cs" />
+    <Compile Include="Detectors\RightArmSwipeDetector.cs" />
+    <Compile Include="Detectors\SwipeDetector.cs" />
+    <Compile Include="States\SwipeState.cs" />
     <Compile Include="YoumoteController.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
