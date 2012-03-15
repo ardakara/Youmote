@@ -19,7 +19,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 using System.IO;
 using SysPath = System.IO.Path;
 using YouMote.Television;
-using YouMote.Test;
+using YouMote.States;
 
 namespace YouMote
 {
@@ -38,6 +38,7 @@ namespace YouMote
         private SpeechHelpOverrideDetector speechHelpOverrideDetector;
         private SpeechExitHelpDetector speechExitHelpDetector;
         private RightArmSwipeDetector rSwipeDetector = new RightArmSwipeDetector();
+        private LeftArmSwipeDetector lSwipeDetector = new LeftArmSwipeDetector();
 
         private MainWindow window;
 
@@ -307,20 +308,22 @@ namespace YouMote
             {
 
                 this.rSwipeDetector.processSkeleton(skeleton);
+                this.lSwipeDetector.processSkeleton(skeleton);
 
-                Boolean swipeDetected = rSwipeDetector.isScenarioDetected();
-                if (rSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
+                Boolean rHandSwipeDetected = rSwipeDetector.isScenarioDetected();
+                Boolean lHandSwipeDetected = lSwipeDetector.isScenarioDetected();
+                if (lSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
                 {
-                    this._debugGestureBox.Text = rSwipeDetector.getSwipePosition() + "";
+                    this._debugGestureBox.Text = lSwipeDetector.getSwipePosition() + "";
                 }
                 else
                 {
-                    this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+                    this._debugGestureBox.Text = lSwipeDetector.getCurrentState().toString();
                 }
 
 
 
-                if (swipeDetected)
+                if (rHandSwipeDetected)
                 {
                     if (rSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.LEFT))
                     {
@@ -337,6 +340,24 @@ namespace YouMote
                     }
 
                 }
+                else if (lHandSwipeDetected)
+                {
+                    if (lSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.LEFT))
+                    {
+                        this._debugGestureBox.Text = "Swipe left!";
+                        this._tv.moveMediaToLeft();
+                        swipe_sw.Restart();
+                    }
+                    else if (lSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.RIGHT))
+                    {
+
+                        this._debugGestureBox.Text = "Right swipe!";
+                        this._tv.moveMediaToRight();
+                        swipe_sw.Restart();
+                    }
+
+                }
+
 
                 /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
                 if (!barycenterHelper.IsStable(skeleton.TrackingId))

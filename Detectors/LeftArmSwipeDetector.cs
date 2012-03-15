@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
 namespace YouMote.Detectors
-
 {
-    class RightArmSwipeDetector : SwipeDetector
+    class LeftArmSwipeDetector : SwipeDetector
     {
-        protected override  double LEFT_SWIPE_FINISH_ANGLE { get { return 70; } }
-        protected override double RIGHT_SWIPE_FINISH_ANGLE{ get { return 110; } }
+        protected override  double LEFT_SWIPE_FINISH_ANGLE { get { return 110; } }
+        protected override double RIGHT_SWIPE_FINISH_ANGLE{ get { return 70; } }
         protected override double CORRIDOR_RADIUS { get { return 0.2; } }
         protected override double CORRIDOR_EPSILON{ get { return 0.2; } } 
-        protected override double LEFT_SWIPE_ZONE_ANGLE { get { return 110; } }
-        protected override double RIGHT_SWIPE_ZONE_ANGLE { get { return 70; } }
+        protected override double LEFT_SWIPE_ZONE_ANGLE { get { return 70; } }
+        protected override double RIGHT_SWIPE_ZONE_ANGLE { get { return 110; } }
 
-        public RightArmSwipeDetector() : base()
+        public LeftArmSwipeDetector() : base()
         {
             
         }
@@ -26,7 +25,7 @@ namespace YouMote.Detectors
         /// <returns></returns>
         protected override Point3D getHandLocation()
         {
-            return new Point3D(this.Skeleton.Joints[JointType.HandRight]);
+            return new Point3D(this.Skeleton.Joints[JointType.HandLeft]);
         }
 
 
@@ -36,7 +35,7 @@ namespace YouMote.Detectors
         /// <returns></returns>
         protected override Point3D getElbowLocation()
         {
-            return new Point3D(this.Skeleton.Joints[JointType.ElbowRight]);
+            return new Point3D(this.Skeleton.Joints[JointType.ElbowLeft]);
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace YouMote.Detectors
         /// <returns></returns>
         protected override Point3D getShoulderLocation()
         {
-            return new Point3D(this.Skeleton.Joints[JointType.ShoulderRight]);
+            return new Point3D(this.Skeleton.Joints[JointType.ShoulderLeft]);
         }
     }
 }
