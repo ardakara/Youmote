@@ -422,6 +422,7 @@ namespace YouMote
             }
             else
             {
+                // TODO: rSwipeDetector.getSwipePosition() and rSwipeDetector.getSwipeDirection()
 
                 detectSittingStandingScenarios(skeleton);
                 detectChannelChangingScenarios(skeleton, nui);

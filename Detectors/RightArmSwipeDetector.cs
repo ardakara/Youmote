@@ -9,8 +9,8 @@ namespace YouMote.Test
     {
         protected override  double LEFT_SWIPE_FINISH_ANGLE { get { return 70; } }
         protected override double RIGHT_SWIPE_FINISH_ANGLE{ get { return 110; } }
-        protected override double CORRIDOR_RADIUS { get { return 0.1; } }
-        protected override double CORRIDOR_EPSILON{ get { return 0.1; } } 
+        protected override double CORRIDOR_RADIUS { get { return 0.2; } }
+        protected override double CORRIDOR_EPSILON{ get { return 0.2; } } 
         protected override double LEFT_SWIPE_ZONE_ANGLE { get { return 110; } }
         protected override double RIGHT_SWIPE_ZONE_ANGLE { get { return 70; } }
 
