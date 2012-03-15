@@ -5,18 +5,16 @@ using System.Text;
 using Microsoft.Kinect;
 namespace YouMote.Detectors
 {
-    class LeftArmSwipeDetector : SwipeDetector
-    {
-        protected override  double LEFT_SWIPE_FINISH_ANGLE { get { return 70; } }
-        protected override double RIGHT_SWIPE_FINISH_ANGLE{ get { return 110; } }
-        protected override double CORRIDOR_RADIUS { get { return 0.2; } }
-        protected override double CORRIDOR_EPSILON{ get { return 0.2; } } 
-        protected override double LEFT_SWIPE_ZONE_ANGLE { get { return 70; } }
-        protected override double RIGHT_SWIPE_ZONE_ANGLE { get { return 110; } }
 
-        public LeftArmSwipeDetector() : base()
+   class LeftArmVolumeSwipeDetector : VolumeSwipeDetector
+    {
+        protected override double LEFT_SWIPE_ZONE_ANGLE { get { return 110; } }
+        protected override double RIGHT_SWIPE_ZONE_ANGLE { get { return 70; } }
+
+        public LeftArmVolumeSwipeDetector()
+            : base()
         {
-            
+
         }
 
         /// <summary>

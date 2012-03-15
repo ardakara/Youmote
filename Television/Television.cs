@@ -11,6 +11,25 @@ namespace YouMote.Television
 {
     public class Television
     {
+        private static double MAX_VOLUME_RANGE = 0.2;
+        private static double VOLUME_INCREMENT = 0.1;
+        private DateTime _lastVolumeTick = DateTime.Now;
+        private double _baseVolume;
+
+        public double BaseVolume
+        {
+            get
+            {
+                return this._baseVolume;
+            }
+
+            set
+            {
+                this._baseVolume = value;
+                _lastVolumeTick = DateTime.Now;
+            }
+        }
+
         private double _volume = 1.0;
         public double Volume
         {
@@ -21,8 +40,19 @@ namespace YouMote.Television
 
             set
             {
-                this._volume = value;
-                this._screenController.setCurrentMediaVolume(value);
+                if (value > 1)
+                {
+                    this._volume = 1;
+                }
+                else if (value < 0)
+                {
+                    this._volume = 0;
+                }
+                else
+                {
+                    this._volume = value;
+                }
+                this._screenController.setCurrentMediaVolume(this._volume);
             }
         }
         private Boolean _isOn = false;
@@ -91,7 +121,24 @@ namespace YouMote.Television
             this.CurrentChannelIndex = 0;
         }
 
+        public void pinVolume()
+        {
+            this.BaseVolume = this._volume;
+        }
 
+        public void changeVolume(double factor)
+        {
+            double secondsSinceLastTick = DateTime.Now.Subtract(this._lastVolumeTick).Seconds;
+            if (Math.Abs(factor) >= 1 && secondsSinceLastTick > 1.0)
+            {
+                this.BaseVolume = this._baseVolume + factor*VOLUME_INCREMENT;
+                this.Volume = this._volume + factor*VOLUME_INCREMENT;
+            }
+            else
+            {
+                this.Volume = this.BaseVolume + factor * (MAX_VOLUME_RANGE);
+            }
+        }
         /// <summary>
         /// Returns the channel currently being viewed
         /// </summary>

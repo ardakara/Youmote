@@ -39,6 +39,7 @@ namespace YouMote
         private SpeechExitHelpDetector speechExitHelpDetector;
         private RightArmSwipeDetector rSwipeDetector = new RightArmSwipeDetector();
         private LeftArmSwipeDetector lSwipeDetector = new LeftArmSwipeDetector();
+        private RightArmVolumeSwipeDetector rVolumeSwipeDetector = new RightArmVolumeSwipeDetector();
 
         private MainWindow window;
 
@@ -66,7 +67,6 @@ namespace YouMote
 
 
         /*Handling volume*/
-        private VolumeDecreaseDetector volumeDetector = new VolumeDecreaseDetector();
 
         /* Stuff needed to 'turn on the tv'*/
         private YouMote.Television.Television _tv;
@@ -314,11 +314,11 @@ namespace YouMote
                 Boolean lHandSwipeDetected = lSwipeDetector.isScenarioDetected();
                 if (lSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
                 {
-                    this._debugGestureBox.Text = lSwipeDetector.getSwipePosition() + "";
+                    //                    this._debugGestureBox.Text = lSwipeDetector.getSwipePosition() + "";
                 }
                 else
                 {
-                    this._debugGestureBox.Text = lSwipeDetector.getCurrentState().toString();
+                    //                    this._debugGestureBox.Text = lSwipeDetector.getCurrentState().toString();
                 }
 
 
@@ -399,13 +399,35 @@ namespace YouMote
         {
             if (skeleton != null)
             {
-                volumeDetector.processSkeleton(skeleton);
-                double deltaVolume = volumeDetector.getVolumeDelta();
-                if (deltaVolume != 0)
+                rVolumeSwipeDetector.processSkeleton(skeleton);
+                if (rVolumeSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.START))
                 {
-                    //                    this._debugGestureBox.Text = "cV " + this._tv.Volume;
-                    this._tv.Volume = adjustVolume(deltaVolume);
+                    this._tv.pinVolume();
                 }
+
+                else
+                {
+                    this._debugGestureBox.Text = rVolumeSwipeDetector.getCurrentState().toString();
+                }
+
+                Boolean isVolumeChangeDetected = rVolumeSwipeDetector.isScenarioDetected();
+                if (isVolumeChangeDetected)
+                {
+                    double position = this.rVolumeSwipeDetector.getSwipePosition();
+                    if (this.rVolumeSwipeDetector.getSwipeDirection().Equals(VolumeSwipeDetector.VolumeSwipeDirection.DOWN))
+                    {
+                        position *= -1;
+                    }
+
+                    this._tv.changeVolume(position);
+                    this._debugGestureBox.Text = "V:" + this._tv.Volume;
+                }
+                else
+                {
+                    this._debugGestureBox.Text = "NEUTRAL";
+                }
+
+
             }
         }
 

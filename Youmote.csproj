@@ -102,7 +102,9 @@
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
     <Compile Include="Detectors\LeftArmSwipeDetector.cs" />
+    <Compile Include="Detectors\LeftArmVolumeSwipeDetector.cs" />
     <Compile Include="Detectors\RightArmSwipeDetector.cs" />
+    <Compile Include="Detectors\RightArmVolumeSwipeDetector.cs" />
     <Compile Include="Detectors\SpeechExitHelpDetector.cs" />
     <Compile Include="Detectors\SpeechOffOverrideDetector.cs" />
     <Compile Include="Detectors\SpeechOnOverrideDetector.cs" />
@@ -113,6 +115,7 @@
     <Compile Include="Detectors\SpeechPauseOverrideDetector.cs" />
     <Compile Include="Detectors\SpeechResumeOverrideDetector.cs" />
     <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
+    <Compile Include="Detectors\VolumeSwipeDetector.cs" />
     <Compile Include="States\VolumeState.cs" />
     <Compile Include="States\SwipeState.cs" />
     <Compile Include="States\ScreenState.cs" />
