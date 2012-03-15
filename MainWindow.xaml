@@ -9,7 +9,7 @@
         <Canvas Name="MediaContainer2">
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual" />
         </Canvas>
-        <Canvas Name="HelpScreen" Canvas.Left="576" Canvas.Top="177" Height="441" Width="819" Background="White">
+        <Canvas Name="HelpScreen" Canvas.Left="576" Canvas.Top="177" Height="441" Width="819" Background="White" Visibility="Hidden">
             <MediaElement Name="Help1"  LoadedBehavior="Manual" Canvas.Left="61" Canvas.Top="64" />
             <MediaElement Name="Help2"  LoadedBehavior="Manual" Canvas.Left="344" Canvas.Top="78" />
             <MediaElement Name="Help3"  LoadedBehavior="Manual" Canvas.Left="599" Canvas.Top="111" />
