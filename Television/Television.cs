@@ -112,6 +112,10 @@ namespace YouMote.Television
         {
             this.updateChannelListings();
             this.CurrentChannelIndex = (this.CurrentChannelIndex - 1) % this.Channels.Count;
+            if (this.CurrentChannelIndex < 0)
+            {
+                this.CurrentChannelIndex += this.Channels.Count;
+            }
             Channel nextChannel = this._channels[this.CurrentChannelIndex];
             Media nextMedia = nextChannel.Media;
             this._screenController.moveMediaToRight(nextMedia);

@@ -330,7 +330,7 @@ namespace YouMote.Television
 
             this._onPointMediaElement.Source = media.FileUri;
             this._onPointMediaElement.Volume = this._currentMediaElement.Volume;
-            this._onPointMediaElement.Play();
+            this._onPointMediaElement.Pause();
             this._onPointMediaElement.Position = TimeSpan.FromSeconds(media.CurrentTime);
 
             this._currentContainer.Opacity = 1.0;
@@ -343,10 +343,8 @@ namespace YouMote.Television
                 curAnimation = this.generateDoubleAnimation(this.screenX, this.screenX - this.screenWidth, ScreenController.SCREEN_CHANGE_DURATION);
                 onPointAnimation = this.generateDoubleAnimation(this.screenX + this.screenWidth, this.screenX, ScreenController.SCREEN_CHANGE_DURATION);
             }
-
             this._currentContainer.BeginAnimation(Canvas.LeftProperty, curAnimation);
             this._onPointContainer.BeginAnimation(Canvas.LeftProperty, onPointAnimation);
-
             Canvas tempContainer = this._currentContainer;
             MediaElement tempMediaElement = this._currentMediaElement;
 

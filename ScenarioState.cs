@@ -25,7 +25,8 @@ namespace YouMote
         /// <param name="next"></param>
         ScenarioState finishState(ScenarioState next);
 
-
+        DateTime Start{get;}
+        DateTime End{get;}
         /// <summary>
         /// returns the duration that this state took place in minutes;
         /// </summary>

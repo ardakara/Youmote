@@ -19,7 +19,7 @@ using WinRectangle = System.Windows.Shapes.Rectangle;
 using System.IO;
 using SysPath = System.IO.Path;
 using YouMote.Television;
-
+using YouMote.Test;
 
 namespace YouMote
 {
@@ -29,8 +29,7 @@ namespace YouMote
         private SittingDetector sittingDetector = new SittingDetector();
         private AbsentDetector absentDetector = new AbsentDetector();
         private PermanentLeaveDetector permanentLeaveDetector = new PermanentLeaveDetector();
-        private AmbidextrousScreenDetector ambiScreenDetector = new AmbidextrousScreenDetector();
-        private AmbidextrousResumeDetector ambiResumeDetector = new AmbidextrousResumeDetector();
+
         private TalkOnPhoneDetector talkOnPhoneDetector;
         private SpeechPauseOverrideDetector speechPauseOverrideDetector;
         private SpeechResumeOverrideDetector speechResumeOverrideDetector;
@@ -38,6 +37,7 @@ namespace YouMote
         private SpeechOffOverrideDetector speechOffOverrideDetector;
         private SpeechHelpOverrideDetector speechHelpOverrideDetector;
         private SpeechExitHelpDetector speechExitHelpDetector;
+        private RightArmSwipeDetector rSwipeDetector = new RightArmSwipeDetector();
 
         private MainWindow window;
 
@@ -47,8 +47,6 @@ namespace YouMote
         private Stopwatch sw = new Stopwatch();
 
         /* To get channels changing */
-        private AmbidextrousStiffSwipeLeftDetector ambiSwipeLeftDetector = new AmbidextrousStiffSwipeLeftDetector();
-        private AmbidextrousStiffSwipeRightDetector ambiSwipeRightDetector = new AmbidextrousStiffSwipeRightDetector();
         private Stopwatch swipe_sw = new Stopwatch();
 
         /* To turn TV on and off */
@@ -199,7 +197,7 @@ namespace YouMote
             this.absentDetector.processSkeleton(skeleton);
             this.standingDetector.processSkeleton(skeleton);
             this.sittingDetector.processSkeleton(skeleton);
-            this.ambiResumeDetector.processSkeleton(skeleton);
+            //            this.ambiResumeDetector.processSkeleton(skeleton);
             this.talkOnPhoneDetector.processSkeleton(skeleton);
 
             Boolean isAbsent = absentDetector.isScenarioDetected();
@@ -284,15 +282,18 @@ namespace YouMote
 
             }
 
-            if (isTalkingOnPhone) {
+            if (isTalkingOnPhone)
+            {
                 this._debugPositionBox.Text = "I'm talking on phone.";
             }
 
-            if (isStanding) {
+            if (isStanding)
+            {
                 this._debugPositionBox.Text = "I'm standing.";
             }
 
-            if (isSitting) {
+            if (isSitting)
+            {
                 this._debugPositionBox.Text = "Sitting!";
             }
 
@@ -304,21 +305,31 @@ namespace YouMote
 
             if (skeleton != null)
             {
-                ambiSwipeLeftDetector.processSkeleton(skeleton);
-                if (ambiSwipeLeftDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000))
+
+                this.rSwipeDetector.processSkeleton(skeleton);
+
+                Boolean swipeDetected = rSwipeDetector.isScenarioDetected();
+                this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+
+
+                if (swipeDetected)
                 {
-                    this._debugGestureBox.Text = "Swipe left!";
-                    this._tv.moveMediaToLeft();
-                    swipe_sw.Restart();
+                    if (rSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.LEFT))
+                    {
+                        this._debugGestureBox.Text = "Swipe left!";
+                        this._tv.moveMediaToLeft();
+                        swipe_sw.Restart();
+                    }
+                    else if (rSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.RIGHT))
+                    {
+
+                        this._debugGestureBox.Text = "Right swipe!";
+                        this._tv.moveMediaToRight();
+                        swipe_sw.Restart();
+                    }
+
                 }
 
-                ambiSwipeRightDetector.processSkeleton(skeleton);
-                if (ambiSwipeRightDetector.isScenarioDetected() && (swipe_sw.ElapsedMilliseconds > 1000))
-                {
-                    this._debugGestureBox.Text = "Right swipe!";
-                    this._tv.moveMediaToRight();
-                    swipe_sw.Restart();
-                }
                 /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
                 if (!barycenterHelper.IsStable(skeleton.TrackingId))
                     return;
@@ -336,6 +347,7 @@ namespace YouMote
 
                 algorithmicPostureRecognizer.TrackPostures(skeleton);*/
             }
+
         }
 
         private double adjustVolume(double deltaV)
@@ -343,9 +355,13 @@ namespace YouMote
             if (this._tv.Volume + deltaV > 1)
             {
                 return 1;
-            } else if (this._tv.Volume + deltaV < 0) {
+            }
+            else if (this._tv.Volume + deltaV < 0)
+            {
                 return 0;
-            } else {
+            }
+            else
+            {
                 return this._tv.Volume + deltaV;
             }
         }
@@ -356,10 +372,9 @@ namespace YouMote
             {
                 volumeDetector.processSkeleton(skeleton);
                 double deltaVolume = volumeDetector.getVolumeDelta();
-                if (deltaVolume != 0) {
-                    Console.WriteLine("curVol: " + this._tv.Volume);
-                    Console.WriteLine("dVol: "+ deltaVolume);
-                    this._debugGestureBox.Text = "cV " + this._tv.Volume;
+                if (deltaVolume != 0)
+                {
+                    //                    this._debugGestureBox.Text = "cV " + this._tv.Volume;
                     this._tv.Volume = adjustVolume(deltaVolume);
                 }
             }
@@ -367,7 +382,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-           
+
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)

@@ -18,6 +18,14 @@ namespace YouMote.States
 
         private DateTime _start;
         private DateTime _end;
+        public DateTime Start
+        {
+            get { return _start; }
+        }
+        public DateTime End
+        {
+            get { return _end; }
+        }
         private ResumePosition _pos;
 
         ResumePosition Pos
