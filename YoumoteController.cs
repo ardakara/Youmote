@@ -220,7 +220,7 @@ namespace YouMote
             if (isManualPause)
             {
                 manualPauseResume(true);
-                
+
 
             }
             else if (isManualResume)
@@ -252,14 +252,15 @@ namespace YouMote
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
             }
-            else if (isSitting) 
+            else if (isSitting)
             {
                 this._isManualResume = false;
                 this._keyboardResume = false;
-                if(!this._isManualPause){
+                if (!this._isManualPause)
+                {
                     this._tv.play();
                 }
-                
+
             }
 
             if (isTalkingOnPhone)
@@ -289,7 +290,15 @@ namespace YouMote
                 this.rSwipeDetector.processSkeleton(skeleton);
 
                 Boolean swipeDetected = rSwipeDetector.isScenarioDetected();
-                this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+                if (rSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
+                {
+                    this._debugGestureBox.Text = rSwipeDetector.getSwipePosition() + "";
+                }
+                else
+                {
+                    this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+                }
+
 
 
                 if (swipeDetected)
