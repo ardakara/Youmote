@@ -80,7 +80,7 @@ namespace YouMote.Television
         private Stopwatch _stopWatch = new Stopwatch();
         private Media _cachedMedia = Media.NULL_MEDIA;
         private int _cachedMediaIndex = -1;
-        private ScreenController _screenController;
+        public ScreenController _screenController;
         private List<Channel> _channels = new List<Channel>();
         public List<Channel> Channels
         {

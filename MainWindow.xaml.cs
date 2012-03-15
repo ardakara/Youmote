@@ -116,6 +116,7 @@ namespace YouMote
                 //add event to receive skeleton data
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
+                youmoteController.hideHelp();
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
             }
         }
@@ -212,7 +213,10 @@ namespace YouMote
         {
             if (e.Key == Key.Escape)
             {
-                nui.Stop();
+                if (nui != null)
+                {
+                    nui.Stop();
+                }
                 Application.Current.Shutdown();
             }
             else if (e.Key == Key.D1)
@@ -223,7 +227,18 @@ namespace YouMote
             {
                 showDebug();
             }
-            
+            else if (e.Key == Key.D3)
+            {
+                if (youmoteController.isHelpMenu)
+                {
+                    youmoteController.hideHelp();
+                }
+                else
+                {
+                    youmoteController.showHelp();
+                }
+            }
+
             else if (youmoteController != null)
             {
                 youmoteController.processKeys(e.Key);
