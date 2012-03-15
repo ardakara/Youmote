@@ -101,14 +101,19 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
+    <Compile Include="Detectors\RightArmSwipeDetector.cs" />
+    <Compile Include="Detectors\SpeechExitHelpDetector.cs" />
     <Compile Include="Detectors\SpeechOffOverrideDetector.cs" />
     <Compile Include="Detectors\SpeechOnOverrideDetector.cs" />
+    <Compile Include="Detectors\SpeechOverrideHelpDetector.cs" />
+    <Compile Include="Detectors\SwipeDetector.cs" />
     <Compile Include="Detectors\VolumeDecreaseDetector.cs" />
     <Compile Include="Detectors\VolumeDetector.cs" />
     <Compile Include="Detectors\SpeechPauseOverrideDetector.cs" />
     <Compile Include="Detectors\SpeechResumeOverrideDetector.cs" />
     <Compile Include="Detectors\TalkOnPhoneDetector.cs" />
     <Compile Include="States\VolumeState.cs" />
+    <Compile Include="States\SwipeState.cs" />
     <Compile Include="States\ScreenState.cs" />
     <Compile Include="Detectors\PullDownScreenDetector.cs" />
     <Compile Include="Detectors\MuteDetector.cs" />
@@ -147,9 +152,6 @@
     <Compile Include="Television\Person.cs" />
     <Compile Include="Television\ScreenController.cs" />
     <Compile Include="Television\Television.cs" />
-    <Compile Include="Detectors\RightArmSwipeDetector.cs" />
-    <Compile Include="Detectors\SwipeDetector.cs" />
-    <Compile Include="States\SwipeState.cs" />
     <Compile Include="YoumoteController.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -35,6 +35,8 @@ namespace YouMote
         private SpeechResumeOverrideDetector speechResumeOverrideDetector;
         private SpeechOnOverrideDetector speechStartOverrideDetector;
         private SpeechOffOverrideDetector speechOffOverrideDetector;
+        private SpeechHelpOverrideDetector speechHelpOverrideDetector;
+        private SpeechExitHelpDetector speechExitHelpDetector;
         private RightArmSwipeDetector rSwipeDetector = new RightArmSwipeDetector();
 
         private MainWindow window;
@@ -58,6 +60,8 @@ namespace YouMote
 
         private Boolean _keyboardResume = false;
         private Boolean _keyboardPause = false;
+
+        private Boolean _isHelpMenu = false;
 
 
         /*Handling volume*/
@@ -101,6 +105,8 @@ namespace YouMote
             speechResumeOverrideDetector = new SpeechResumeOverrideDetector(win);
             speechStartOverrideDetector = new SpeechOnOverrideDetector(win);
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
+            speechHelpOverrideDetector = new SpeechHelpOverrideDetector(win);
+            speechExitHelpDetector = new SpeechExitHelpDetector(win);
         }
 
 
@@ -203,7 +209,8 @@ namespace YouMote
             Boolean isManualPause = speechPauseOverrideDetector.isScenarioDetected() || this._keyboardPause;
             Boolean isManualResume = speechResumeOverrideDetector.isScenarioDetected() || this._keyboardResume;
 
-
+            Boolean isHelp = speechHelpOverrideDetector.isScenarioDetected();
+            Boolean isExitHelp = speechExitHelpDetector.isScenarioDetected();
 
             if (isTalkingOnPhone)
             {
@@ -229,7 +236,19 @@ namespace YouMote
             }
 
             //all the detector logic
-            if (isAbsent && !this._isManualResume)
+            if (isHelp)
+            {
+                this._isHelpMenu = true;
+                this._tv.pause();
+                //play the help video
+            }
+            else if (isExitHelp)
+            {
+                this._isHelpMenu = false;
+                //pause help video
+                this._tv.play();
+            }
+            else if (isAbsent && !this._isManualResume && !this._isHelpMenu)
             {
                 if (isPermanentlyGone)
                 {
@@ -240,19 +259,19 @@ namespace YouMote
                     this._tv.pause(ScreenController.PauseReason.LEAVE);
                 }
             }
-            else if (isTalkingOnPhone && !this._isManualResume)
+            else if (isTalkingOnPhone && !this._isManualResume && !this._isHelpMenu)
             {
                 //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
                 this._tv.pause(reason);
             }
-            else if (isStanding && !this._isManualResume)
+            else if (isStanding && !this._isManualResume && !this._isHelpMenu)
             {
                 //this._isManualPause = false;
                 ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
                 this._tv.pause(reason);
             }
-            else if (isSitting)
+            else if (isSitting && !this._isHelpMenu)
             {
                 this._isManualResume = false;
                 this._keyboardResume = false;
