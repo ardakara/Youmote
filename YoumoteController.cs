@@ -108,8 +108,16 @@ namespace YouMote
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
             speechHelpOverrideDetector = new SpeechHelpOverrideDetector(win);
             speechExitHelpDetector = new SpeechExitHelpDetector(win);
+            setUpHelpVideos();
         }
 
+        void setUpHelpVideos()
+        {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            window.Help1.Source = new Uri(currentPath + "\\help-tv-on.mp4");
+            window.Help2.Source = new Uri(currentPath + "\\help-swipe-gesture.mp4");
+            window.Help3.Source = new Uri(currentPath + "\\help-tv-pause.mp4");
+        }
 
         void OnGestureDetected(string gesture)
         {
@@ -190,6 +198,45 @@ namespace YouMote
             }
         }
 
+        public void showHelp()
+        {
+            this._isHelpMenu = true;
+            window.DebugPositionTextBox.Text = "HELP MODE";
+            if (!(this._tv.Channels != null || this._tv.Channels.Count==0))
+            {
+                this._tv.pause();
+            }
+            window.HelpScreen.Visibility = Visibility.Visible;
+            window.Help1.Play();
+            window.Help2.Play();
+            window.Help3.Play();
+            //play the help video
+        }
+
+        public void hideHelp()
+        {
+            this._isHelpMenu = false;
+            if (!(this._tv.Channels != null || this._tv.Channels.Count == 0))
+            {
+                //pause help video
+                this._tv.play();
+            }
+            window.DebugPositionTextBox.Text = "HELP EXIT";
+            window.HelpScreen.Visibility = Visibility.Hidden;
+            window.Help1.Pause();
+            window.Help2.Pause();
+            window.Help3.Pause();
+        }
+
+        public Boolean isHelpMenu
+        {
+            get
+            {
+                return this._isHelpMenu;
+            }
+        }
+
+
 
         private void detectSittingStandingScenarios(Skeleton skeleton)
         {
@@ -224,65 +271,67 @@ namespace YouMote
                 this._debugGestureBox.Text = "hand on face";
             }
 
+            //window.DebugSpeechTextBox.Text = this._isHelpMenu.ToString();
 
-            if (isManualPause)
-            {
-                manualPauseResume(true);
+            
 
-
-            }
-            else if (isManualResume)
+            if (this._isHelpMenu)
             {
-                manualPauseResume(false);
-            }
-
-            //all the detector logic
-            if (isHelp)
-            {
-                this._isHelpMenu = true;
-                this._tv.pause();
-                //play the help video
-            }
-            else if (isExitHelp)
-            {
-                this._isHelpMenu = false;
-                //pause help video
-                this._tv.play();
-            }
-            else if (isAbsent && !this._isManualResume && !this._isHelpMenu)
-            {
-                if (isPermanentlyGone)
+                if (isExitHelp)
                 {
-                    this._tv.turnOff();
-                }
-                else
-                {
-                    this._tv.pause(ScreenController.PauseReason.LEAVE);
+                    hideHelp();
                 }
             }
-            else if (isTalkingOnPhone && !this._isManualResume && !this._isHelpMenu)
+            else
             {
-                //this._isManualPause = false;
-                ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
-                this._tv.pause(reason);
-            }
-            else if (isStanding && !this._isManualResume && !this._isHelpMenu)
-            {
-                //this._isManualPause = false;
-                ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
-                this._tv.pause(reason);
-            }
-            else if (isSitting && !this._isHelpMenu)
-            {
-                this._isManualResume = false;
-                this._keyboardResume = false;
-                if (!this._isManualPause)
+                if (isManualPause)
                 {
-                    this._tv.play();
+                    manualPauseResume(true);
+                }
+                else if (isManualResume)
+                {
+                    manualPauseResume(false);
                 }
 
-            }
+                //all the detector logic
+                if (isHelp)
+                {
+                    showHelp();
+                }
+                else if (isAbsent && !this._isManualResume)
+                {
+                    if (isPermanentlyGone)
+                    {
+                        this._tv.turnOff();
+                    }
+                    else
+                    {
+                        this._tv.pause(ScreenController.PauseReason.LEAVE);
+                    }
+                }
+                else if (isTalkingOnPhone && !this._isManualResume)
+                {
+                    //this._isManualPause = false;
+                    ScreenController.PauseReason reason = ScreenController.PauseReason.PHONE;
+                    this._tv.pause(reason);
+                }
+                else if (isStanding && !this._isManualResume)
+                {
+                    //this._isManualPause = false;
+                    ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
+                    this._tv.pause(reason);
+                }
+                else if (isSitting)
+                {
+                    this._isManualResume = false;
+                    this._keyboardResume = false;
+                    if (!this._isManualPause)
+                    {
+                        this._tv.play();
+                    }
 
+                }
+            }
             if (isTalkingOnPhone)
             {
                 this._debugPositionBox.Text = "I'm talking on phone.";
