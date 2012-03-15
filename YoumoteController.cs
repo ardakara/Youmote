@@ -312,7 +312,7 @@ namespace YouMote
 
                 Boolean rHandSwipeDetected = rSwipeDetector.isScenarioDetected();
                 Boolean lHandSwipeDetected = lSwipeDetector.isScenarioDetected();
-                if (lSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
+                if (lSwipeDetector.getCurrentState().Pos.Equals(SwipePosition.MOVING))
                 {
                     this._debugGestureBox.Text = lSwipeDetector.getSwipePosition() + "";
                 }
@@ -325,13 +325,13 @@ namespace YouMote
 
                 if (rHandSwipeDetected)
                 {
-                    if (rSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.LEFT))
+                    if (rSwipeDetector.getSwipeDirection().Equals(SwipeDirection.LEFT))
                     {
                         this._debugGestureBox.Text = "Swipe left!";
                         this._tv.moveMediaToLeft();
                         swipe_sw.Restart();
                     }
-                    else if (rSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.RIGHT))
+                    else if (rSwipeDetector.getSwipeDirection().Equals(SwipeDirection.RIGHT))
                     {
 
                         this._debugGestureBox.Text = "Right swipe!";
@@ -342,13 +342,13 @@ namespace YouMote
                 }
                 else if (lHandSwipeDetected)
                 {
-                    if (lSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.LEFT))
+                    if (lSwipeDetector.getSwipeDirection().Equals(SwipeDirection.LEFT))
                     {
                         this._debugGestureBox.Text = "Swipe left!";
                         this._tv.moveMediaToLeft();
                         swipe_sw.Restart();
                     }
-                    else if (lSwipeDetector.getSwipeDirection().Equals(SwipeDetector.SwipeDirection.RIGHT))
+                    else if (lSwipeDetector.getSwipeDirection().Equals(SwipeDirection.RIGHT))
                     {
 
                         this._debugGestureBox.Text = "Right swipe!";
@@ -443,7 +443,28 @@ namespace YouMote
             }
             else
             {
-                // TODO: rSwipeDetector.getSwipePosition() and rSwipeDetector.getSwipeDirection()
+                SwipeState swipeState = rSwipeDetector.getCurrentState();
+                if (this._tv._screenController.isInSwipe)
+                {
+                    if (swipeState.Pos == SwipePosition.END ||
+                        swipeState.Pos == SwipePosition.NEUTRAL)
+                    {
+                        this._tv._screenController.abortSwipe();
+                    }
+                    else
+                    {
+                        this._tv._screenController.updateSwipe(rSwipeDetector.getSwipePosition(), rSwipeDetector.getSwipeDirection());
+                    }
+                }
+                else
+                {
+                    if (swipeState != null && 
+                       (swipeState.Pos == SwipePosition.START ||
+                        swipeState.Pos == SwipePosition.MOVING))
+                    {
+                        this._tv._screenController.startSwipe();
+                    }
+                }
 
                 detectSittingStandingScenarios(skeleton);
                 detectChannelChangingScenarios(skeleton, nui);

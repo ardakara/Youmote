@@ -5,9 +5,9 @@ using System.Text;
 
 namespace YouMote.States
 {
+    public enum SwipePosition { START, END, MOVING, NEUTRAL };
     class SwipeState : ScenarioState
     {
-        public enum SwipePosition { START, END, MOVING, NEUTRAL };
         private DateTime _start;
         private DateTime _end;
         public DateTime Start

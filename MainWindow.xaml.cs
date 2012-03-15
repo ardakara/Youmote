@@ -212,7 +212,10 @@ namespace YouMote
         {
             if (e.Key == Key.Escape)
             {
-                nui.Stop();
+                if (nui != null)
+                {
+                    nui.Stop();
+                }
                 Application.Current.Shutdown();
             }
             else if (e.Key == Key.D1)

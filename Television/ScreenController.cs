@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using System.Windows;
 using System.Windows.Shapes;
 using YouMote;
+using YouMote.Detectors;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -19,7 +20,6 @@ namespace YouMote.Television
     public class ScreenController
     {
         public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH };
-        public enum SwipeDirection {LEFT, RIGHT, CENTER};
 
         private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
@@ -47,6 +47,7 @@ namespace YouMote.Television
 
         private double swipableWidth;
         private SwipeDirection lastSwipeDirection;
+        public bool isInSwipe;
 
         public Media CurrentMedia
         {
@@ -257,7 +258,8 @@ namespace YouMote.Television
         }
 
         public void startSwipe()
-        { 
+        {
+            this.isInSwipe = true;
             this._swipeIcon.Visibility = Visibility.Visible;
             this.lastSwipeDirection = SwipeDirection.CENTER;
             this._swipeIcon.Content = "O";
@@ -293,12 +295,14 @@ namespace YouMote.Television
             if (swipeProgress >= 1.00)
             {
                 this._swipeIcon.Visibility = Visibility.Hidden;
+                this.isInSwipe = false;
                 // TODO: call swipe here
             }
         }
 
         public void abortSwipe()
         {
+            this.isInSwipe = false;
             this._swipeIcon.Visibility = Visibility.Hidden;
         }
 
