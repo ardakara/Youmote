@@ -12,6 +12,7 @@ namespace YouMote
         private static double DEFAULT_FALSE_STATE_DURATION = 0.3;
         private List<ScenarioState> _history;
         private int _maxSize;
+
         public List<ScenarioState> History
         {
             get

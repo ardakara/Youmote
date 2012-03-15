@@ -227,7 +227,7 @@ namespace YouMote
             if (isManualPause)
             {
                 manualPauseResume(true);
-                
+
 
             }
             else if (isManualResume)
@@ -309,7 +309,15 @@ namespace YouMote
                 this.rSwipeDetector.processSkeleton(skeleton);
 
                 Boolean swipeDetected = rSwipeDetector.isScenarioDetected();
-                this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+                if (rSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
+                {
+                    this._debugGestureBox.Text = rSwipeDetector.getSwipePosition() + "";
+                }
+                else
+                {
+                    this._debugGestureBox.Text = rSwipeDetector.getCurrentState().toString();
+                }
+
 
 
                 if (swipeDetected)

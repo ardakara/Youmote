@@ -76,6 +76,15 @@ namespace YouMote.Test
             }
         }
 
+        protected double getArmAngle(Point3D endpoint)
+        {
+
+            Point3D xUnitVector = new Point3D(1, 0, 0);
+            Point3D shoulderLocation = this.getShoulderLocation();
+            Point3D shoulderToEndpoint = shoulderLocation.subtract(endpoint);
+            double angle = xUnitVector.calculateAngle(shoulderToEndpoint);
+            return angle;
+        }
         /// <summary>
         /// returns a number -1.0 to 1.0
         /// positive number means right swipe
@@ -84,7 +93,36 @@ namespace YouMote.Test
         /// <returns></returns>
         public double getSwipePosition()
         {
-            return 0;
+            SwipeState curState = this.getCurrentState();
+            if (curState.Pos.Equals(SwipeState.SwipePosition.MOVING))
+            {
+                SwipeState prevState = this.getPreviousState();
+                Point3D currentHandLocation = this.getHandLocation();
+                Point3D startBoxLocation = prevState.Loc;
+
+                double curAngle = this.getArmAngle(currentHandLocation);
+                double startAngle = this.getArmAngle(startBoxLocation);
+                double finishAngle = LEFT_SWIPE_FINISH_ANGLE;
+                if (this._direction.Equals(SwipeDirection.RIGHT))
+                {
+                    finishAngle = RIGHT_SWIPE_FINISH_ANGLE;
+                }
+
+                double percentComplete = Math.Abs(curAngle - startAngle) / Math.Abs(finishAngle - startAngle);
+                return percentComplete;
+            }
+            else if (curState.Pos.Equals(SwipeState.SwipePosition.START))
+            {
+                return 0.0;
+            }
+            else if (curState.Pos.Equals(SwipeState.SwipePosition.END))
+            {
+                return 1.0;
+            }
+            else
+            {
+                return -1.0;
+            }
         }
 
         public SwipeDirection getSwipeDirection()
@@ -95,6 +133,19 @@ namespace YouMote.Test
         public SwipeState getCurrentState()
         {
             return (SwipeState)this._history.Peek();
+        }
+
+        public SwipeState getPreviousState()
+        {
+            if (this._history.History.Count >= 2)
+            {
+                return (SwipeState)this._history.getLastNStates(2).ElementAt(1);
+            }
+            else
+            {
+                return null;
+            }
+
         }
         public void processSkeleton(Skeleton skeleton)
         {
@@ -203,22 +254,17 @@ namespace YouMote.Test
                             SwipeState startState = (SwipeState)startScenarioState;
                             Point3D startBoxLocation = startState.Loc;
                             Point3D prevHandLocation = prevState.Loc;
-                            Boolean isMovingInCorrectDirection = this.isMovingInCorrectDirection(prevHandLocation, startBoxLocation);
-                            if (isMovingInCorrectDirection)
+                            Boolean isWithinCorridor = this.isWithinCorridor(startBoxLocation);
+                            if (isWithinCorridor)
                             {
-                                // check if its crossed the CrossLine
-                                Boolean isCrossedFinishLine = this.isCrossedFinishLine(prevHandLocation, startBoxLocation);
-                                if (isCrossedFinishLine)
-                                {
-                                    // add 3 seconds to make the state not destroyed by smoothing
-                                    SwipeState currentState = new SwipeState(SwipeState.SwipePosition.END, DateTime.Now, DateTime.Now.AddSeconds(1), handLocation);
-                                    this._history.addState(currentState);
-                                }
-                                else
-                                {
-                                    SwipeState currentState = new SwipeState(SwipeState.SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
-                                    this._history.addState(currentState);
-                                }
+                                SwipeState currentState = new SwipeState(SwipeState.SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
+                                this._history.addState(currentState);
+                            }
+                            else if (this.isAfterFinishLine())
+                            {
+                                // add 3 seconds to make the state not destroyed by smoothing
+                                SwipeState currentState = new SwipeState(SwipeState.SwipePosition.END, DateTime.Now, DateTime.Now.AddSeconds(1), handLocation);
+                                this._history.addState(currentState);
                             }
                             else
                             {
@@ -406,56 +452,14 @@ namespace YouMote.Test
         /// <returns></returns>
         abstract protected Point3D getShoulderLocation();
 
-        /// <summary>
-        /// given these locations determines from prev and start Box what the swipe direction is
-        /// then checks to make sure handLocation is still going in the right direction relative to 
-        /// prevHandLocation with small epsilon error
-        /// Also checks to make sure it is in the curved corridor
-        /// </summary>
-        /// <param name="handLocation"></param>
-        /// <param name="prevHandLocation"></param>
-        /// <param name="startBoxLocation"></param>
-        /// <returns></returns>
-        protected Boolean isMovingInCorrectDirection(Point3D prevHandLocation, Point3D startBoxLocation)
+        protected Boolean isBeforeStartLine()
         {
-            Point3D handLocation = this.getHandLocation();
-            Point3D zoneVector = prevHandLocation.subtract(startBoxLocation);
-
-            if (zoneVector.X == 0)
-            {
-                return true;
-            }
-
-            // check relative position from 
-
-            Point3D directionVector = handLocation.subtract(prevHandLocation);
-
-            Boolean isValidSwipeLeft = this._direction.Equals(SwipeDirection.LEFT) && (directionVector.X < 0 || Math.Abs(directionVector.X) < MOVEMENT_EPSILON);
-            Boolean isValidSwipeRight = this._direction.Equals(SwipeDirection.RIGHT) && (directionVector.X > 0 || Math.Abs(directionVector.X) < MOVEMENT_EPSILON);
-            Boolean isInCorridor = this.isWithinCorridor(startBoxLocation);
-
-            return (isValidSwipeLeft || isValidSwipeRight) && isInCorridor;
+            return this.getSwipePosition() < 0;
         }
-
-        protected Boolean isCrossedFinishLine(Point3D prevHandLocation, Point3D startBoxLocation)
+        protected Boolean isAfterFinishLine()
         {
-            Point3D handLocation = this.getHandLocation();
-            Point3D shoulderLocation = this.getShoulderLocation();
-            Point3D xUnitVector = new Point3D(1, 0, 0);
-            Point3D shoulderToHand = shoulderLocation.subtract(handLocation);
-            // project onto xz plane
-            shoulderToHand.Y = 0;
-            double angle = xUnitVector.calculateAngle(shoulderToHand);
-            Boolean crossedFinishLine = false;
-            if (this._direction.Equals(SwipeDirection.LEFT))
-            {
-                crossedFinishLine = angle <= LEFT_SWIPE_FINISH_ANGLE;
-            }
-            else if (this._direction.Equals(SwipeDirection.RIGHT))
-            {
-                crossedFinishLine = angle >= RIGHT_SWIPE_FINISH_ANGLE;
-            }
-            return crossedFinishLine;
+            return this.getSwipePosition() > 1;
+
         }
 
         protected Boolean isWithinCorridor(Point3D startBoxLocation)
@@ -470,17 +474,9 @@ namespace YouMote.Test
             Boolean isWithinCorridorEpsilon = difference < CORRIDOR_EPSILON;
 
             Boolean isWithinCorridorRadius = Math.Abs(handLocation.Y - startBoxLocation.Y) < CORRIDOR_RADIUS;
-            Boolean isCorrectDirection = false;
-
-            if (this._direction.Equals(SwipeDirection.RIGHT))
-            {
-                isCorrectDirection = handLocation.X >= startBoxLocation.X;
-            }
-            else if (this._direction.Equals(SwipeDirection.LEFT))
-            {
-                isCorrectDirection = handLocation.X <= startBoxLocation.X;
-            }
-            return isWithinCorridorEpsilon && isWithinCorridorRadius && isCorrectDirection;
+            Boolean isAfterStartLine = !this.isBeforeStartLine();
+            Boolean isBeforeFinishLine = !this.isAfterFinishLine();
+            return isWithinCorridorEpsilon && isWithinCorridorRadius && isAfterStartLine && isBeforeFinishLine;
         }
 
     }
