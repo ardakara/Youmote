@@ -69,16 +69,16 @@ namespace YouMote.Detectors
                 SwipeState state0 = (SwipeState)last3States[0];
                 SwipeState state1 = (SwipeState)last3States[1];
 
-                Boolean hasMovingState0 = state0.Pos.Equals(SwipeState.SwipePosition.MOVING);
-                Boolean hasStartState1 = state1.Pos.Equals(SwipeState.SwipePosition.START);
+                Boolean hasMovingState0 = state0.Pos.Equals(SwipePosition.MOVING);
+                Boolean hasStartState1 = state1.Pos.Equals(SwipePosition.START);
 
-                Boolean hasEndState0 = state0.Pos.Equals(SwipeState.SwipePosition.END);
-                Boolean hasMovingState1 = state1.Pos.Equals(SwipeState.SwipePosition.MOVING);
+                Boolean hasEndState0 = state0.Pos.Equals(SwipePosition.END);
+                Boolean hasMovingState1 = state1.Pos.Equals(SwipePosition.MOVING);
                 Boolean isScenarioDetected = false;
                 if (last3States.Count == 3)
                 {
                     SwipeState state2 = (SwipeState)last3States[2];
-                    Boolean hasStartState2 = state2.Pos.Equals(SwipeState.SwipePosition.START);
+                    Boolean hasStartState2 = state2.Pos.Equals(SwipePosition.START);
                     isScenarioDetected = isScenarioDetected || (hasEndState0 && hasMovingState1 && hasStartState2);
                 }
 
@@ -112,7 +112,7 @@ namespace YouMote.Detectors
         public double getSwipePosition()
         {
             SwipeState curState = this.getCurrentState();
-            if (curState.Pos.Equals(SwipeState.SwipePosition.MOVING)||curState.Pos.Equals(SwipeState.SwipePosition.END))
+            if (curState.Pos.Equals(SwipePosition.MOVING)||curState.Pos.Equals(SwipePosition.END))
             {
 
                 if (this._direction.Equals(VolumeSwipeDirection.CENTER) || this._direction.Equals(VolumeSwipeDirection.NULL))
@@ -133,7 +133,7 @@ namespace YouMote.Detectors
                 }
                 return percentComplete;
             }
-            else if (curState.Pos.Equals(SwipeState.SwipePosition.START))
+            else if (curState.Pos.Equals(SwipePosition.START))
             {
                 return 0.0;
             }
@@ -169,7 +169,7 @@ namespace YouMote.Detectors
         {
             if (skeleton == null || this._history.History.Count == 0)
             {
-                SwipeState currentState = new SwipeState(SwipeState.SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, new Point3D(0, 0, 0));
+                SwipeState currentState = new SwipeState(SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, new Point3D(0, 0, 0));
                 this._history.addState(currentState);
                 return;
             }
@@ -190,7 +190,7 @@ namespace YouMote.Detectors
 
                 // if curr is neutral
                 // check if its straight
-                if (prevState.Pos.Equals(SwipeState.SwipePosition.NEUTRAL))
+                if (prevState.Pos.Equals(SwipePosition.NEUTRAL))
                 {
                     // determine whether arm is straight out
                     // 
@@ -204,11 +204,11 @@ namespace YouMote.Detectors
                     {
                         // create a start state with position
                         this._direction = VolumeSwipeDirection.CENTER;
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.START, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.START, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                 }
-                else if (prevState.Pos.Equals(SwipeState.SwipePosition.START))
+                else if (prevState.Pos.Equals(SwipePosition.START))
                 {
                     // previous state was start state
                     // two things happen
@@ -221,7 +221,7 @@ namespace YouMote.Detectors
                         // still start state
                         // just merge it
                         this._direction = VolumeSwipeDirection.CENTER;
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.START, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.START, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                     else
@@ -235,7 +235,7 @@ namespace YouMote.Detectors
                             this._startBoxShoulderLocation = this.getShoulderLocation();
                             this._direction = this.computeCurrentSwipeDirection();
 
-                            SwipeState currentState = new SwipeState(SwipeState.SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
+                            SwipeState currentState = new SwipeState(SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
                             this._history.addState(currentState);
                         }
                         else
@@ -243,14 +243,14 @@ namespace YouMote.Detectors
                             this._direction = VolumeSwipeDirection.NULL;
                             // hand moved outside of box in wrong direction or in bad position relating to cross line
                             // make it neutral
-                            SwipeState currentState = new SwipeState(SwipeState.SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
+                            SwipeState currentState = new SwipeState(SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
                             this._history.addState(currentState);
                         }
 
                     }
 
                 }
-                else if (prevState.Pos.Equals(SwipeState.SwipePosition.MOVING))
+                else if (prevState.Pos.Equals(SwipePosition.MOVING))
                 {
                     Boolean isWithinCorridor = this.isWithinCorridor();
                     Boolean isAfterFinishLine = this.isAfterFinishLine();
@@ -258,13 +258,13 @@ namespace YouMote.Detectors
                     {
                         // add 3 seconds to make the state not destroyed by smoothing
                         this._direction = this.computeCurrentSwipeDirection();
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.END, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.END, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                     else if (isWithinCorridor)
                     {
                         this._direction = this.computeCurrentSwipeDirection();
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                     else
@@ -276,31 +276,31 @@ namespace YouMote.Detectors
                         // hand moved outside of box in wrong direction or in bad position relating to cross line
                         // make it neutral
                         this._direction = VolumeSwipeDirection.NULL;
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                 }
-                else if (prevState.Pos.Equals(SwipeState.SwipePosition.END))
+                else if (prevState.Pos.Equals(SwipePosition.END))
                 {
                     Boolean isWithinCorridor = this.isWithinCorridor();
                     Boolean isAfterFinishLine = this.isAfterFinishLine();
                     if (isAfterFinishLine)
                     {
                         this._direction = this.computeCurrentSwipeDirection();
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.END, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.END, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                     else if (isWithinCorridor && !isAfterFinishLine)
                     {
                         this._direction = this.computeCurrentSwipeDirection();
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.MOVING, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                     else
                     {
                         this._direction = VolumeSwipeDirection.NULL;
                         // prev state was end.  Now add neutral
-                        SwipeState currentState = new SwipeState(SwipeState.SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
+                        SwipeState currentState = new SwipeState(SwipePosition.NEUTRAL, DateTime.Now, DateTime.Now, handLocation);
                         this._history.addState(currentState);
                     }
                 }
@@ -370,15 +370,15 @@ namespace YouMote.Detectors
 
         protected Point3D getStartBoxLocation()
         {
-            if (this.getCurrentState().Pos.Equals(SwipeState.SwipePosition.NEUTRAL))
+            if (this.getCurrentState().Pos.Equals(SwipePosition.NEUTRAL))
             {
                 return null;
             }
-            else if (this.getCurrentState().Pos.Equals(SwipeState.SwipePosition.START))
+            else if (this.getCurrentState().Pos.Equals(SwipePosition.START))
             {
                 return this.getCurrentState().Loc;
             }
-            else if (this.getCurrentState().Pos.Equals(SwipeState.SwipePosition.MOVING))
+            else if (this.getCurrentState().Pos.Equals(SwipePosition.MOVING))
             {
                 if (this._history.History.Count > 1)
                 {
@@ -392,7 +392,7 @@ namespace YouMote.Detectors
 
             }
 
-            else if (this.getCurrentState().Pos.Equals(SwipeState.SwipePosition.END))
+            else if (this.getCurrentState().Pos.Equals(SwipePosition.END))
             {
 
                 if (this._history.History.Count > 1)

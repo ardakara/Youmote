@@ -449,7 +449,7 @@ namespace YouMote
             if (skeleton != null)
             {
                 rVolumeSwipeDetector.processSkeleton(skeleton);
-                if (rVolumeSwipeDetector.getCurrentState().Pos.Equals(SwipeState.SwipePosition.START))
+                if (rVolumeSwipeDetector.getCurrentState().Pos.Equals(SwipePosition.START))
                 {
                     this._tv.pinVolume();
                 }
