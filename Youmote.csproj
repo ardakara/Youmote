@@ -101,6 +101,7 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Detectors\AbsentDetector.cs" />
     <Compile Include="Detectors\ArriveAndSitDetector.cs" />
+    <Compile Include="Detectors\LeftArmSwipeDetector.cs" />
     <Compile Include="Detectors\RightArmSwipeDetector.cs" />
     <Compile Include="Detectors\SpeechExitHelpDetector.cs" />
     <Compile Include="Detectors\SpeechOffOverrideDetector.cs" />

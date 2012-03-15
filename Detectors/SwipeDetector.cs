@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Kinect;
-
-namespace YouMote.Test
+using YouMote.States;
+namespace YouMote.Detectors
 {
     abstract class SwipeDetector : ScenarioDetector
     {
