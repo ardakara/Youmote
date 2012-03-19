@@ -98,6 +98,8 @@ namespace YouMote
         public float k_xMaxJointScale = 3.0f;
         public float k_yMaxJointScale = 3.0f;
         private static readonly int Bgr32BytesPerPixel = (PixelFormats.Bgr32.BitsPerPixel + 7) / 8;
+        private Boolean socialShown = false;
+
 
         SpeechRecognizer mySpeechRecognizer;
 
@@ -265,7 +267,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D3)
             {
-                
+
                 if (youmoteController.isHelpMenu)
                 {
                     youmoteController.hideHelp();
@@ -288,6 +290,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D5)
             {
+                nui.ElevationAngle = nui.ElevationAngle = 25;
                 try
                 {
                     nui.ElevationAngle = -10;
@@ -309,11 +312,27 @@ namespace YouMote
                     Console.WriteLine(exc.ToString());
                 }
             }
-
+            else if (e.Key == Key.S) {
+                if (socialShown)
+                {
+                    youmoteController.setNotificationToHidden();
+                    socialShown = false;
+                }
+                else
+                {
+                    youmoteController.setNotificationToVisible();
+                    socialShown = true;
+                }      
+            }
             else if (youmoteController != null)
             {
                 youmoteController.processKeys(e.Key);
             }
+        }
+
+        private void NotificationBackground_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+
         }
     }
 }

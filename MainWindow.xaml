@@ -23,7 +23,7 @@
         <Image Name="CenterIcon" Width="512" Height="512" />
         <Image Name="CornerIcon" Width="128" Height="128" Canvas.Right="20" Canvas.Top="20" />
         <Image Canvas.Left="615" Canvas.Top="624" Height="84" Name="SwipeIcon" Width="138" Visibility="Hidden" IsEnabled="True"/>
-        <ProgressBar Canvas.Right="60" Canvas.Bottom="200" Height="500" Name="VolumeBar" Width="50" Value="50" Orientation="Vertical" Visibility="Hidden" />
+        <ProgressBar Canvas.Right="60" Canvas.Bottom="200" Height="500" Name="VolumeBar" Width="40" Value="50" Orientation="Vertical" Visibility="Hidden" />
         <Canvas Name="SkeletonCanvas" Canvas.Top="100" Canvas.Left="0">
             <Ellipse Canvas.Left="270" Canvas.Top="126" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
             <Ellipse Canvas.Left="384" Canvas.Top="253" Height="35" Name="rightEllipse" Stroke="Black" Width="35" Fill="Blue" />
@@ -42,6 +42,11 @@
             <Ellipse Canvas.Left="245" Canvas.Top="319" Fill="Bisque" Height="16" Name="kneeLeft" Stroke="Black" Width="16" />
             <Ellipse Canvas.Left="304" Canvas.Top="319" Fill="Bisque" Height="16" Name="kneeRight" Stroke="Black" Width="16" />
             <Ellipse Canvas.Left="282" Canvas.Top="253" Fill="BlueViolet" Height="16" Name="hipCenter" Stroke="Black" Width="16" />
+        </Canvas>
+        <Canvas Name="SocialNotification" Canvas.Left="12" Canvas.Top="12" Height="143" Width="415">
+            <Image Visibility="Hidden"  Name="NotificationBackground" Stretch="Fill" Canvas.Left="2" Canvas.Top="5" Height="128" Width="407" ImageFailed="NotificationBackground_ImageFailed" />
+            <TextBlock Visibility="Hidden" Name="NotificationText" Canvas.Left="133" Canvas.Top="35" Height="68" Text="You're now watching with Arda!" Width="273" FontSize="26" TextWrapping="Wrap" />
+            <Image Visibility="Hidden" Name="NotificationImage" Canvas.Left="20" Canvas.Top="20" Height="100" Stretch="Fill" Width="97" />
         </Canvas>
     </Canvas>
 </Window>

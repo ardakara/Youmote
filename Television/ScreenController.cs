@@ -24,10 +24,10 @@ namespace YouMote.Television
         private static String PAUSE_FILE = "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE = "Images\\icons\\icon-solid-play.png";
         private static String STANDUP_FILE = "Images\\icons\\icon-solid-standup.png";
-        private static String LEAVE_FILE = "Images\\icons\\icon-solid-leave.png";
-        private static String PHONE_FILE = "Images\\icons\\icon-solid-phone.png";
-        private static String SPEECH_FILE = "Images\\icons\\icon-solid-speech.png";
-        private static String OFF_FILE = "Images\\icons\\icon-solid-off.png";
+        private static String LEAVE_FILE =   "Images\\icons\\icon-solid-leave.png";
+        private static String PHONE_FILE =   "Images\\icons\\icon-solid-phone.png";
+        private static String SPEECH_FILE =   "Images\\icons\\icon-solid-speech.png";
+        private static String OFF_FILE =    "Images\\icons\\icon-solid-off.png";
 
         private static double PAUSE_FADE_OUT_DURATION = 3.0;
         private static double PLAY_FADE_IN_DURATION = 1.0;
@@ -42,6 +42,7 @@ namespace YouMote.Television
         private Image _cornerIcon;
         private Image _swipeIcon;
         private ProgressBar _volumeBar;
+        private TimeSpan _timeToHideVolume;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
 
@@ -166,6 +167,7 @@ namespace YouMote.Television
             this.CurrentMedia = m;
             this._currentMediaElement.Source = this._currentMedia.FileUri;
             this._currentMediaElement.Play();
+            this._cornerIcon.Opacity = 0;
             this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 1, ScreenController.FADE_IN_DURATION));
@@ -253,6 +255,7 @@ namespace YouMote.Television
             this._centerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(1.0, 0, ScreenController.OFF_FADE_OUT_DURATION));
 
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
+            this._cornerIcon.Opacity = 1.0;
             this._cornerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(cornerIconStartOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             return position;
         }
@@ -262,11 +265,20 @@ namespace YouMote.Television
         {
             this._volumeBar.Visibility = Visibility.Visible;
             this._volumeBar.Value = 100*value;
-            
-            // TODO: have a timer, that resets to a certain amount every time volume is updated, when it runs out hide it again
-            // TODO: set volume of media
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            TimeSpan newTime = new TimeSpan(now.Hours, now.Minutes, now.Seconds + 3);
+            this._timeToHideVolume = newTime;
         }
 
+        public void checkVolumeHide()
+        {
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            int timeComparison = now.CompareTo(this._timeToHideVolume);
+            if (timeComparison >= 0)
+            {
+                this._volumeBar.Visibility = Visibility.Hidden;
+            }
+        }
 
         public void startSwipe(SwipeDirection direction)
         {

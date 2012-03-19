@@ -69,16 +69,21 @@ namespace YouMote
         /*Handling volume*/
 
         /* Stuff needed to 'turn on the tv'*/
-        private YouMote.Television.Television _tv;
+        public YouMote.Television.Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
+
+        /*Used for social notifications*/
+        private Canvas _socialNotification;
+        private Image _socialBackground;
+        //private WinRectangle _socialRectangle;
+        private TextBlock _socialTextBlock;
+        private Image _socialImage;
 
         private void addMessages()
         {
             this.messageList.Clear();
-            this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
-            this.messageList.pushMessage(10, 3, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
+            this.messageList.pushMessage(0, 0, "Arda Kara", "You're now watching TV with Arda!", "arda.jpg");
         }
 
 
@@ -89,6 +94,11 @@ namespace YouMote
             this.window = win;
             // repeat for all the messages
             addMessages();
+            this._socialNotification = win.SocialNotification;
+            this._socialBackground = win.NotificationBackground;
+            this._socialTextBlock = win.NotificationText;
+            this._socialImage = win.NotificationImage;
+            
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
 
@@ -127,23 +137,67 @@ namespace YouMote
             }
         }
 
-        private void change_speaker_photo(String image_name)
+        private void set_not_background(String background_name)
         {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             BitmapImage img = new BitmapImage();
             img.BeginInit();
-            img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
+            img.UriSource = new Uri(currentPath + "\\Images\\" + background_name);
             img.EndInit();
+            this._socialBackground.Source = img;
+        }
+
+        private void change_speaker_photo(String image_name)
+        {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri(currentPath + "\\Images\\" + image_name);
+            img.EndInit();
+            this._socialImage.Source = img;
+        }
+
+        public void setNotificationToVisible()
+        {
+            this._socialNotification.Visibility = Visibility.Visible;
+            this._socialImage.Visibility = Visibility.Visible;
+            this._socialTextBlock.Visibility = Visibility.Visible;
+            this._socialBackground.Visibility = Visibility.Visible;
+        }
+
+        public void setNotificationToHidden()
+        {
+            this._socialNotification.Visibility = Visibility.Hidden;
+            this._socialImage.Visibility = Visibility.Hidden;
+            this._socialTextBlock.Visibility = Visibility.Hidden;
+            this._socialBackground.Visibility = Visibility.Hidden;
         }
 
         private void display_message(Message message)
         {
             change_speaker_photo(message.imgFile);
+            set_not_background("box2.png");
+            this._socialTextBlock.Text = message.text;
+            setNotificationToVisible();
+
         }
 
         private void remove_message(Message message)
         {
-
+            setNotificationToHidden();
         }
+
+        /// <summary>
+        /// LEFT MEDIA - left arrow
+        /// RIGHT MEDIA - right arrow
+        /// INCREASE VOLUME - up arrow
+        /// DECREASE VOLUMe - down arrow
+        /// ON - O 
+        /// OFF - P
+        /// PLAY - K 
+        /// PAUSE - L
+        /// </summary>
+        /// <param name="key"></param>
 
         public void processKeys(Key key)
         {
@@ -168,6 +222,52 @@ namespace YouMote
             {
                 this._debugPositionBox.Text = "key = X";
                 this._tv.turnOff();
+            }
+            else if (key == Key.Up)
+            {
+                // increase Volume
+                this._tv.Volume += 0.1;
+            }
+
+            else if (key == Key.Down)
+            {
+                // decrease Volume
+                this._tv.Volume -= 0.1;
+            }
+
+            else if (key == Key.Left)
+            {
+                // increase Volume
+                this._tv.moveMediaToLeft();
+
+            }
+
+            else if (key == Key.Right)
+            {
+                // increase Volume
+                this._tv.moveMediaToRight();
+            }
+            else if (key == Key.P)
+            {
+                // increase Volume
+                this._tv.turnOff();
+
+            }
+
+            else if (key == Key.O)
+            {
+                // increase Volume
+                this._tv.turnOn();
+            }
+            else if (key == Key.K)
+            {
+                // increase Volume
+                this._tv.play();
+            }
+            else if (key == Key.L)
+            {
+                // increase Volume
+                this._tv.pause();
             }
 
         }
@@ -194,7 +294,7 @@ namespace YouMote
         {
             this._isHelpMenu = true;
             window.DebugPositionTextBox.Text = "HELP MODE";
-            if (!(this._tv.Channels == null || this._tv.Channels.Count==0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count == 0))
             {
                 this._tv.pause(ScreenController.PauseReason.HELP);
             }
@@ -269,7 +369,7 @@ namespace YouMote
 
             //window.DebugSpeechTextBox.Text = this._isHelpMenu.ToString();
 
-            
+
 
             if (this._isHelpMenu)
             {
@@ -402,24 +502,6 @@ namespace YouMote
                     }
 
                 }
-
-
-                /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
-                if (!barycenterHelper.IsStable(skeleton.TrackingId))
-                    return;
-
-                foreach (Joint joint in skeleton.Joints)
-                {
-                    if (joint.TrackingState != JointTrackingState.Tracked)
-                        continue;
-
-                    if (joint.JointType == JointType.HandRight)
-                    {
-                        swipeGestureRecognizer.Add(joint.Position, nui);
-                    }
-                }
-
-                algorithmicPostureRecognizer.TrackPostures(skeleton);*/
             }
 
         }
@@ -478,7 +560,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-
+            this._tv._screenController.checkVolumeHide();
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)
@@ -538,7 +620,7 @@ namespace YouMote
                     {
                         this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
                     }
-                    else if (leftSwipeState != null && 
+                    else if (leftSwipeState != null &&
                             (leftSwipeState.Pos == SwipePosition.START ||
                              leftSwipeState.Pos == SwipePosition.MOVING))
                     {
@@ -550,7 +632,7 @@ namespace YouMote
                 detectChannelChangingScenarios(skeleton, nui);
                 detectVolumeChangingScenarios(skeleton);
 
-                List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
+                List<Message> readyMessages = this.messageList.popReadyMessages(2/*sw.Elapsed.TotalSeconds*/);
                 foreach (Message message in readyMessages)
                 {
                     display_message(message);
@@ -564,16 +646,6 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-
-                this.ambiHandWaveDetector.processSkeleton(skeleton);
-                Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
-                if (hasWaved && wave_sw.ElapsedMilliseconds > 1500)
-                {
-                    this._debugGestureBox.Text = "OFF-has waved";
-                    this._tv.turnOff();
-                    wave_sw.Reset();
-                    wave_sw.Start();
-                }
                 Boolean manualOverrideOff = speechOffOverrideDetector.isScenarioDetected();
                 if (manualOverrideOff)
                 {

@@ -182,6 +182,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Client\app.config" />
+    <None Include="Images\arrow.psd" />
+    <None Include="Images\icons\icon-glossy-leave.psd" />
+    <None Include="Images\icons\icons.psd" />
+    <None Include="Images\icons\tv-screen.psd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -254,6 +258,32 @@
   <ItemGroup>
     <Resource Include="Images\arrow-left.png" />
     <Resource Include="Images\arrow-right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\arda.png" />
+    <Resource Include="Images\icons\icon-glossy-leave.png" />
+    <Resource Include="Images\icons\icon-glossy-pause.png" />
+    <Resource Include="Images\icons\icon-glossy-phone.png" />
+    <Resource Include="Images\icons\icon-glossy-play.png" />
+    <Resource Include="Images\icons\icon-glossy-standup.png" />
+    <Resource Include="Images\icons\icon-solid-leave.png" />
+    <Resource Include="Images\icons\icon-solid-off.png" />
+    <Resource Include="Images\icons\icon-solid-pause.png" />
+    <Resource Include="Images\icons\icon-solid-phone.png" />
+    <Resource Include="Images\icons\icon-solid-play.png" />
+    <Resource Include="Images\icons\icon-solid-speech.png" />
+    <Resource Include="Images\icons\icon-solid-standup.png" />
+    <Resource Include="Images\icons\tv-screen-glossy-center.png" />
+    <Resource Include="Images\icons\tv-screen-glossy-corner.png" />
+    <Resource Include="Images\icons\tv-screen-solid-center.png" />
+    <Resource Include="Images\icons\tv-screen-solid-corner.png" />
+    <Resource Include="Images\icons\tv-screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\box2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\arda.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
