@@ -23,8 +23,9 @@ namespace YouMote
     using System.Windows.Navigation;
     using System.Windows.Shapes;
     using Microsoft.Kinect;
-    using Coding4Fun.Kinect.Wpf;
 
+    using Coding4Fun.Kinect.Wpf;
+    using Coding4Fun.Kinect.Wpf;
     using System.Threading;
     using Microsoft.Speech.AudioFormat;
     using Microsoft.Speech.Recognition;
@@ -88,7 +89,7 @@ namespace YouMote
             {
                 //use first Kinect
                 nui = KinectSensor.KinectSensors[0];
-                  
+
                 //Initialize to do skeletal tracking
                 nui.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                 nui.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
@@ -238,11 +239,20 @@ namespace YouMote
                     youmoteController.showHelp();
                 }
             }
+            else if (e.Key == Key.D4)
+            {
+                nui.ElevationAngle = nui.ElevationAngle = -15;
+            }
+            else if (e.Key == Key.D5)
+            {
+                nui.ElevationAngle = nui.ElevationAngle = 15;
+            }
 
             else if (youmoteController != null)
             {
                 youmoteController.processKeys(e.Key);
             }
+
         }
     }
 }
