@@ -20,7 +20,7 @@
         <Image Name="CenterIcon" Width="512" Height="512" />
         <Image Name="CornerIcon" Width="128" Height="128" Canvas.Right="20" Canvas.Top="20" />
         <Image Canvas.Left="615" Canvas.Top="624" Height="84" Name="SwipeIcon" Width="138" Visibility="Hidden" IsEnabled="True"/>
-        <ProgressBar Canvas.Right="60" Canvas.Bottom="200" Height="500" Name="VolumeBar" Width="50" Value="50" Orientation="Vertical" Visibility="Hidden" />
+        <ProgressBar Canvas.Right="60" Canvas.Bottom="200" Height="500" Name="VolumeBar" Width="40" Value="50" Orientation="Vertical" Visibility="Hidden" />
         <Canvas Name="SkeletonCanvas" Canvas.Top="100" Canvas.Left="0">
             <Ellipse Canvas.Left="270" Canvas.Top="126" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
             <Ellipse Canvas.Left="384" Canvas.Top="253" Height="35" Name="rightEllipse" Stroke="Black" Width="35" Fill="Blue" />

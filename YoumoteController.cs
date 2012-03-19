@@ -177,7 +177,14 @@ namespace YouMote
                 this._debugPositionBox.Text = "key = X";
                 this._tv.turnOff();
             }
-
+            else if (key == Key.Up)
+            {
+                this._tv.Volume = this._tv.Volume + 0.1;
+            }
+            else if (key == Key.Down)
+            {
+                this._tv.Volume = this._tv.Volume - 0.1;
+            }
         }
 
         private void manualPauseResume(Boolean pause)
@@ -482,7 +489,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-
+            this._tv._screenController.checkVolumeHide();
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)
