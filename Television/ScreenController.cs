@@ -147,14 +147,17 @@ namespace YouMote.Television
             if (volume < 0)
             {
                 this._currentMediaElement.Volume = 0;
+                this.setVolumeBar(0);
             }
             else if (volume > 1.0)
             {
-                this._currentMediaElement.Volume = 0;
+                this._currentMediaElement.Volume = 1.0;
+                this.setVolumeBar(1);
             }
             else
             {
                 this._currentMediaElement.Volume = volume;
+                this.setVolumeBar(volume);
             }
         }
 
@@ -254,10 +257,11 @@ namespace YouMote.Television
         }
 
         // between 0 - 100
-        public void setVolumeBar(int value)
+        public void setVolumeBar(double value)
         {
             this._volumeBar.Visibility = Visibility.Visible;
-            this._volumeBar.Value = value;
+            this._volumeBar.Value = 100*value;
+            
             // TODO: have a timer, that resets to a certain amount every time volume is updated, when it runs out hide it again
             // TODO: set volume of media
         }
