@@ -202,9 +202,9 @@ namespace YouMote
         {
             this._isHelpMenu = true;
             window.DebugPositionTextBox.Text = "HELP MODE";
-            if (!(this._tv.Channels != null || this._tv.Channels.Count==0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count==0))
             {
-                this._tv.pause();
+                this._tv.pause(ScreenController.PauseReason.HELP);
             }
             window.HelpScreen.Visibility = Visibility.Visible;
             window.Help1.Play();
