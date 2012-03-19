@@ -100,7 +100,7 @@ namespace YouMote
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SetupKinect();
+//            SetupKinect();
         }
 
         private void SetupKinect()
