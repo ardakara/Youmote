@@ -275,7 +275,6 @@ namespace YouMote.Television
             else if (direction == SwipeDirection.RIGHT)
             {
                 Canvas.SetLeft(this._swipeIcon, 0);
-                Console.Write("Here");
             }
             Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
         }

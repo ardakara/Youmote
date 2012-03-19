@@ -241,7 +241,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D4)
             {
-                nui.ElevationAngle = 25;
+                nui.ElevationAngle = 10;
                 Console.WriteLine(nui.ElevationAngle);
             }
             else if (e.Key == Key.D5)

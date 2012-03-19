@@ -525,19 +525,26 @@ namespace YouMote
                     {
                         this._tv._screenController.abortSwipe();
                     }
-                    else
+                    else if (leftSwipeState.Pos == SwipePosition.MOVING)
+                    {
+                        this._tv._screenController.updateSwipe(lSwipeDetector.getSwipePosition(), lSwipeDetector.getSwipeDirection());
+                    }
+                    else if (rightSwipeState.Pos == SwipePosition.MOVING)
                     {
                         this._tv._screenController.updateSwipe(rSwipeDetector.getSwipePosition(), rSwipeDetector.getSwipeDirection());
                     }
                 }
                 else
                 {
-                    if ((leftSwipeState != null && 
-                       (leftSwipeState.Pos == SwipePosition.START ||
-                        leftSwipeState.Pos == SwipePosition.MOVING)) ||
-                       (rightSwipeState != null && 
+                    if (rightSwipeState != null &&
                        (rightSwipeState.Pos == SwipePosition.START ||
-                        rightSwipeState.Pos == SwipePosition.MOVING)))
+                        rightSwipeState.Pos == SwipePosition.MOVING))
+                    {
+                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
+                    }
+                    else if (leftSwipeState != null && 
+                            (leftSwipeState.Pos == SwipePosition.START ||
+                             leftSwipeState.Pos == SwipePosition.MOVING))
                     {
                         this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
                     }
