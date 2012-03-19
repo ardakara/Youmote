@@ -69,7 +69,7 @@ namespace YouMote
         /*Handling volume*/
 
         /* Stuff needed to 'turn on the tv'*/
-        private YouMote.Television.Television _tv;
+        public YouMote.Television.Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
@@ -145,6 +145,18 @@ namespace YouMote
 
         }
 
+        /// <summary>
+        /// LEFT MEDIA - left arrow
+        /// RIGHT MEDIA - right arrow
+        /// INCREASE VOLUME - up arrow
+        /// DECREASE VOLUMe - down arrow
+        /// ON - O 
+        /// OFF - P
+        /// PLAY - K 
+        /// PAUSE - L
+        /// </summary>
+        /// <param name="key"></param>
+
         public void processKeys(Key key)
         {
             if (key == Key.A)   //pause
@@ -169,6 +181,54 @@ namespace YouMote
                 this._debugPositionBox.Text = "key = X";
                 this._tv.turnOff();
             }
+            else if (key == Key.Up)
+            {
+                // increase Volume
+                this._tv.Volume += 0.1;
+            }
+
+            else if (key == Key.Down)
+            {
+                // decrease Volume
+                this._tv.Volume -= 0.1;
+            }
+
+            else if (key == Key.Left)
+            {
+                // increase Volume
+                this._tv.moveMediaToLeft();
+
+            }
+
+            else if (key == Key.Right)
+            {
+                // increase Volume
+                this._tv.moveMediaToRight();
+            }
+            else if (key == Key.P)
+            {
+                // increase Volume
+                this._tv.turnOff();
+
+            }
+
+            else if (key == Key.O)
+            {
+                // increase Volume
+                this._tv.turnOn();
+            }
+            else if (key == Key.K)
+            {
+                // increase Volume
+                this._tv.play();
+            }
+            else if (key == Key.L)
+            {
+                // increase Volume
+                this._tv.pause();
+            }
+
+
 
         }
 
@@ -194,7 +254,7 @@ namespace YouMote
         {
             this._isHelpMenu = true;
             window.DebugPositionTextBox.Text = "HELP MODE";
-            if (!(this._tv.Channels == null || this._tv.Channels.Count==0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count == 0))
             {
                 this._tv.pause(ScreenController.PauseReason.HELP);
             }
@@ -269,7 +329,7 @@ namespace YouMote
 
             //window.DebugSpeechTextBox.Text = this._isHelpMenu.ToString();
 
-            
+
 
             if (this._isHelpMenu)
             {
@@ -538,7 +598,7 @@ namespace YouMote
                     {
                         this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
                     }
-                    else if (leftSwipeState != null && 
+                    else if (leftSwipeState != null &&
                             (leftSwipeState.Pos == SwipePosition.START ||
                              leftSwipeState.Pos == SwipePosition.MOVING))
                     {

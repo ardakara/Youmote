@@ -166,6 +166,7 @@ namespace YouMote.Television
             this.CurrentMedia = m;
             this._currentMediaElement.Source = this._currentMedia.FileUri;
             this._currentMediaElement.Play();
+            this._cornerIcon.Opacity = 0;
             this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 1, ScreenController.FADE_IN_DURATION));

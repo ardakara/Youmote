@@ -100,7 +100,7 @@ namespace YouMote
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-//            SetupKinect();
+            SetupKinect();
         }
 
         private void SetupKinect()
@@ -253,7 +253,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D3)
             {
-                
+
                 if (youmoteController.isHelpMenu)
                 {
                     youmoteController.hideHelp();
