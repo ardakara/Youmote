@@ -10,12 +10,19 @@
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual" />
         </Canvas>
         <Canvas Name="HelpScreen" Canvas.Left="50" Canvas.Top="50" Height="550" Width="1350" Background="White" Visibility="Hidden">
-            <TextBox Name="HelpTextBox" Text="This is the help screen. To \n exit, please say EXIT HELP" Canvas.Left="50" Canvas.Top="50" Height="200" Width="350" FontSize="30" Background="White"/>
-            <MediaElement Name="Help1"  LoadedBehavior="Manual" Canvas.Left="850" Canvas.Top="300" Height="200" Width="350"/>
+            <TextBox Name="HelpTextBox" Text="This is the help screen. To exit, please say EXIT HELP" Canvas.Left="50" Canvas.Top="0" Height="50" Width="1200" FontSize="30" Background="White" FontWeight="Bold" />
+            <MediaElement Name="Help1"  LoadedBehavior="Manual" Canvas.Left="50" Canvas.Top="50" Height="200" Width="350"/>
+            <TextBox Name="Help1TextBox" Text="Say TV on!" Canvas.Left="50" Canvas.Top="250" Height="50" Width="350" FontSize="30"/>
             <MediaElement Name="Help2"  LoadedBehavior="Manual" Canvas.Left="450" Canvas.Top="50" Height="200" Width="350"/>
+            <TextBox Name="Help2TextBox" Text="Say TV pause!" Canvas.Left="450" Canvas.Top="250" Height="50" Width="350" FontSize="30"/>
             <MediaElement Name="Help3"  LoadedBehavior="Manual" Canvas.Left="850" Canvas.Top="50" Height="200" Width="350"/>
+            <TextBox Name="Help3TextBox" Text="Say TV play!" Canvas.Left="850" Canvas.Top="250" Height="50" Width="350" FontSize="30"/>
             <MediaElement Name="Help4"  LoadedBehavior="Manual" Canvas.Left="50" Canvas.Top="300" Height="200" Width="350"/>
+            <TextBox Name="Help4TextBox" Text="Volume Control!" Canvas.Left="50" Canvas.Top="500" Height="50" Width="350" FontSize="30"/>
             <MediaElement Name="Help5"  LoadedBehavior="Manual" Canvas.Left="450" Canvas.Top="300" Height="200" Width="350"/>
+            <TextBox Name="Help5TextBox" Text="Turn on TV by waving!" Canvas.Left="450" Canvas.Top="500" Height="50" Width="350" FontSize="30"/>
+            <MediaElement Name="Help6"  LoadedBehavior="Manual" Canvas.Left="850" Canvas.Top="300" Height="200" Width="350"/>
+            <TextBox Name="Help6TextBox" Text="Change Channels!" Canvas.Left="850" Canvas.Top="500" Height="50" Width="350" FontSize="30"/>
         </Canvas>
         <TextBox Name="DebugGestureTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="36" Background="White" Visibility="Hidden" />
         <TextBox Name="DebugSpeechTextBox" Canvas.Left="0" Text="speech" Canvas.Top="100" Height="88" Width="366" FontSize="20" Background="White" Visibility="Hidden" />

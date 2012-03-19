@@ -52,11 +52,13 @@ namespace YouMote
             this.Help3.Loaded += new RoutedEventHandler(helpLoaded);
             this.Help4.Loaded += new RoutedEventHandler(helpLoaded);
             this.Help5.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help6.Loaded += new RoutedEventHandler(helpLoaded);
             this.Help1.MediaEnded += this.handleMediaEnded;
             this.Help2.MediaEnded += this.handleMediaEnded;
             this.Help3.MediaEnded += this.handleMediaEnded;
             this.Help4.MediaEnded += this.handleMediaEnded;
             this.Help5.MediaEnded += this.handleMediaEnded;
+            this.Help6.MediaEnded += this.handleMediaEnded;
         }
 
         void handleMediaEnded(object sender, EventArgs e)
@@ -68,7 +70,8 @@ namespace YouMote
         }
         int helpVideoIdx = 0;
         String[] helpVideoPaths = { "\\Video\\help-tv-on.mp4", "\\Video\\help-tv-pause.mp4", "\\Video\\help-tv-play.mp4",
-                                  "\\Video\\help-volume-gesture.mp4", "\\Video\\help-wave-gesture.mp4"};
+                                  "\\Video\\help-volume-gesture.mp4", "\\Video\\help-wave-gesture.mp4"
+                                  ,"\\Video\\help-swipe-gesture.mp4"};
 
 
         private void helpLoaded(object sender, RoutedEventArgs e)

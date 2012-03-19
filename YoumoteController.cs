@@ -305,6 +305,7 @@ namespace YouMote
             window.Help3.Play();
             window.Help4.Play();
             window.Help5.Play();
+            window.Help6.Play();
         }
 
         public void hideHelp()
@@ -322,6 +323,7 @@ namespace YouMote
             window.Help3.Pause();
             window.Help4.Pause();
             window.Help5.Pause();
+            window.Help6.Pause();
         }
 
         public Boolean isHelpMenu
