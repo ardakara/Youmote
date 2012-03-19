@@ -50,11 +50,13 @@ namespace YouMote
             this.Help1.Loaded += new RoutedEventHandler(helpLoaded);
             this.Help2.Loaded += new RoutedEventHandler(helpLoaded);
             this.Help3.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help4.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help5.Loaded += new RoutedEventHandler(helpLoaded);
         }
 
         int helpVideoIdx = 0;
-        String[] helpVideoPaths = { "Video\\help-tv-on.mp4", "Video\\help-tv-pause.mp4", "Video\\help-tv-play.mp4",
-                                  "Video\\help-volume-gesture.mp4", "Video\\help-wave-gesture.mp4"};
+        String[] helpVideoPaths = { "\\Video\\help-tv-on.mp4", "\\Video\\help-tv-pause.mp4", "\\Video\\help-tv-play.mp4",
+                                  "\\Video\\help-volume-gesture.mp4", "\\Video\\help-wave-gesture.mp4"};
 
 
         private void helpLoaded(object sender, RoutedEventArgs e)
@@ -300,7 +302,6 @@ namespace YouMote
             {
                 youmoteController.processKeys(e.Key);
             }
-
         }
     }
 }
