@@ -42,8 +42,33 @@ namespace YouMote
             //YouMote.Client.Client.test();
             InitializeComponent();
             showDebug();
+            loadHelpSources();
         }
 
+        void loadHelpSources()
+        {
+            this.Help1.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help2.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help3.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help4.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help5.Loaded += new RoutedEventHandler(helpLoaded);
+        }
+
+        int helpVideoIdx = 0;
+        String[] helpVideoPaths = { "\\Video\\help-tv-on.mp4", "\\Video\\help-tv-pause.mp4", "\\Video\\help-tv-play.mp4",
+                                  "\\Video\\help-volume-gesture.mp4", "\\Video\\help-wave-gesture.mp4"};
+
+
+        private void helpLoaded(object sender, RoutedEventArgs e)
+        {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            MediaElement me = (MediaElement)(sender);
+            if (me.Source == null)
+            {
+                me.Source = new Uri(currentPath + helpVideoPaths[helpVideoIdx]);
+                helpVideoIdx++;
+            }
+        }
         //Kinect Sensor
         KinectSensor nui;
 
@@ -75,7 +100,7 @@ namespace YouMote
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            SetupKinect();
+//            SetupKinect();
         }
 
         private void SetupKinect()
@@ -116,7 +141,6 @@ namespace YouMote
                 //add event to receive skeleton data
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
-                youmoteController.hideHelp();
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
             }
         }
@@ -278,7 +302,6 @@ namespace YouMote
             {
                 youmoteController.processKeys(e.Key);
             }
-
         }
     }
 }
