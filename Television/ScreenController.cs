@@ -27,7 +27,7 @@ namespace YouMote.Television
         private static String LEAVE_FILE =   "Images\\icons\\icon-solid-leave.png";
         private static String PHONE_FILE =   "Images\\icons\\icon-solid-phone.png";
         private static String SPEECH_FILE =   "Images\\icons\\icon-solid-speech.png";
-        //private static String OFF_FILE =    "Images\\icons\\icon-solid-off.png";
+        private static String OFF_FILE =    "Images\\icons\\icon-solid-off.png";
 
         private static double PAUSE_FADE_OUT_DURATION = 3.0;
         private static double PLAY_FADE_IN_DURATION = 1.0;
@@ -245,6 +245,7 @@ namespace YouMote.Television
             double position = this.pause(PauseReason.LEAVE);
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
+            this._cornerIcon.Opacity = 1.0;
             return position;
         }
 

@@ -73,12 +73,19 @@ namespace YouMote
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
+        /*Used for social notifications*/
+        private Canvas _socialNotification;
+        private Image _socialBackground;
+        //private WinRectangle _socialRectangle;
+        private TextBlock _socialTextBlock;
+        private Image _socialImage;
+
         private void addMessages()
         {
             this.messageList.Clear();
             this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
             this.messageList.pushMessage(10, 3, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(1, 3, "TV Ninja", "You're watching with Jeff H.!", "tv_logo.png");
+            this.messageList.pushMessage(0, 0.1, "Arda Kara", "You're now watching TV with Arda!", "arda.jpg");
         }
 
 
@@ -89,6 +96,11 @@ namespace YouMote
             this.window = win;
             // repeat for all the messages
             addMessages();
+            this._socialNotification = win.SocialNotification;
+            this._socialBackground = win.NotificationBackground;
+            this._socialTextBlock = win.NotificationText;
+            this._socialImage = win.NotificationImage;
+            
             this._debugPositionBox = win.DebugPositionTextBox;
             this._debugGestureBox = win.DebugGestureTextBox;
 
@@ -135,22 +147,54 @@ namespace YouMote
             }
         }
 
-        private void change_speaker_photo(String image_name)
+        private void set_not_background(String background_name)
         {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
             BitmapImage img = new BitmapImage();
             img.BeginInit();
-            img.UriSource = new Uri("pack://application:,,/Images/" + image_name);
+            img.UriSource = new Uri(currentPath + "\\Images\\" + background_name);
             img.EndInit();
+            this._socialBackground.Source = img;
+        }
+
+        private void change_speaker_photo(String image_name)
+        {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            BitmapImage img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri(currentPath + "\\Images\\" + image_name);
+            img.EndInit();
+            this._socialImage.Source = img;
+        }
+
+        public void setNotificationToVisible()
+        {
+            this._socialNotification.Visibility = Visibility.Visible;
+            this._socialImage.Visibility = Visibility.Visible;
+            this._socialTextBlock.Visibility = Visibility.Visible;
+            this._socialBackground.Visibility = Visibility.Visible;
+        }
+
+        public void setNotificationToHidden()
+        {
+            this._socialNotification.Visibility = Visibility.Hidden;
+            this._socialImage.Visibility = Visibility.Hidden;
+            this._socialTextBlock.Visibility = Visibility.Hidden;
+            this._socialBackground.Visibility = Visibility.Hidden;
         }
 
         private void display_message(Message message)
         {
             change_speaker_photo(message.imgFile);
+            set_not_background("box2.png");
+            this._socialTextBlock.Text = message.text;
+            setNotificationToVisible();
+
         }
 
         private void remove_message(Message message)
         {
-
+            setNotificationToHidden();
         }
 
         public void processKeys(Key key)
@@ -406,24 +450,6 @@ namespace YouMote
                     }
 
                 }
-
-
-                /*barycenterHelper.Add(skeleton.Position.ToVector3(), skeleton.TrackingId);
-                if (!barycenterHelper.IsStable(skeleton.TrackingId))
-                    return;
-
-                foreach (Joint joint in skeleton.Joints)
-                {
-                    if (joint.TrackingState != JointTrackingState.Tracked)
-                        continue;
-
-                    if (joint.JointType == JointType.HandRight)
-                    {
-                        swipeGestureRecognizer.Add(joint.Position, nui);
-                    }
-                }
-
-                algorithmicPostureRecognizer.TrackPostures(skeleton);*/
             }
 
         }
@@ -547,7 +573,7 @@ namespace YouMote
                 detectChannelChangingScenarios(skeleton, nui);
                 detectVolumeChangingScenarios(skeleton);
 
-                List<Message> readyMessages = this.messageList.popReadyMessages(sw.Elapsed.TotalSeconds);
+                List<Message> readyMessages = this.messageList.popReadyMessages(2/*sw.Elapsed.TotalSeconds*/);
                 foreach (Message message in readyMessages)
                 {
                     display_message(message);
@@ -561,16 +587,6 @@ namespace YouMote
                     message.stopMessageTimer();
                 }
 
-
-                this.ambiHandWaveDetector.processSkeleton(skeleton);
-                Boolean hasWaved = this.ambiHandWaveDetector.isScenarioDetected();
-                if (hasWaved && wave_sw.ElapsedMilliseconds > 1500)
-                {
-                    this._debugGestureBox.Text = "OFF-has waved";
-                    this._tv.turnOff();
-                    wave_sw.Reset();
-                    wave_sw.Start();
-                }
                 Boolean manualOverrideOff = speechOffOverrideDetector.isScenarioDetected();
                 if (manualOverrideOff)
                 {
