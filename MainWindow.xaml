@@ -10,9 +10,9 @@
             <MediaElement Name="mediaElement2"  LoadedBehavior="Manual" />
         </Canvas>
         <Canvas Name="HelpScreen" Canvas.Left="576" Canvas.Top="177" Height="441" Width="819" Background="White" Visibility="Hidden">
-            <MediaElement Name="Help1"  LoadedBehavior="Manual" Canvas.Left="61" Canvas.Top="64" />
-            <MediaElement Name="Help2"  LoadedBehavior="Manual" Canvas.Left="344" Canvas.Top="78" />
-            <MediaElement Name="Help3"  LoadedBehavior="Manual" Canvas.Left="599" Canvas.Top="111" />
+            <MediaElement Name="Help1"  LoadedBehavior="Manual" Canvas.Left="576" Canvas.Top="177" /> <!--Source="C:\\Users\\Kenny\\CS247\\Youmote\\Video\\help-tv-on.mp4" /> -->
+            <MediaElement Name="Help2"  LoadedBehavior="Manual" Canvas.Left="800" Canvas.Top="177" />
+            <MediaElement Name="Help3"  LoadedBehavior="Manual" Canvas.Left="1000" Canvas.Top="177" />
         </Canvas>
         <TextBox Name="DebugGestureTextBox" Canvas.Left="0" Text="hello" Canvas.Top="0" Height="88" Width="366" FontSize="36" Background="White" Visibility="Hidden" />
         <TextBox Name="DebugSpeechTextBox" Canvas.Left="0" Text="speech" Canvas.Top="100" Height="88" Width="366" FontSize="20" Background="White" Visibility="Hidden" />

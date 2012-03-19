@@ -108,15 +108,15 @@ namespace YouMote
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
             speechHelpOverrideDetector = new SpeechHelpOverrideDetector(win);
             speechExitHelpDetector = new SpeechExitHelpDetector(win);
-            setUpHelpVideos();
+            //setUpHelpVideos();
         }
 
         void setUpHelpVideos()
         {
             String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            window.Help1.Source = new Uri(currentPath + "\\help-tv-on.mp4");
-            window.Help2.Source = new Uri(currentPath + "\\help-swipe-gesture.mp4");
-            window.Help3.Source = new Uri(currentPath + "\\help-tv-pause.mp4");
+            window.Help1.Source = new Uri(currentPath + "\\Video\\help-tv-on.mp4");
+            window.Help2.Source = new Uri(currentPath + "\\Video\\help-swipe-gesture.mp4");
+            window.Help3.Source = new Uri(currentPath + "\\Video\\help-tv-pause.mp4");
         }
 
         void OnGestureDetected(string gesture)
@@ -207,6 +207,7 @@ namespace YouMote
                 this._tv.pause(ScreenController.PauseReason.HELP);
             }
             window.HelpScreen.Visibility = Visibility.Visible;
+            window.Help1.Visibility = Visibility.Visible;
             window.Help1.Play();
             window.Help2.Play();
             window.Help3.Play();
@@ -216,7 +217,7 @@ namespace YouMote
         public void hideHelp()
         {
             this._isHelpMenu = false;
-            if (!(this._tv.Channels != null || this._tv.Channels.Count == 0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count == 0))
             {
                 //pause help video
                 this._tv.play();
