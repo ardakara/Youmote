@@ -106,6 +106,17 @@ namespace YouMote.Detectors
                 if (this._direction.Equals(SwipeDirection.RIGHT))
                 {
                     finishAngle = RIGHT_SWIPE_FINISH_ANGLE;
+                    if (curAngle < startAngle)
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    if (curAngle > startAngle)
+                    {
+                        return 0;
+                    }
                 }
 
                 double percentComplete = Math.Abs(curAngle - startAngle) / Math.Abs(finishAngle - startAngle);
