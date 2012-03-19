@@ -40,7 +40,7 @@ namespace YouMote.Television
         private double screenHeight;
         private Image _centerIcon;
         private Image _cornerIcon;
-        private Button _swipeIcon;
+        private Image _swipeIcon;
         private ProgressBar _volumeBar;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
@@ -283,11 +283,9 @@ namespace YouMote.Television
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    ImageBrush newBrush = new ImageBrush();
-                    newBrush.ImageSource = new BitmapImage(
+                    this._swipeIcon.Source = new BitmapImage(
                         new Uri("../../Images/arrow-left.png", UriKind.Relative)
                     );
-                    this._swipeIcon.Background = newBrush;
                 }
             }
             else if (direction == SwipeDirection.RIGHT)
@@ -297,11 +295,9 @@ namespace YouMote.Television
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    ImageBrush newBrush = new ImageBrush();
-                    newBrush.ImageSource = new BitmapImage(
-                        new Uri("../../Images/arrow-right.png", UriKind.Relative)
+                    this._swipeIcon.Source = new BitmapImage(
+                        new Uri("../../Images/arrow-left.png", UriKind.Relative)
                     );
-                    this._swipeIcon.Background = newBrush;
                 }
             }
 
