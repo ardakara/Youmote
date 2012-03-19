@@ -301,10 +301,10 @@ namespace YouMote
             window.HelpScreen.Visibility = Visibility.Visible;
             window.Help1.Visibility = Visibility.Visible;
             window.Help1.Play();
-//            window.Help2.Play();
-//            window.Help3.Play();
-//            window.Help4.Play();
- //           window.Help5.Play();
+            window.Help2.Play();
+            window.Help3.Play();
+            window.Help4.Play();
+            window.Help5.Play();
         }
 
         public void hideHelp()
@@ -318,10 +318,10 @@ namespace YouMote
             window.DebugPositionTextBox.Text = "HELP EXIT";
             window.HelpScreen.Visibility = Visibility.Hidden;
             window.Help1.Pause();
-//            window.Help2.Pause();
-//            window.Help3.Pause();
-//            window.Help4.Pause();
-//            window.Help5.Pause();
+            window.Help2.Pause();
+            window.Help3.Pause();
+            window.Help4.Pause();
+            window.Help5.Pause();
         }
 
         public Boolean isHelpMenu
