@@ -242,11 +242,11 @@ namespace YouMote
             }
             else if (e.Key == Key.D4)
             {
-                nui.ElevationAngle = nui.ElevationAngle = -15;
+                nui.ElevationAngle = nui.ElevationAngle = 01;
             }
             else if (e.Key == Key.D5)
             {
-                nui.ElevationAngle = nui.ElevationAngle = 15;
+                nui.ElevationAngle = nui.ElevationAngle = 25;
             }
 
             else if (youmoteController != null)
