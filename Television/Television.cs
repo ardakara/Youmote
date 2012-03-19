@@ -126,13 +126,27 @@ namespace YouMote.Television
             this.BaseVolume = this._volume;
         }
 
+        public double getCurrentChannelPosition()
+        {
+            Channel c = this.getCurrentChannel();
+            if (c == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return this.computeMediaTime(c.Media);
+            }
+
+        }
+
         public void changeVolume(double factor)
         {
             double secondsSinceLastTick = DateTime.Now.Subtract(this._lastVolumeTick).Seconds;
-            if (Math.Abs(factor) >= 1 && secondsSinceLastTick > 1.0)
+            if (Math.Abs(factor) >= 1 && secondsSinceLastTick > 0.3)
             {
-                this.BaseVolume = this._baseVolume + factor*VOLUME_INCREMENT;
-                this.Volume = this._volume + factor*VOLUME_INCREMENT;
+                this.BaseVolume = this._baseVolume + factor * VOLUME_INCREMENT;
+                this.Volume = this._volume + factor * VOLUME_INCREMENT;
             }
             else
             {
@@ -216,8 +230,11 @@ namespace YouMote.Television
             if (this.IsOn)
             {
                 this._stopWatch.Stop();
-                ScreenController.PauseReason reason = ScreenController.PauseReason.STANDUP;
-                this.pause(reason);
+
+                Channel curChannel = this.getCurrentChannel();
+                this._cachedMedia = curChannel.Media;
+                this._cachedMedia.CurrentTime = this._screenController.getCurrentMediaPosition();
+                this._cachedMediaIndex = this._currentChannelIndex;
                 this._isOn = false;
                 this.IsPaused = true;
                 this._screenController.turnOff();

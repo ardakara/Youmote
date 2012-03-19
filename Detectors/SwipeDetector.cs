@@ -85,12 +85,7 @@ namespace YouMote.Detectors
             double angle = xUnitVector.calculateAngle(shoulderToEndpoint);
             return angle;
         }
-        /// <summary>
-        /// returns a number -1.0 to 1.0
-        /// positive number means right swipe
-        /// negative number means left swipe
-        /// </summary>
-        /// <returns></returns>
+
         public double getSwipePosition()
         {
             SwipeState curState = this.getCurrentState();
@@ -106,6 +101,17 @@ namespace YouMote.Detectors
                 if (this._direction.Equals(SwipeDirection.RIGHT))
                 {
                     finishAngle = RIGHT_SWIPE_FINISH_ANGLE;
+                    if (curAngle < startAngle)
+                    {
+                        return 0;
+                    }
+                }
+                else
+                {
+                    if (curAngle > startAngle)
+                    {
+                        return 0;
+                    }
                 }
 
                 double percentComplete = Math.Abs(curAngle - startAngle) / Math.Abs(finishAngle - startAngle);

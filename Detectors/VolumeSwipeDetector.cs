@@ -20,7 +20,7 @@ namespace YouMote.Detectors
         protected static Point3D X_UNIT_VECTOR = new Point3D(1, 0, 0);
         protected static Point3D Y_UNIT_VECTOR = new Point3D(0, 1, 0);
         protected static Point3D Z_UNIT_VECTOR = new Point3D(0, 0, 1);
-        protected static double SWIPE_FINISH_ANGLE = 20;
+        protected static double SWIPE_FINISH_ANGLE = 30;
 
         protected abstract double LEFT_SWIPE_ZONE_ANGLE { get; }
         protected abstract double RIGHT_SWIPE_ZONE_ANGLE { get; }
