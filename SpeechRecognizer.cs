@@ -78,6 +78,7 @@ namespace YouMote.Speech
             grammar.Add("TV off");
             grammar.Add("TV help");
             grammar.Add("exit help");
+            grammar.Add("TV on");
 
             var gb = new GrammarBuilder { Culture = speechRecognitionEngine.RecognizerInfo.Culture };
             gb.Append(grammar);

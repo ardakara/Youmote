@@ -42,6 +42,7 @@ namespace YouMote.Television
         private Image _cornerIcon;
         private Image _swipeIcon;
         private ProgressBar _volumeBar;
+        private TimeSpan _timeToHideVolume;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
 
@@ -263,11 +264,20 @@ namespace YouMote.Television
         {
             this._volumeBar.Visibility = Visibility.Visible;
             this._volumeBar.Value = 100*value;
-            
-            // TODO: have a timer, that resets to a certain amount every time volume is updated, when it runs out hide it again
-            // TODO: set volume of media
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            TimeSpan newTime = new TimeSpan(now.Hours, now.Minutes, now.Seconds + 3);
+            this._timeToHideVolume = newTime;
         }
 
+        public void checkVolumeHide()
+        {
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            int timeComparison = now.CompareTo(this._timeToHideVolume);
+            if (timeComparison >= 0)
+            {
+                this._volumeBar.Visibility = Visibility.Hidden;
+            }
+        }
 
         public void startSwipe(SwipeDirection direction)
         {

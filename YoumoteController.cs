@@ -228,8 +228,6 @@ namespace YouMote
                 this._tv.pause();
             }
 
-
-
         }
 
         private void manualPauseResume(Boolean pause)
@@ -538,7 +536,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-
+            this._tv._screenController.checkVolumeHide();
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)
