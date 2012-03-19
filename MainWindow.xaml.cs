@@ -241,19 +241,37 @@ namespace YouMote
             }
             else if (e.Key == Key.D4)
             {
-                nui.ElevationAngle = 10;
-                Console.WriteLine(nui.ElevationAngle);
+                try
+                {
+                    nui.ElevationAngle = 10;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
             }
             else if (e.Key == Key.D5)
             {
-                nui.ElevationAngle = -25;
-                Console.WriteLine(nui.ElevationAngle);
+                try
+                {
+                    nui.ElevationAngle = -10;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
             }
 
             else if (e.Key == Key.D6)
             {
-                nui.ElevationAngle = 0;
-                Console.WriteLine(nui.ElevationAngle);
+                try
+                {
+                    nui.ElevationAngle = 0;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
             }
 
             else if (youmoteController != null)
