@@ -230,6 +230,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D3)
             {
+                
                 if (youmoteController.isHelpMenu)
                 {
                     youmoteController.hideHelp();
