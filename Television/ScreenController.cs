@@ -242,13 +242,14 @@ namespace YouMote.Television
         {
             double position = this.pause(PauseReason.LEAVE);
             double startOpacity = this._currentContainer.Opacity;
+            double cornerIconStartOpacity = this._cornerIcon.Opacity;
 
             this._centerIcon.Source = this.generateImage(OFF_FILE);
 
             this._centerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(1.0, 0, ScreenController.OFF_FADE_OUT_DURATION));
 
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
-
+            this._cornerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(cornerIconStartOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             return position;
         }
 
