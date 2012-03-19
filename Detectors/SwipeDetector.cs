@@ -85,12 +85,7 @@ namespace YouMote.Detectors
             double angle = xUnitVector.calculateAngle(shoulderToEndpoint);
             return angle;
         }
-        /// <summary>
-        /// returns a number -1.0 to 1.0
-        /// positive number means right swipe
-        /// negative number means left swipe
-        /// </summary>
-        /// <returns></returns>
+
         public double getSwipePosition()
         {
             SwipeState curState = this.getCurrentState();

@@ -19,7 +19,7 @@ namespace YouMote.Television
     /// </summary>
     public class ScreenController
     {
-        public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH };
+        public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH, HELP };
 
         private static String PAUSE_FILE = "Images\\icons\\icon-solid-pause.png";
         private static String PLAY_FILE = "Images\\icons\\icon-solid-play.png";
@@ -33,14 +33,14 @@ namespace YouMote.Television
         private static double PLAY_FADE_IN_DURATION = 1.0;
         private static double OFF_FADE_OUT_DURATION = 5.0;
         private static double FADE_IN_DURATION = 3.0;
-        private static double SCREEN_CHANGE_DURATION = 1.0;
-        private double screenX = 0;
+        //private static double SCREEN_CHANGE_DURATION = 1.0;
+        //private double screenX = 0;
         //private double screenY = 0;
         private double screenWidth;
         private double screenHeight;
         private Image _centerIcon;
         private Image _cornerIcon;
-        private Button _swipeIcon;
+        private Image _swipeIcon;
         private ProgressBar _volumeBar;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
@@ -274,6 +274,7 @@ namespace YouMote.Television
             else if (direction == SwipeDirection.RIGHT)
             {
                 Canvas.SetLeft(this._swipeIcon, 0);
+                Console.Write("Here");
             }
             Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
         }
@@ -289,11 +290,9 @@ namespace YouMote.Television
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    ImageBrush newBrush = new ImageBrush();
-                    newBrush.ImageSource = new BitmapImage(
+                    this._swipeIcon.Source = new BitmapImage(
                         new Uri("../../Images/arrow-left.png", UriKind.Relative)
                     );
-                    this._swipeIcon.Background = newBrush;
                 }
             }
             else if (direction == SwipeDirection.RIGHT)
@@ -303,11 +302,9 @@ namespace YouMote.Television
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    ImageBrush newBrush = new ImageBrush();
-                    newBrush.ImageSource = new BitmapImage(
+                    this._swipeIcon.Source = new BitmapImage(
                         new Uri("../../Images/arrow-right.png", UriKind.Relative)
                     );
-                    this._swipeIcon.Background = newBrush;
                 }
             }
 
