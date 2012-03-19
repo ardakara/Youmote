@@ -72,7 +72,7 @@ namespace YouMote.Television
             this._window = window;
             this.screenWidth = window.MainCanvas.Width;
             this.screenHeight = window.MainCanvas.Height;
-            this.swipableWidth = (this.screenWidth / 2.0) - this._window.SwipeIcon.Width;
+            this.swipableWidth = this.screenWidth - this._window.SwipeIcon.Width;
             this.lastSwipeDirection = SwipeDirection.CENTER;
             this.initializeMediaElements();
 
@@ -257,36 +257,51 @@ namespace YouMote.Television
             // TODO: set volume of media
         }
 
-        public void startSwipe()
+        public void startSwipe(SwipeDirection direction)
         {
             this.isInSwipe = true;
             this._swipeIcon.Visibility = Visibility.Visible;
             this.lastSwipeDirection = SwipeDirection.CENTER;
-            this._swipeIcon.Content = "O";
-            Canvas.SetLeft(this._swipeIcon, this.screenWidth / 2.0 - this._swipeIcon.Width);
-            Canvas.SetTop(this._swipeIcon, this.screenHeight / 2.0 - this._swipeIcon.Height);
+            if (direction == SwipeDirection.LEFT)
+            {
+                Canvas.SetLeft(this._swipeIcon, this.screenWidth - this._swipeIcon.Width);  
+            }
+            else if (direction == SwipeDirection.RIGHT) {
+                Canvas.SetLeft(this._swipeIcon, 0);
+            }
+            Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
         }
 
         public void updateSwipe(double swipeProgress, SwipeDirection direction)
         {
             double swipeOffset = this.swipableWidth * swipeProgress;
-            double newLeft = this.screenWidth / 2.0;
+            double newLeft = 0;
             if (direction == SwipeDirection.LEFT)
             {
-                newLeft -= (this._swipeIcon.Width / 2.0) + swipeOffset;
+                newLeft = this.screenWidth - this._swipeIcon.Width;
+                newLeft -= swipeOffset;
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    this._swipeIcon.Content = "<";
+                    ImageBrush newBrush = new ImageBrush();
+                    newBrush.ImageSource = new BitmapImage(
+                        new Uri("../../Images/arrow-left.png", UriKind.Relative)
+                    );
+                    this._swipeIcon.Background = newBrush;
                 }
             }
             else if (direction == SwipeDirection.RIGHT)
             {
+                newLeft = 0;
                 newLeft += swipeOffset;
                 if (this.lastSwipeDirection != direction)
                 {
                     this.lastSwipeDirection = direction;
-                    this._swipeIcon.Content = ">";
+                    ImageBrush newBrush = new ImageBrush();
+                    newBrush.ImageSource = new BitmapImage(
+                        new Uri("../../Images/arrow-right.png", UriKind.Relative)
+                    );
+                    this._swipeIcon.Background = newBrush;
                 }
             }
 
@@ -319,7 +334,14 @@ namespace YouMote.Television
 
         private void moveMedia(Media media, Boolean isLeft)
         {
+            this._currentMediaElement.Pause(); 
+            this._currentMediaElement.Source = media.FileUri;
+            this._currentMediaElement.Volume = this._currentMediaElement.Volume;
+            this._currentMediaElement.Play();
+            this._currentMediaElement.Position = TimeSpan.FromSeconds(media.CurrentTime);
 
+
+            /*
             if (this._cornerIcon.Opacity > 0)
             {
                 this._cornerIcon.Opacity = 0.0;
@@ -357,7 +379,7 @@ namespace YouMote.Television
             this._currentMedia = media;
 
             this._onPointContainer = tempContainer;
-            this._onPointMediaElement = tempMediaElement;
+            this._onPointMediaElement = tempMediaElement;*/
         }
     }
 }

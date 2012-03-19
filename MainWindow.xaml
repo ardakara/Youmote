@@ -19,7 +19,7 @@
         <TextBox Name="DebugPositionTextBox" Canvas.Left="0" Text="hello" Canvas.Top="200" Height="88" Width="366" FontSize="36" Background="White" Visibility="Hidden" />
         <Image Name="CenterIcon" Width="512" Height="512" />
         <Image Name="CornerIcon" Width="128" Height="128" Canvas.Right="20" Canvas.Top="20" />
-        <Button Canvas.Left="615" Canvas.Top="624" Content="O" Height="84" Name="SwipeIcon" Width="138" Visibility="Hidden" IsEnabled="True" FontSize="56" FontWeight="Bold" />
+        <Button Canvas.Left="615" Canvas.Top="624" Height="84" Name="SwipeIcon" Width="138" Visibility="Hidden" IsEnabled="True" FontSize="56" FontWeight="Bold" BorderThickness="0" />
         <ProgressBar Canvas.Right="60" Canvas.Bottom="200" Height="500" Name="VolumeBar" Width="50" Value="50" Orientation="Vertical" Visibility="Hidden" />
         <Canvas Name="SkeletonCanvas" Canvas.Top="100" Canvas.Left="0">
             <Ellipse Canvas.Left="270" Canvas.Top="126" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />

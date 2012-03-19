@@ -514,11 +514,14 @@ namespace YouMote
             }
             else
             {
-                SwipeState swipeState = rSwipeDetector.getCurrentState();
+                SwipeState rightSwipeState = rSwipeDetector.getCurrentState();
+                SwipeState leftSwipeState = lSwipeDetector.getCurrentState();
                 if (this._tv._screenController.isInSwipe)
                 {
-                    if (swipeState.Pos == SwipePosition.END ||
-                        swipeState.Pos == SwipePosition.NEUTRAL)
+                    if ((leftSwipeState.Pos == SwipePosition.END ||
+                        leftSwipeState.Pos == SwipePosition.NEUTRAL) &&
+                        (rightSwipeState.Pos == SwipePosition.END ||
+                        rightSwipeState.Pos == SwipePosition.NEUTRAL))
                     {
                         this._tv._screenController.abortSwipe();
                     }
@@ -529,11 +532,14 @@ namespace YouMote
                 }
                 else
                 {
-                    if (swipeState != null && 
-                       (swipeState.Pos == SwipePosition.START ||
-                        swipeState.Pos == SwipePosition.MOVING))
+                    if ((leftSwipeState != null && 
+                       (leftSwipeState.Pos == SwipePosition.START ||
+                        leftSwipeState.Pos == SwipePosition.MOVING)) ||
+                       (rightSwipeState != null && 
+                       (rightSwipeState.Pos == SwipePosition.START ||
+                        rightSwipeState.Pos == SwipePosition.MOVING)))
                     {
-                        this._tv._screenController.startSwipe();
+                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
                     }
                 }
 
