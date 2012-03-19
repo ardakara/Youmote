@@ -19,10 +19,10 @@ namespace YouMote.Television
     /// </summary>
     public class ScreenController
     {
-        public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH };
+        public enum PauseReason { STANDUP, PHONE, LEAVE, SPEECH, HELP };
 
-        private static String PAUSE_FILE =   "Images\\icons\\icon-solid-pause.png";
-        private static String PLAY_FILE =    "Images\\icons\\icon-solid-play.png";
+        private static String PAUSE_FILE = "Images\\icons\\icon-solid-pause.png";
+        private static String PLAY_FILE = "Images\\icons\\icon-solid-play.png";
         private static String STANDUP_FILE = "Images\\icons\\icon-solid-standup.png";
         private static String LEAVE_FILE =   "Images\\icons\\icon-solid-leave.png";
         private static String PHONE_FILE =   "Images\\icons\\icon-solid-phone.png";
@@ -33,8 +33,8 @@ namespace YouMote.Television
         private static double PLAY_FADE_IN_DURATION = 1.0;
         private static double OFF_FADE_OUT_DURATION = 5.0;
         private static double FADE_IN_DURATION = 3.0;
-        private static double SCREEN_CHANGE_DURATION = 1.0;
-        private double screenX = 0;
+        //private static double SCREEN_CHANGE_DURATION = 1.0;
+        //private double screenX = 0;
         //private double screenY = 0;
         private double screenWidth;
         private double screenHeight;
@@ -42,6 +42,7 @@ namespace YouMote.Television
         private Image _cornerIcon;
         private Image _swipeIcon;
         private ProgressBar _volumeBar;
+        private TimeSpan _timeToHideVolume;
         private MainWindow _window;
         private Media _currentMedia = Media.NULL_MEDIA;
 
@@ -97,7 +98,7 @@ namespace YouMote.Television
         private void initializeMediaElements()
         {
             this._cornerIcon = this._window.CornerIcon;
-            this._cornerIcon.Opacity = 0.0; 
+            this._cornerIcon.Opacity = 0.0;
 
             this._currentContainer = this._window.MediaContainer1;
             this._currentContainer.Height = this.screenHeight;
@@ -147,14 +148,17 @@ namespace YouMote.Television
             if (volume < 0)
             {
                 this._currentMediaElement.Volume = 0;
+                this.setVolumeBar(0);
             }
             else if (volume > 1.0)
             {
-                this._currentMediaElement.Volume = 0;
+                this._currentMediaElement.Volume = 1.0;
+                this.setVolumeBar(1);
             }
             else
             {
                 this._currentMediaElement.Volume = volume;
+                this.setVolumeBar(volume);
             }
         }
 
@@ -163,6 +167,7 @@ namespace YouMote.Television
             this.CurrentMedia = m;
             this._currentMediaElement.Source = this._currentMedia.FileUri;
             this._currentMediaElement.Play();
+            this._cornerIcon.Opacity = 0;
             this._currentMediaElement.Position = TimeSpan.FromSeconds(this._currentMedia.CurrentTime);
             double startOpacity = this._currentContainer.Opacity;
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 1, ScreenController.FADE_IN_DURATION));
@@ -203,10 +208,9 @@ namespace YouMote.Television
 
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0.3, ScreenController.PAUSE_FADE_OUT_DURATION));
             this._centerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(1, 0, ScreenController.PAUSE_FADE_OUT_DURATION));
+
             this._cornerIcon.Opacity = 1.0;
             this._cornerIcon.Source = this.generateImage(this.getIconPathForPauseReason(pr));
-
-
             return currentPosition;
         }
 
@@ -244,18 +248,36 @@ namespace YouMote.Television
         {
             double position = this.pause(PauseReason.LEAVE);
             double startOpacity = this._currentContainer.Opacity;
+            double cornerIconStartOpacity = this._cornerIcon.Opacity;
+
+            this._centerIcon.Source = this.generateImage(OFF_FILE);
+
+            this._centerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(1.0, 0, ScreenController.OFF_FADE_OUT_DURATION));
+
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             this._cornerIcon.Opacity = 1.0;
+            this._cornerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(cornerIconStartOpacity, 0, ScreenController.OFF_FADE_OUT_DURATION));
             return position;
         }
 
         // between 0 - 100
-        public void setVolumeBar(int value)
+        public void setVolumeBar(double value)
         {
             this._volumeBar.Visibility = Visibility.Visible;
-            this._volumeBar.Value = value;
-            // TODO: have a timer, that resets to a certain amount every time volume is updated, when it runs out hide it again
-            // TODO: set volume of media
+            this._volumeBar.Value = 100*value;
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            TimeSpan newTime = new TimeSpan(now.Hours, now.Minutes, now.Seconds + 3);
+            this._timeToHideVolume = newTime;
+        }
+
+        public void checkVolumeHide()
+        {
+            TimeSpan now = DateTime.Now.TimeOfDay;
+            int timeComparison = now.CompareTo(this._timeToHideVolume);
+            if (timeComparison >= 0)
+            {
+                this._volumeBar.Visibility = Visibility.Hidden;
+            }
         }
 
         public void startSwipe(SwipeDirection direction)
@@ -265,9 +287,10 @@ namespace YouMote.Television
             this.lastSwipeDirection = SwipeDirection.CENTER;
             if (direction == SwipeDirection.LEFT)
             {
-                Canvas.SetLeft(this._swipeIcon, this.screenWidth - this._swipeIcon.Width);  
+                Canvas.SetLeft(this._swipeIcon, this.screenWidth - this._swipeIcon.Width);
             }
-            else if (direction == SwipeDirection.RIGHT) {
+            else if (direction == SwipeDirection.RIGHT)
+            {
                 Canvas.SetLeft(this._swipeIcon, 0);
             }
             Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
@@ -297,7 +320,7 @@ namespace YouMote.Television
                 {
                     this.lastSwipeDirection = direction;
                     this._swipeIcon.Source = new BitmapImage(
-                        new Uri("../../Images/arrow-left.png", UriKind.Relative)
+                        new Uri("../../Images/arrow-right.png", UriKind.Relative)
                     );
                 }
             }
@@ -331,7 +354,7 @@ namespace YouMote.Television
 
         private void moveMedia(Media media, Boolean isLeft)
         {
-            this._currentMediaElement.Pause(); 
+            this._currentMediaElement.Pause();
             this._currentMediaElement.Source = media.FileUri;
             this._currentMediaElement.Volume = this._currentMediaElement.Volume;
             this._currentMediaElement.Play();

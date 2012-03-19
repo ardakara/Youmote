@@ -42,8 +42,33 @@ namespace YouMote
             //YouMote.Client.Client.test();
             InitializeComponent();
             showDebug();
+            loadHelpSources();
         }
 
+        void loadHelpSources()
+        {
+            this.Help1.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help2.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help3.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help4.Loaded += new RoutedEventHandler(helpLoaded);
+            this.Help5.Loaded += new RoutedEventHandler(helpLoaded);
+        }
+
+        int helpVideoIdx = 0;
+        String[] helpVideoPaths = { "\\Video\\help-tv-on.mp4", "\\Video\\help-tv-pause.mp4", "\\Video\\help-tv-play.mp4",
+                                  "\\Video\\help-volume-gesture.mp4", "\\Video\\help-wave-gesture.mp4"};
+
+
+        private void helpLoaded(object sender, RoutedEventArgs e)
+        {
+            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            MediaElement me = (MediaElement)(sender);
+            if (me.Source == null)
+            {
+                me.Source = new Uri(currentPath + helpVideoPaths[helpVideoIdx]);
+                helpVideoIdx++;
+            }
+        }
         //Kinect Sensor
         KinectSensor nui;
 
@@ -118,7 +143,6 @@ namespace YouMote
                 //add event to receive skeleton data
                 youmoteController = new YoumoteController(this);
                 currentController = youmoteController;
-                youmoteController.hideHelp();
                 nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
             }
         }
@@ -231,7 +255,7 @@ namespace YouMote
             }
             else if (e.Key == Key.D3)
             {
-                
+
                 if (youmoteController.isHelpMenu)
                 {
                     youmoteController.hideHelp();
@@ -243,12 +267,40 @@ namespace YouMote
             }
             else if (e.Key == Key.D4)
             {
-                nui.ElevationAngle = nui.ElevationAngle = 01;
+                try
+                {
+                    nui.ElevationAngle = 10;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
             }
             else if (e.Key == Key.D5)
             {
                 nui.ElevationAngle = nui.ElevationAngle = 25;
-            } else if (e.Key == Key.S) {
+                try
+                {
+                    nui.ElevationAngle = -10;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
+            }
+
+            else if (e.Key == Key.D6)
+            {
+                try
+                {
+                    nui.ElevationAngle = 0;
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc.ToString());
+                }
+            }
+            else if (e.Key == Key.S) {
                 if (socialShown)
                 {
                     youmoteController.setNotificationToHidden();
@@ -258,15 +310,12 @@ namespace YouMote
                 {
                     youmoteController.setNotificationToVisible();
                     socialShown = true;
-                }
-                
+                }      
             }
-
             else if (youmoteController != null)
             {
                 youmoteController.processKeys(e.Key);
             }
-
         }
 
         private void NotificationBackground_ImageFailed(object sender, ExceptionRoutedEventArgs e)

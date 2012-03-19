@@ -69,7 +69,7 @@ namespace YouMote
         /*Handling volume*/
 
         /* Stuff needed to 'turn on the tv'*/
-        private YouMote.Television.Television _tv;
+        public YouMote.Television.Television _tv;
         private TextBox _debugPositionBox;
         private TextBox _debugGestureBox;
 
@@ -83,9 +83,7 @@ namespace YouMote
         private void addMessages()
         {
             this.messageList.Clear();
-            this.messageList.pushMessage(20, 3, "Jeff H.", "Bwahahahha", "heer_profile.jpg");
-            this.messageList.pushMessage(10, 3, "Jeff H.", "Hahahahahahaha", "heer_profile.jpg");
-            this.messageList.pushMessage(0, 0.1, "Arda Kara", "You're now watching TV with Arda!", "arda.jpg");
+            this.messageList.pushMessage(0, 0, "Arda Kara", "You're now watching TV with Arda!", "arda.jpg");
         }
 
 
@@ -120,16 +118,8 @@ namespace YouMote
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
             speechHelpOverrideDetector = new SpeechHelpOverrideDetector(win);
             speechExitHelpDetector = new SpeechExitHelpDetector(win);
-            setUpHelpVideos();
         }
 
-        void setUpHelpVideos()
-        {
-            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            window.Help1.Source = new Uri(currentPath + "\\help-tv-on.mp4");
-            window.Help2.Source = new Uri(currentPath + "\\help-swipe-gesture.mp4");
-            window.Help3.Source = new Uri(currentPath + "\\help-tv-pause.mp4");
-        }
 
         void OnGestureDetected(string gesture)
         {
@@ -197,6 +187,18 @@ namespace YouMote
             setNotificationToHidden();
         }
 
+        /// <summary>
+        /// LEFT MEDIA - left arrow
+        /// RIGHT MEDIA - right arrow
+        /// INCREASE VOLUME - up arrow
+        /// DECREASE VOLUMe - down arrow
+        /// ON - O 
+        /// OFF - P
+        /// PLAY - K 
+        /// PAUSE - L
+        /// </summary>
+        /// <param name="key"></param>
+
         public void processKeys(Key key)
         {
             if (key == Key.A)   //pause
@@ -220,6 +222,52 @@ namespace YouMote
             {
                 this._debugPositionBox.Text = "key = X";
                 this._tv.turnOff();
+            }
+            else if (key == Key.Up)
+            {
+                // increase Volume
+                this._tv.Volume += 0.1;
+            }
+
+            else if (key == Key.Down)
+            {
+                // decrease Volume
+                this._tv.Volume -= 0.1;
+            }
+
+            else if (key == Key.Left)
+            {
+                // increase Volume
+                this._tv.moveMediaToLeft();
+
+            }
+
+            else if (key == Key.Right)
+            {
+                // increase Volume
+                this._tv.moveMediaToRight();
+            }
+            else if (key == Key.P)
+            {
+                // increase Volume
+                this._tv.turnOff();
+
+            }
+
+            else if (key == Key.O)
+            {
+                // increase Volume
+                this._tv.turnOn();
+            }
+            else if (key == Key.K)
+            {
+                // increase Volume
+                this._tv.play();
+            }
+            else if (key == Key.L)
+            {
+                // increase Volume
+                this._tv.pause();
             }
 
         }
@@ -246,21 +294,23 @@ namespace YouMote
         {
             this._isHelpMenu = true;
             window.DebugPositionTextBox.Text = "HELP MODE";
-            if (!(this._tv.Channels != null || this._tv.Channels.Count==0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count == 0))
             {
-                this._tv.pause();
+                this._tv.pause(ScreenController.PauseReason.HELP);
             }
             window.HelpScreen.Visibility = Visibility.Visible;
+            window.Help1.Visibility = Visibility.Visible;
             window.Help1.Play();
             window.Help2.Play();
             window.Help3.Play();
-            //play the help video
+            window.Help4.Play();
+            window.Help5.Play();
         }
 
         public void hideHelp()
         {
             this._isHelpMenu = false;
-            if (!(this._tv.Channels != null || this._tv.Channels.Count == 0))
+            if (!(this._tv.Channels == null || this._tv.Channels.Count == 0))
             {
                 //pause help video
                 this._tv.play();
@@ -270,6 +320,8 @@ namespace YouMote
             window.Help1.Pause();
             window.Help2.Pause();
             window.Help3.Pause();
+            window.Help4.Pause();
+            window.Help5.Pause();
         }
 
         public Boolean isHelpMenu
@@ -317,7 +369,7 @@ namespace YouMote
 
             //window.DebugSpeechTextBox.Text = this._isHelpMenu.ToString();
 
-            
+
 
             if (this._isHelpMenu)
             {
@@ -508,7 +560,7 @@ namespace YouMote
 
         public override void processSkeletonFrame(Skeleton skeleton, KinectSensor nui, Dictionary<int, Target> targets)
         {
-
+            this._tv._screenController.checkVolumeHide();
             if (!this._tv.IsOn)
             {
                 if (skeleton == null)
@@ -551,19 +603,26 @@ namespace YouMote
                     {
                         this._tv._screenController.abortSwipe();
                     }
-                    else
+                    else if (leftSwipeState.Pos == SwipePosition.MOVING)
+                    {
+                        this._tv._screenController.updateSwipe(lSwipeDetector.getSwipePosition(), lSwipeDetector.getSwipeDirection());
+                    }
+                    else if (rightSwipeState.Pos == SwipePosition.MOVING)
                     {
                         this._tv._screenController.updateSwipe(rSwipeDetector.getSwipePosition(), rSwipeDetector.getSwipeDirection());
                     }
                 }
                 else
                 {
-                    if ((leftSwipeState != null && 
-                       (leftSwipeState.Pos == SwipePosition.START ||
-                        leftSwipeState.Pos == SwipePosition.MOVING)) ||
-                       (rightSwipeState != null && 
+                    if (rightSwipeState != null &&
                        (rightSwipeState.Pos == SwipePosition.START ||
-                        rightSwipeState.Pos == SwipePosition.MOVING)))
+                        rightSwipeState.Pos == SwipePosition.MOVING))
+                    {
+                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
+                    }
+                    else if (leftSwipeState != null &&
+                            (leftSwipeState.Pos == SwipePosition.START ||
+                             leftSwipeState.Pos == SwipePosition.MOVING))
                     {
                         this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
                     }
