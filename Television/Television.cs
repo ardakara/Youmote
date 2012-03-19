@@ -129,7 +129,7 @@ namespace YouMote.Television
         public void changeVolume(double factor)
         {
             double secondsSinceLastTick = DateTime.Now.Subtract(this._lastVolumeTick).Seconds;
-            if (Math.Abs(factor) >= 1 && secondsSinceLastTick > 1.0)
+            if (Math.Abs(factor) >= 1 && secondsSinceLastTick > 0.3)
             {
                 this.BaseVolume = this._baseVolume + factor*VOLUME_INCREMENT;
                 this.Volume = this._volume + factor*VOLUME_INCREMENT;

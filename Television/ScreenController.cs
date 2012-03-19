@@ -206,6 +206,7 @@ namespace YouMote.Television
 
             this._currentContainer.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(startOpacity, 0.3, ScreenController.PAUSE_FADE_OUT_DURATION));
             this._centerIcon.BeginAnimation(Canvas.OpacityProperty, this.generateDoubleAnimation(1, 0, ScreenController.PAUSE_FADE_OUT_DURATION));
+
             this._cornerIcon.Opacity = 1.0;
             this._cornerIcon.Source = this.generateImage(this.getIconPathForPauseReason(pr));
             return currentPosition;
