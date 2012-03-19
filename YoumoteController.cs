@@ -108,16 +108,8 @@ namespace YouMote
             speechOffOverrideDetector = new SpeechOffOverrideDetector(win);
             speechHelpOverrideDetector = new SpeechHelpOverrideDetector(win);
             speechExitHelpDetector = new SpeechExitHelpDetector(win);
-            //setUpHelpVideos();
         }
 
-        void setUpHelpVideos()
-        {
-            String currentPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            window.Help1.Source = new Uri(currentPath + "\\Video\\help-tv-on.mp4");
-            window.Help2.Source = new Uri(currentPath + "\\Video\\help-swipe-gesture.mp4");
-            window.Help3.Source = new Uri(currentPath + "\\Video\\help-tv-pause.mp4");
-        }
 
         void OnGestureDetected(string gesture)
         {
@@ -211,7 +203,8 @@ namespace YouMote
             window.Help1.Play();
             window.Help2.Play();
             window.Help3.Play();
-            //play the help video
+            window.Help4.Play();
+            window.Help5.Play();
         }
 
         public void hideHelp()
@@ -227,6 +220,8 @@ namespace YouMote
             window.Help1.Pause();
             window.Help2.Pause();
             window.Help3.Pause();
+            window.Help4.Pause();
+            window.Help5.Pause();
         }
 
         public Boolean isHelpMenu
