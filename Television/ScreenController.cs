@@ -33,8 +33,8 @@ namespace YouMote.Television
         private static double PLAY_FADE_IN_DURATION = 1.0;
         private static double OFF_FADE_OUT_DURATION = 5.0;
         private static double FADE_IN_DURATION = 3.0;
-        private static double SCREEN_CHANGE_DURATION = 1.0;
-        private double screenX = 0;
+        //private static double SCREEN_CHANGE_DURATION = 1.0;
+        //private double screenX = 0;
         //private double screenY = 0;
         private double screenWidth;
         private double screenHeight;
@@ -268,6 +268,7 @@ namespace YouMote.Television
             }
             else if (direction == SwipeDirection.RIGHT) {
                 Canvas.SetLeft(this._swipeIcon, 0);
+                Console.Write("Here");
             }
             Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
         }
@@ -296,7 +297,7 @@ namespace YouMote.Television
                 {
                     this.lastSwipeDirection = direction;
                     this._swipeIcon.Source = new BitmapImage(
-                        new Uri("../../Images/arrow-left.png", UriKind.Relative)
+                        new Uri("../../Images/arrow-right.png", UriKind.Relative)
                     );
                 }
             }

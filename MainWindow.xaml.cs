@@ -25,7 +25,6 @@ namespace YouMote
     using Microsoft.Kinect;
 
     using Coding4Fun.Kinect.Wpf;
-    using Coding4Fun.Kinect.Wpf;
     using System.Threading;
     using Microsoft.Speech.AudioFormat;
     using Microsoft.Speech.Recognition;
