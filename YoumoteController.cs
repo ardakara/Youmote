@@ -261,11 +261,15 @@ namespace YouMote
             }
             else if (key == Key.K)
             {
+                this._isManualPause = false;
+                this._isManualResume = true;
                 // increase Volume
                 this._tv.play();
             }
             else if (key == Key.L)
             {
+                this._isManualPause = true;
+                this._isManualResume = false;
                 // increase Volume
                 this._tv.pause();
             }
