@@ -280,19 +280,25 @@ namespace YouMote.Television
             }
         }
 
-        public void startSwipe(SwipeDirection direction)
+        public void startSwipe(SwipeDirection direction, SwipeDirection hand)
         {
-            this.isInSwipe = true;
-            this._swipeIcon.Visibility = Visibility.Visible;
-            this.lastSwipeDirection = SwipeDirection.CENTER;
+            this.lastSwipeDirection = direction;
             if (direction == SwipeDirection.LEFT)
             {
                 Canvas.SetLeft(this._swipeIcon, this.screenWidth - this._swipeIcon.Width);
+                this._swipeIcon.Source = new BitmapImage(
+                    new Uri("../../Images/arrow-left.png", UriKind.Relative)
+                );
             }
             else if (direction == SwipeDirection.RIGHT)
             {
                 Canvas.SetLeft(this._swipeIcon, 0);
+                this._swipeIcon.Source = new BitmapImage(
+                        new Uri("../../Images/arrow-right.png", UriKind.Relative)
+                );
             }
+            this.isInSwipe = true;
+            this._swipeIcon.Visibility = Visibility.Visible;
             Canvas.SetTop(this._swipeIcon, (this.screenHeight - this._swipeIcon.Height) / 2.0);
         }
 

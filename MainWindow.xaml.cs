@@ -68,14 +68,6 @@ namespace YouMote
             me.Play();
 
         }
-        int helpVideoIdx = 0;
-        String[] helpVideoPaths = { "\\Video\\help-wave-gesture.mp4",
-                                    "\\Video\\help-tv-pause.mp4",
-                                    "\\Video\\help-tv-play.mp4",
-                                    "\\Video\\help-tv-on.mp4",  
-                                    "\\Video\\help-volume-gesture.mp4", 
-                                    "\\Video\\help-swipe-gesture.mp4"};
-
 
         private void helpLoaded(object sender, RoutedEventArgs e)
         {
@@ -85,27 +77,27 @@ namespace YouMote
             {
                 if (me.Name == "Help1")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-tv-on.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-tv-on.mpeg");
                 }
                 else if (me.Name == "Help2")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-tv-pause.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-tv-pause.mpeg");
                 }
                 else if (me.Name == "Help3")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-tv-play.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-tv-play.mpeg");
                 }
                 else if (me.Name == "Help4")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-volume-gesture.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-volume-gesture.mpeg");
                 }
                 else if (me.Name == "Help5")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-wave-gesture.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-wave-gesture.mpeg");
                 }
                 else if (me.Name == "Help6")
                 {
-                    me.Source = new Uri(currentPath + "\\Video\\help-swipe-gesture.mp4");
+                    me.Source = new Uri(currentPath + "\\Video\\help-swipe-gesture.mpeg");
                 }
             }
         }
