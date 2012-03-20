@@ -620,13 +620,13 @@ namespace YouMote
                        (rightSwipeState.Pos == SwipePosition.START ||
                         rightSwipeState.Pos == SwipePosition.MOVING))
                     {
-                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
+                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection(), SwipeDirection.RIGHT);
                     }
                     else if (leftSwipeState != null &&
                             (leftSwipeState.Pos == SwipePosition.START ||
                              leftSwipeState.Pos == SwipePosition.MOVING))
                     {
-                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection());
+                        this._tv._screenController.startSwipe(rSwipeDetector.getSwipeDirection(), SwipeDirection.LEFT);
                     }
                 }
 
